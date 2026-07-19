@@ -1,0 +1,13 @@
+using MediatR;
+
+namespace AgencyWebsite.Application.Features.Services.Commands.CreateService;
+
+public class CreateServiceCommand : IRequest<Guid>
+{
+    public string Title { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public string ShortDescription { get; set; } = string.Empty;
+    public string FullDescription { get; set; } = string.Empty;
+    public string IconUrl { get; set; } = string.Empty;
+    public int DisplayOrder { get; set; }
+}
