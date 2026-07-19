@@ -13,5 +13,6 @@ public class CreateJobListingCommandValidator : AbstractValidator<CreateJobListi
         RuleFor(x => x.Department).NotEmpty().MaximumLength(200);
         RuleFor(x => x.Location).NotEmpty().MaximumLength(200);
         RuleFor(x => x.Description).NotEmpty();
+        RuleFor(x => x.Status).IsInEnum();
     }
 }

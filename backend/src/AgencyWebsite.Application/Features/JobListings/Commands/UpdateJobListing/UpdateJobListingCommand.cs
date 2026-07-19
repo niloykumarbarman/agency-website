@@ -1,3 +1,4 @@
+using AgencyWebsite.Domain.Enums;
 using MediatR;
 
 namespace AgencyWebsite.Application.Features.JobListings.Commands.UpdateJobListing;
@@ -12,4 +13,5 @@ public class UpdateJobListingCommand : IRequest<Unit>
     public string EmploymentType { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Requirements { get; set; } = string.Empty;
+    public JobListingStatus Status { get; set; }
 }

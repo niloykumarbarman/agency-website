@@ -13,5 +13,6 @@ public class CreateBlogPostCommandValidator : AbstractValidator<CreateBlogPostCo
         RuleFor(x => x.Excerpt).NotEmpty().MaximumLength(500);
         RuleFor(x => x.Content).NotEmpty();
         RuleFor(x => x.AuthorName).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.Status).IsInEnum();
     }
 }

@@ -26,6 +26,7 @@ public class UpdateJobListingCommandHandler : IRequestHandler<UpdateJobListingCo
         jobListing.EmploymentType = request.EmploymentType;
         jobListing.Description = request.Description;
         jobListing.Requirements = request.Requirements;
+        jobListing.Status = request.Status;
         jobListing.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
