@@ -1,5 +1,6 @@
 using AgencyWebsite.Application.Common.Interfaces;
 using AgencyWebsite.Domain.Entities;
+using AgencyWebsite.Domain.Enums;
 using MediatR;
 
 namespace AgencyWebsite.Application.Features.BlogPosts.Commands.CreateBlogPost;
@@ -22,7 +23,9 @@ public class CreateBlogPostCommandHandler : IRequestHandler<CreateBlogPostComman
             Excerpt = request.Excerpt,
             Content = request.Content,
             CoverImageUrl = request.CoverImageUrl,
-            AuthorName = request.AuthorName
+            AuthorName = request.AuthorName,
+            Status = request.Status,
+            PublishedAt = request.Status == BlogPostStatus.Published ? DateTime.UtcNow : null
         };
 
         _context.BlogPosts.Add(blogPost);

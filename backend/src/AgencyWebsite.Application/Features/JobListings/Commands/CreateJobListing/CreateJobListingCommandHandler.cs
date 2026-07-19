@@ -23,7 +23,8 @@ public class CreateJobListingCommandHandler : IRequestHandler<CreateJobListingCo
             Location = request.Location,
             EmploymentType = request.EmploymentType,
             Description = request.Description,
-            Requirements = request.Requirements
+            Requirements = request.Requirements,
+            Status = request.Status
         };
 
         _context.JobListings.Add(jobListing);

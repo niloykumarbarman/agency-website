@@ -1,4 +1,5 @@
 using AgencyWebsite.Application.Common.Interfaces;
+using AgencyWebsite.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,13 @@ public class UpdateBlogPostCommandHandler : IRequestHandler<UpdateBlogPostComman
         blogPost.Content = request.Content;
         blogPost.CoverImageUrl = request.CoverImageUrl;
         blogPost.AuthorName = request.AuthorName;
+
+        if (blogPost.Status != BlogPostStatus.Published && request.Status == BlogPostStatus.Published)
+        {
+            blogPost.PublishedAt = DateTime.UtcNow;
+        }
+
+        blogPost.Status = request.Status;
         blogPost.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
