@@ -1,8 +1,6 @@
 using AgencyWebsite.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-
 namespace AgencyWebsite.Application.Common.Interfaces;
-
 public interface IAppDbContext
 {
     DbSet<Service> Services { get; }
@@ -12,6 +10,6 @@ public interface IAppDbContext
     DbSet<Testimonial> Testimonials { get; }
     DbSet<ContactMessage> ContactMessages { get; }
     DbSet<JobListing> JobListings { get; }
-
+    DbSet<Admin> Admins { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
