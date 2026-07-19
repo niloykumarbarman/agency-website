@@ -6,11 +6,15 @@ namespace AgencyWebsite.Application.Features.Services.Commands.UpdateService;
 
 public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand, Unit>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "services:all";
 
-    public UpdateServiceCommandHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public UpdateServiceCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
@@ -29,6 +33,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         service.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+        await _cache.RemoveAsync(CacheKey, cancellationToken);
+
         return Unit.Value;
     }
 }

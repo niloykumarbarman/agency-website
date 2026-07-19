@@ -6,11 +6,15 @@ namespace AgencyWebsite.Application.Features.Services.Commands.CreateService;
 
 public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand, Guid>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "services:all";
 
-    public CreateServiceCommandHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public CreateServiceCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Guid> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
@@ -27,6 +31,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
         _context.Services.Add(service);
         await _context.SaveChangesAsync(cancellationToken);
+        await _cache.RemoveAsync(CacheKey, cancellationToken);
 
         return service.Id;
     }

@@ -1,6 +1,7 @@
 using System.Text;
 using AgencyWebsite.Application.Common.Interfaces;
 using AgencyWebsite.Application.Features.Services.Commands.CreateService;
+using AgencyWebsite.Infrastructure.Caching;
 using AgencyWebsite.Infrastructure.Data;
 using AgencyWebsite.Infrastructure.Security;
 using FluentValidation;
@@ -34,6 +35,14 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+// Redis distributed cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "agencywebsite:";
+});
+builder.Services.AddScoped<ICacheService, RedisCacheService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()
     ?? throw new InvalidOperationException("JwtSettings configuration section is missing.");

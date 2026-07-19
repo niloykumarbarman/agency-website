@@ -6,11 +6,15 @@ namespace AgencyWebsite.Application.Features.Services.Commands.DeleteService;
 
 public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand, Unit>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "services:all";
 
-    public DeleteServiceCommandHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public DeleteServiceCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(DeleteServiceCommand request, CancellationToken cancellationToken)
@@ -24,6 +28,8 @@ public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand,
         service.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+        await _cache.RemoveAsync(CacheKey, cancellationToken);
+
         return Unit.Value;
     }
 }
