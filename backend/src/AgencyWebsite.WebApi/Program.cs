@@ -9,7 +9,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using AgencyWebsite.Application.Common.Behaviors;
 using AgencyWebsite.WebApi.Middleware;
+using AgencyWebsite.WebApi.Services;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using Scalar.AspNetCore;
@@ -28,7 +30,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreateServiceCommand).Assembly));
+{
+    cfg.RegisterServicesFromAssembly(typeof(CreateServiceCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(AuditLoggingBehavior<,>));
+});
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateServiceCommand).Assembly);
 builder.Services.AddFluentValidationAutoValidation();
