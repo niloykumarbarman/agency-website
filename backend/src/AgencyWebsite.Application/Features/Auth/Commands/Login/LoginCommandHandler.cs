@@ -1,4 +1,5 @@
 using AgencyWebsite.Application.Common.Interfaces;
+using AgencyWebsite.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,15 +10,21 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IRefreshTokenService _refreshTokenService;
+    private readonly ICurrentUserService _currentUserService;
 
     public LoginCommandHandler(
         IAppDbContext context,
         IPasswordHasher passwordHasher,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        IRefreshTokenService refreshTokenService,
+        ICurrentUserService currentUserService)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _refreshTokenService = refreshTokenService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -38,6 +45,19 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResult>
         }
 
         var token = _jwtTokenGenerator.GenerateToken(admin);
-        return new LoginResult { Success = true, Token = token };
+
+        var rawRefreshToken = _refreshTokenService.GenerateRawToken();
+        var refreshTokenEntity = new AgencyWebsite.Domain.Entities.RefreshToken
+        {
+            AdminId = admin.Id,
+            TokenHash = _refreshTokenService.Hash(rawRefreshToken),
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedByIp = _currentUserService.IpAddress
+        };
+
+        _context.RefreshTokens.Add(refreshTokenEntity);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return new LoginResult { Success = true, Token = token, RefreshToken = rawRefreshToken };
     }
 }
