@@ -19,6 +19,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<JobListing> JobListings => Set<JobListing>();
     public DbSet<Admin> Admins => Set<Admin>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,5 +28,7 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<Admin>().HasIndex(a => a.Email).IsUnique();
         modelBuilder.Entity<AuditLog>().HasIndex(a => a.Timestamp);
         modelBuilder.Entity<AuditLog>().HasIndex(a => a.UserId);
+        modelBuilder.Entity<RefreshToken>().HasIndex(rt => rt.TokenHash).IsUnique();
+        modelBuilder.Entity<RefreshToken>().HasIndex(rt => rt.AdminId);
     }
 }

@@ -1,4 +1,6 @@
 using AgencyWebsite.Application.Features.Auth.Commands.Login;
+using AgencyWebsite.Application.Features.Auth.Commands.Logout;
+using AgencyWebsite.Application.Features.Auth.Commands.RefreshToken;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -27,6 +29,26 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = result.ErrorMessage });
         }
 
+        return Ok(result);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<ActionResult<RefreshTokenResult>> Refresh(RefreshTokenCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(command, cancellationToken);
+
+        if (!result.Success)
+        {
+            return Unauthorized(new { message = result.ErrorMessage });
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult<LogoutResult>> Logout(LogoutCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(command, cancellationToken);
         return Ok(result);
     }
 }

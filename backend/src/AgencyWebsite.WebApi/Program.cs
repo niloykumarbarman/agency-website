@@ -45,6 +45,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
 // Redis distributed cache
 builder.Services.AddStackExchangeRedisCache(options =>
