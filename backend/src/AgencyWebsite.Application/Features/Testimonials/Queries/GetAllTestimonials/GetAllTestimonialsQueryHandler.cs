@@ -7,14 +7,24 @@ namespace AgencyWebsite.Application.Features.Testimonials.Queries.GetAllTestimon
 public class GetAllTestimonialsQueryHandler : IRequestHandler<GetAllTestimonialsQuery, List<TestimonialDto>>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public GetAllTestimonialsQueryHandler(IAppDbContext context)
+    public GetAllTestimonialsQueryHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<List<TestimonialDto>> Handle(GetAllTestimonialsQuery request, CancellationToken cancellationToken)
     {
+        var cacheKey = request.FeaturedOnly ? "testimonials:featured" : "testimonials:all";
+
+        var cached = await _cache.GetAsync<List<TestimonialDto>>(cacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
         var query = _context.Testimonials.Where(t => !t.IsDeleted);
 
         if (request.FeaturedOnly)
@@ -22,7 +32,7 @@ public class GetAllTestimonialsQueryHandler : IRequestHandler<GetAllTestimonials
             query = query.Where(t => t.IsFeatured);
         }
 
-        return await query
+        var result = await query
             .OrderByDescending(t => t.CreatedAt)
             .Select(t => new TestimonialDto
             {
@@ -35,5 +45,9 @@ public class GetAllTestimonialsQueryHandler : IRequestHandler<GetAllTestimonials
                 Rating = t.Rating
             })
             .ToListAsync(cancellationToken);
+
+        await _cache.SetAsync(cacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);
+
+        return result;
     }
 }

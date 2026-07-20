@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.CaseStudies.Commands.CreateCaseStud
 public class CreateCaseStudyCommandHandler : IRequestHandler<CreateCaseStudyCommand, Guid>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public CreateCaseStudyCommandHandler(IAppDbContext context)
+    public CreateCaseStudyCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Guid> Handle(CreateCaseStudyCommand request, CancellationToken cancellationToken)
@@ -30,6 +32,8 @@ public class CreateCaseStudyCommandHandler : IRequestHandler<CreateCaseStudyComm
 
         _context.CaseStudies.Add(caseStudy);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("casestudies:all", cancellationToken);
 
         return caseStudy.Id;
     }

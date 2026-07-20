@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.ContactMessages.Commands.DeleteCont
 public class DeleteContactMessageCommandHandler : IRequestHandler<DeleteContactMessageCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public DeleteContactMessageCommandHandler(IAppDbContext context)
+    public DeleteContactMessageCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(DeleteContactMessageCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,9 @@ public class DeleteContactMessageCommandHandler : IRequestHandler<DeleteContactM
         message.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("contactmessages:all", cancellationToken);
+
         return Unit.Value;
     }
 }

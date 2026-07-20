@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.Testimonials.Commands.DeleteTestimo
 public class DeleteTestimonialCommandHandler : IRequestHandler<DeleteTestimonialCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public DeleteTestimonialCommandHandler(IAppDbContext context)
+    public DeleteTestimonialCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(DeleteTestimonialCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,10 @@ public class DeleteTestimonialCommandHandler : IRequestHandler<DeleteTestimonial
         testimonial.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("testimonials:all", cancellationToken);
+        await _cache.RemoveAsync("testimonials:featured", cancellationToken);
+
         return Unit.Value;
     }
 }

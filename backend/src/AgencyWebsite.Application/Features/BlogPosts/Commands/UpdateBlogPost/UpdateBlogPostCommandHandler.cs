@@ -8,10 +8,12 @@ namespace AgencyWebsite.Application.Features.BlogPosts.Commands.UpdateBlogPost;
 public class UpdateBlogPostCommandHandler : IRequestHandler<UpdateBlogPostCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public UpdateBlogPostCommandHandler(IAppDbContext context)
+    public UpdateBlogPostCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateBlogPostCommand request, CancellationToken cancellationToken)
@@ -36,6 +38,9 @@ public class UpdateBlogPostCommandHandler : IRequestHandler<UpdateBlogPostComman
         blogPost.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("blogposts:all", cancellationToken);
+
         return Unit.Value;
     }
 }

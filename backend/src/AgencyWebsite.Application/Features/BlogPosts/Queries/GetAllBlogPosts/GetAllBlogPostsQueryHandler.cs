@@ -7,16 +7,26 @@ namespace AgencyWebsite.Application.Features.BlogPosts.Queries.GetAllBlogPosts;
 
 public class GetAllBlogPostsQueryHandler : IRequestHandler<GetAllBlogPostsQuery, List<BlogPostDto>>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "blogposts:all";
 
-    public GetAllBlogPostsQueryHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public GetAllBlogPostsQueryHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<List<BlogPostDto>> Handle(GetAllBlogPostsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.BlogPosts
+        var cached = await _cache.GetAsync<List<BlogPostDto>>(CacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        var result = await _context.BlogPosts
             .Where(b => b.Status == BlogPostStatus.Published && !b.IsDeleted)
             .OrderByDescending(b => b.PublishedAt)
             .Select(b => new BlogPostDto
@@ -30,5 +40,9 @@ public class GetAllBlogPostsQueryHandler : IRequestHandler<GetAllBlogPostsQuery,
                 PublishedAt = b.PublishedAt
             })
             .ToListAsync(cancellationToken);
+
+        await _cache.SetAsync(CacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);
+
+        return result;
     }
 }

@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.BlogPosts.Commands.DeleteBlogPost;
 public class DeleteBlogPostCommandHandler : IRequestHandler<DeleteBlogPostCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public DeleteBlogPostCommandHandler(IAppDbContext context)
+    public DeleteBlogPostCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(DeleteBlogPostCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,9 @@ public class DeleteBlogPostCommandHandler : IRequestHandler<DeleteBlogPostComman
         blogPost.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("blogposts:all", cancellationToken);
+
         return Unit.Value;
     }
 }

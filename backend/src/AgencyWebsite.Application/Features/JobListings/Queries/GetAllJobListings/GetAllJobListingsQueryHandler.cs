@@ -7,16 +7,26 @@ namespace AgencyWebsite.Application.Features.JobListings.Queries.GetAllJobListin
 
 public class GetAllJobListingsQueryHandler : IRequestHandler<GetAllJobListingsQuery, List<JobListingDto>>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "joblistings:all";
 
-    public GetAllJobListingsQueryHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public GetAllJobListingsQueryHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<List<JobListingDto>> Handle(GetAllJobListingsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.JobListings
+        var cached = await _cache.GetAsync<List<JobListingDto>>(CacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        var result = await _context.JobListings
             .Where(j => j.Status == JobListingStatus.Open && !j.IsDeleted)
             .OrderByDescending(j => j.CreatedAt)
             .Select(j => new JobListingDto
@@ -29,5 +39,9 @@ public class GetAllJobListingsQueryHandler : IRequestHandler<GetAllJobListingsQu
                 EmploymentType = j.EmploymentType
             })
             .ToListAsync(cancellationToken);
+
+        await _cache.SetAsync(CacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);
+
+        return result;
     }
 }

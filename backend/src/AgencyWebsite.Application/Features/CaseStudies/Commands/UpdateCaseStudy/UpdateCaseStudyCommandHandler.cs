@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.CaseStudies.Commands.UpdateCaseStud
 public class UpdateCaseStudyCommandHandler : IRequestHandler<UpdateCaseStudyCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public UpdateCaseStudyCommandHandler(IAppDbContext context)
+    public UpdateCaseStudyCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateCaseStudyCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,9 @@ public class UpdateCaseStudyCommandHandler : IRequestHandler<UpdateCaseStudyComm
         caseStudy.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("casestudies:all", cancellationToken);
+
         return Unit.Value;
     }
 }

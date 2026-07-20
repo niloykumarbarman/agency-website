@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.ContactMessages.Commands.CreateCont
 public class CreateContactMessageCommandHandler : IRequestHandler<CreateContactMessageCommand, Guid>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public CreateContactMessageCommandHandler(IAppDbContext context)
+    public CreateContactMessageCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Guid> Handle(CreateContactMessageCommand request, CancellationToken cancellationToken)
@@ -27,6 +29,8 @@ public class CreateContactMessageCommandHandler : IRequestHandler<CreateContactM
 
         _context.ContactMessages.Add(message);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("contactmessages:all", cancellationToken);
 
         return message.Id;
     }

@@ -6,16 +6,26 @@ namespace AgencyWebsite.Application.Features.CaseStudies.Queries.GetAllCaseStudi
 
 public class GetAllCaseStudiesQueryHandler : IRequestHandler<GetAllCaseStudiesQuery, List<CaseStudyDto>>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "casestudies:all";
 
-    public GetAllCaseStudiesQueryHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public GetAllCaseStudiesQueryHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<List<CaseStudyDto>> Handle(GetAllCaseStudiesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.CaseStudies
+        var cached = await _cache.GetAsync<List<CaseStudyDto>>(CacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        var result = await _context.CaseStudies
             .Where(c => c.IsPublished && !c.IsDeleted)
             .OrderByDescending(c => c.CreatedAt)
             .Select(c => new CaseStudyDto
@@ -28,5 +38,9 @@ public class GetAllCaseStudiesQueryHandler : IRequestHandler<GetAllCaseStudiesQu
                 CoverImageUrl = c.CoverImageUrl
             })
             .ToListAsync(cancellationToken);
+
+        await _cache.SetAsync(CacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);
+
+        return result;
     }
 }
