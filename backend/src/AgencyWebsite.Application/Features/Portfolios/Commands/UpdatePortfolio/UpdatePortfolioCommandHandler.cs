@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.Portfolios.Commands.UpdatePortfolio
 public class UpdatePortfolioCommandHandler : IRequestHandler<UpdatePortfolioCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public UpdatePortfolioCommandHandler(IAppDbContext context)
+    public UpdatePortfolioCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdatePortfolioCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,10 @@ public class UpdatePortfolioCommandHandler : IRequestHandler<UpdatePortfolioComm
         portfolio.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("portfolios:all", cancellationToken);
+        await _cache.RemoveAsync("portfolios:featured", cancellationToken);
+
         return Unit.Value;
     }
 }

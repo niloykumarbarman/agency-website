@@ -6,16 +6,26 @@ namespace AgencyWebsite.Application.Features.ContactMessages.Queries.GetAllConta
 
 public class GetAllContactMessagesQueryHandler : IRequestHandler<GetAllContactMessagesQuery, List<ContactMessageDto>>
 {
-    private readonly IAppDbContext _context;
+    private const string CacheKey = "contactmessages:all";
 
-    public GetAllContactMessagesQueryHandler(IAppDbContext context)
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public GetAllContactMessagesQueryHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<List<ContactMessageDto>> Handle(GetAllContactMessagesQuery request, CancellationToken cancellationToken)
     {
-        return await _context.ContactMessages
+        var cached = await _cache.GetAsync<List<ContactMessageDto>>(CacheKey, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
+        var result = await _context.ContactMessages
             .Where(m => !m.IsDeleted)
             .OrderByDescending(m => m.CreatedAt)
             .Select(m => new ContactMessageDto
@@ -28,5 +38,9 @@ public class GetAllContactMessagesQueryHandler : IRequestHandler<GetAllContactMe
                 CreatedAt = m.CreatedAt
             })
             .ToListAsync(cancellationToken);
+
+        await _cache.SetAsync(CacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);
+
+        return result;
     }
 }

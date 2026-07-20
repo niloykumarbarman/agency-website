@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.ContactMessages.Commands.UpdateCont
 public class UpdateContactMessageStatusCommandHandler : IRequestHandler<UpdateContactMessageStatusCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public UpdateContactMessageStatusCommandHandler(IAppDbContext context)
+    public UpdateContactMessageStatusCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateContactMessageStatusCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,9 @@ public class UpdateContactMessageStatusCommandHandler : IRequestHandler<UpdateCo
         message.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("contactmessages:all", cancellationToken);
+
         return Unit.Value;
     }
 }

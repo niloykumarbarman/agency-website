@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.Portfolios.Commands.CreatePortfolio
 public class CreatePortfolioCommandHandler : IRequestHandler<CreatePortfolioCommand, Guid>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public CreatePortfolioCommandHandler(IAppDbContext context)
+    public CreatePortfolioCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Guid> Handle(CreatePortfolioCommand request, CancellationToken cancellationToken)
@@ -30,6 +32,9 @@ public class CreatePortfolioCommandHandler : IRequestHandler<CreatePortfolioComm
 
         _context.Portfolios.Add(portfolio);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("portfolios:all", cancellationToken);
+        await _cache.RemoveAsync("portfolios:featured", cancellationToken);
 
         return portfolio.Id;
     }

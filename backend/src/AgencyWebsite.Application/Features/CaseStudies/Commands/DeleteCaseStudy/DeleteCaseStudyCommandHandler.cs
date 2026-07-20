@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.CaseStudies.Commands.DeleteCaseStud
 public class DeleteCaseStudyCommandHandler : IRequestHandler<DeleteCaseStudyCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public DeleteCaseStudyCommandHandler(IAppDbContext context)
+    public DeleteCaseStudyCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(DeleteCaseStudyCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,9 @@ public class DeleteCaseStudyCommandHandler : IRequestHandler<DeleteCaseStudyComm
         caseStudy.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("casestudies:all", cancellationToken);
+
         return Unit.Value;
     }
 }

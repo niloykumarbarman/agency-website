@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.JobListings.Commands.UpdateJobListi
 public class UpdateJobListingCommandHandler : IRequestHandler<UpdateJobListingCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public UpdateJobListingCommandHandler(IAppDbContext context)
+    public UpdateJobListingCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateJobListingCommand request, CancellationToken cancellationToken)
@@ -30,6 +32,9 @@ public class UpdateJobListingCommandHandler : IRequestHandler<UpdateJobListingCo
         jobListing.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("joblistings:all", cancellationToken);
+
         return Unit.Value;
     }
 }

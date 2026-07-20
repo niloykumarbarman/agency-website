@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.JobListings.Commands.DeleteJobListi
 public class DeleteJobListingCommandHandler : IRequestHandler<DeleteJobListingCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public DeleteJobListingCommandHandler(IAppDbContext context)
+    public DeleteJobListingCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(DeleteJobListingCommand request, CancellationToken cancellationToken)
@@ -23,6 +25,9 @@ public class DeleteJobListingCommandHandler : IRequestHandler<DeleteJobListingCo
         jobListing.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("joblistings:all", cancellationToken);
+
         return Unit.Value;
     }
 }

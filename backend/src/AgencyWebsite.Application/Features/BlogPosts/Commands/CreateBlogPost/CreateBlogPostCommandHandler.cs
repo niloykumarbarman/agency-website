@@ -8,10 +8,12 @@ namespace AgencyWebsite.Application.Features.BlogPosts.Commands.CreateBlogPost;
 public class CreateBlogPostCommandHandler : IRequestHandler<CreateBlogPostCommand, Guid>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public CreateBlogPostCommandHandler(IAppDbContext context)
+    public CreateBlogPostCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Guid> Handle(CreateBlogPostCommand request, CancellationToken cancellationToken)
@@ -30,6 +32,8 @@ public class CreateBlogPostCommandHandler : IRequestHandler<CreateBlogPostComman
 
         _context.BlogPosts.Add(blogPost);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("blogposts:all", cancellationToken);
 
         return blogPost.Id;
     }

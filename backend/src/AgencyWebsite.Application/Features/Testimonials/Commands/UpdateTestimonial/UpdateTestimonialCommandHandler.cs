@@ -7,10 +7,12 @@ namespace AgencyWebsite.Application.Features.Testimonials.Commands.UpdateTestimo
 public class UpdateTestimonialCommandHandler : IRequestHandler<UpdateTestimonialCommand, Unit>
 {
     private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
 
-    public UpdateTestimonialCommandHandler(IAppDbContext context)
+    public UpdateTestimonialCommandHandler(IAppDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Unit> Handle(UpdateTestimonialCommand request, CancellationToken cancellationToken)
@@ -29,6 +31,10 @@ public class UpdateTestimonialCommandHandler : IRequestHandler<UpdateTestimonial
         testimonial.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("testimonials:all", cancellationToken);
+        await _cache.RemoveAsync("testimonials:featured", cancellationToken);
+
         return Unit.Value;
     }
 }
