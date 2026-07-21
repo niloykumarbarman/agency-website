@@ -4,7 +4,7 @@ const FOOTER_LINKS = {
   Company: [
     { href: "/about", label: "About" },
     { href: "#work", label: "Work" },
-    { href: "#contact", label: "Contact" },
+    { href: "/contact", label: "Contact" },
   ],
   Services: [
     { href: "#services", label: "Platform engineering" },

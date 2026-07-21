@@ -36,7 +36,7 @@ export default function Navbar() {
         </ul>
 
         <Link
-          href="#contact"
+          href="/contact"
           className="hidden rounded-sm bg-ink px-5 py-2.5 font-mono text-sm text-paper transition-colors hover:bg-signal md:inline-block"
         >
           Start a project
@@ -69,7 +69,7 @@ export default function Navbar() {
             ))}
             <li className="pt-2">
               <Link
-                href="#contact"
+                href="/contact"
                 onClick={() => setOpen(false)}
                 className="block rounded-sm bg-ink px-5 py-2.5 text-center font-mono text-sm text-paper"
               >

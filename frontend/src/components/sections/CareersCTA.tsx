@@ -48,7 +48,7 @@ export default function CareersCTA() {
           className="mt-8"
         >
           <Link
-            href="/#contact"
+            href="/contact"
             className="inline-flex items-center gap-2 bg-signal px-8 py-3.5 font-mono text-sm uppercase tracking-wide text-paper shadow-[0_0_40px_-10px_var(--color-signal)] transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
           >
             Get in touch

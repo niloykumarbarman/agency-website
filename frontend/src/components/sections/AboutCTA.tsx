@@ -40,7 +40,7 @@ export default function AboutCTA() {
         </p>
 
         <Link
-          href="/#contact"
+          href="/contact"
           className="group mt-9 inline-flex items-center gap-2 rounded-lg bg-signal px-7 py-3.5 font-medium text-paper shadow-[0_0_24px_-6px_var(--color-signal)] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_32px_-4px_var(--color-signal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/50 focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         >
           Get in touch
