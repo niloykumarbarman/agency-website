@@ -1,80 +1,59 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { fetchCaseStudies, type CaseStudy } from "@/lib/caseStudies";
 
-type CaseStudy = {
-  client: string;
-  industry: string;
-  title: string;
-  problem: string;
-  approach: string;
-  result: string;
-  metric: string;
-  metricLabel: string;
-  tags: string[];
-};
+const ILLUSTRATIVE_SUFFIX = " (Illustrative Example)";
 
-const CASE_STUDIES: CaseStudy[] = [
-  {
-    client: "Meridian Logistics",
-    industry: "Logistics & Fleet Management",
-    title: "Rebuilding dispatch without a single missed delivery window",
-    problem:
-      "A 12-year-old monolith could not handle real-time dispatch at scale. Peak-hour requests were timing out, and every deploy risked downtime during active routes.",
-    approach:
-      "We decomposed the monolith into bounded services, introduced Redis-backed caching for hot routing data, and shipped changes behind feature flags with zero-downtime rollout.",
-    result:
-      "The new platform handled peak load with room to spare, and deploys became routine instead of risky.",
-    metric: "99.95%",
-    metricLabel: "Uptime after rollout",
-    tags: ["ASP.NET Core", "PostgreSQL", "Redis"],
-  },
-  {
-    client: "Northbridge Health",
-    industry: "Healthcare",
-    title: "Moving patient records to the cloud without losing a single record",
-    problem:
-      "A legacy on-premise records system had no audit trail, no realistic disaster-recovery path, and staff were manually reconciling records between two systems during outages.",
-    approach:
-      "We ran a staged, reversible migration to a cloud-native architecture, verifying data integrity at every checkpoint before decommissioning legacy components, with full audit logging built in from the start.",
-    result:
-      "The migration completed with zero downtime and zero data loss, and the system now produces a complete, queryable audit trail for every record access.",
-    metric: "0",
-    metricLabel: "Downtime minutes during migration",
-    tags: ["Cloud Migration", "Audit Logging", "PostgreSQL"],
-  },
-  {
-    client: "Verity Payments",
-    industry: "Financial Services",
-    title: "Six banking partners, one settlement API, zero double charges",
-    problem:
-      "Manual reconciliation across six banking partners was error-prone and slow, and a prior integration attempt had caused duplicate settlements under load.",
-    approach:
-      "We designed a contract-first API with strict idempotency keys, per-partner rate limiting, and full audit logging on every settlement event.",
-    result:
-      "Reconciliation time dropped from days to minutes, with a complete audit trail for every transaction.",
-    metric: "0",
-    metricLabel: "Duplicate settlements since launch",
-    tags: ["REST API", "JWT Auth", "Rate Limiting"],
-  },
-  {
-    client: "Anchorpoint",
-    industry: "Internal Platform",
-    title: "This website, built with the same standard we sell",
-    problem:
-      "A portfolio site with fabricated claims and generic stock content would not hold up to scrutiny from technical clients evaluating an engineering studio.",
-    approach:
-      "We built the entire platform — backend and frontend — using the identical architecture, security defaults, and caching strategy applied to client work, and kept the commit history public so anyone can verify it.",
-    result:
-      "A live, verifiable system: working JWT auth with rotation, Redis cache-aside on every entity, and a linear git history anyone can read.",
-    metric: "100%",
-    metricLabel: "Of claims backed by running code",
-    tags: ["Next.js", "ASP.NET Core", "Redis"],
-  },
-];
+function splitClientName(clientName: string): {
+  name: string;
+  isIllustrative: boolean;
+} {
+  if (clientName.endsWith(ILLUSTRATIVE_SUFFIX)) {
+    return {
+      name: clientName.slice(0, -ILLUSTRATIVE_SUFFIX.length),
+      isIllustrative: true,
+    };
+  }
+  return { name: clientName, isIllustrative: false };
+}
+
+function truncate(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength).trimEnd()}...`;
+}
 
 export default function PortfolioCaseStudies() {
   const shouldReduceMotion = useReducedMotion();
+  const [studies, setStudies] = useState<CaseStudy[]>([]);
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading"
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchCaseStudies()
+      .then((data) => {
+        if (!cancelled) {
+          setStudies(data);
+          setStatus("success");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStatus("error");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const fadeUp = (i: number) =>
     shouldReduceMotion
@@ -83,7 +62,7 @@ export default function PortfolioCaseStudies() {
           initial: { opacity: 0, y: 24 },
           whileInView: { opacity: 1, y: 0 },
           viewport: { once: true, margin: "-60px" },
-          transition: { duration: 0.5, delay: (i % 4) * 0.08 },
+          transition: { duration: 0.5, delay: (i % 6) * 0.08 },
         };
 
   return (
@@ -97,71 +76,87 @@ export default function PortfolioCaseStudies() {
       />
 
       <div className="relative mx-auto max-w-6xl px-6">
-        <div className="flex flex-col gap-px overflow-hidden rounded-xl border border-ink/10 bg-ink/10">
-          {CASE_STUDIES.map((study, i) => (
-            <motion.article
-              key={study.client}
-              {...fadeUp(i)}
-              className="grid gap-10 bg-paper p-8 md:grid-cols-[2fr_1fr] md:p-12"
-            >
-              <div>
-                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-signal">
-                  {study.industry} — {study.client}
-                </p>
-                <h2 className="mt-3 text-2xl font-semibold leading-snug tracking-tight text-graphite sm:text-3xl">
-                  {study.title}
-                </h2>
+        {status === "loading" && (
+          <p className="font-mono text-sm text-graphite">
+            Loading portfolio...
+          </p>
+        )}
 
-                <div className="mt-8 grid gap-6 sm:grid-cols-3">
-                  <div>
-                    <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ember">
-                      Problem
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed text-graphite/70">
-                      {study.problem}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ember">
-                      Approach
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed text-graphite/70">
-                      {study.approach}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-ember">
-                      Result
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed text-graphite/70">
-                      {study.result}
-                    </p>
-                  </div>
-                </div>
+        {status === "error" && (
+          <p className="font-mono text-sm text-graphite">
+            We could not load the portfolio right now. Please try again
+            later.
+          </p>
+        )}
 
-                <ul className="mt-6 flex flex-wrap gap-2">
-                  {study.tags.map((tag) => (
-                    <li
-                      key={tag}
-                      className="rounded-sm border border-ink/10 px-2.5 py-1 font-mono text-[0.6875rem] text-graphite/60"
-                    >
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        {status === "success" && studies.length === 0 && (
+          <div className="border border-ink/10 bg-ink/[0.02] px-8 py-14 text-center">
+            <p className="font-display text-xl text-ink">
+              No projects published yet
+            </p>
+            <p className="mx-auto mt-3 max-w-md text-graphite">
+              We are documenting our first engagements. Check back soon.
+            </p>
+          </div>
+        )}
 
-              <div className="flex flex-col justify-center border-t border-ink/10 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
-                <p className="text-5xl font-semibold tabular-nums text-signal">
-                  {study.metric}
-                </p>
-                <p className="mt-2 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-graphite/45">
-                  {study.metricLabel}
-                </p>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+        {status === "success" && studies.length > 0 && (
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {studies.map((study, i) => {
+              const { name, isIllustrative } = splitClientName(
+                study.clientName
+              );
+
+              return (
+                <motion.article
+                  key={study.id}
+                  {...fadeUp(i)}
+                  className="group flex flex-col overflow-hidden rounded-xl border border-ink/10 bg-paper transition-colors duration-300 hover:border-ink/25"
+                >
+                  <Link href="/case-studies" className="flex flex-1 flex-col">
+                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-graphite/10">
+                      {study.coverImageUrl && (
+                        <Image
+                          src={study.coverImageUrl}
+                          alt={study.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      )}
+                    </div>
+
+                    <div className="flex flex-1 flex-col p-6">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-signal">
+                          {study.industry} — {name}
+                        </p>
+                        {isIllustrative && (
+                          <span className="rounded-sm border border-ember/30 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-ember">
+                            Illustrative Example
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="mt-3 font-display text-xl font-semibold leading-snug tracking-tight text-graphite">
+                        {study.title}
+                      </h3>
+
+                      <p className="mt-3 flex-1 text-sm leading-relaxed text-graphite/70">
+                        {truncate(study.results, 140)}
+                      </p>
+
+                      <span className="mt-6 inline-flex items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-graphite/50 transition-colors group-hover:text-ember">
+                        View full case study
+                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
+                  </Link>
+                </motion.article>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

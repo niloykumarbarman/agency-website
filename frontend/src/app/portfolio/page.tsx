@@ -8,7 +8,7 @@ import PortfolioCTA from "@/components/sections/PortfolioCTA";
 export const metadata: Metadata = {
   title: "Portfolio | Anchorpoint",
   description:
-    "Detailed case studies covering fleet dispatch, healthcare records migration, multi-bank payment settlement, and this platform itself.",
+    "A visual look at the systems we have shipped — browse the portfolio and open any project for the full case study.",
 };
 
 export default function PortfolioPage() {

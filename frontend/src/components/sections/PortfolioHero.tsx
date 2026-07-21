@@ -40,16 +40,16 @@ export default function PortfolioHero() {
           {...fadeUp(1)}
           className="mt-6 text-balance text-4xl font-semibold leading-tight md:text-6xl"
         >
-          Four systems. <span className="text-signal">Four hard problems.</span>
+          Real systems. <span className="text-signal">Real constraints.</span>
         </motion.h1>
 
         <motion.p
           {...fadeUp(2)}
           className="mx-auto mt-6 max-w-2xl text-lg text-paper/70"
         >
-          Every project below is a system that had to work correctly the
-          first time, with real constraints around uptime, compliance, and
-          data integrity.
+          A visual look at engagements that had to work correctly the first
+          time, with real constraints around uptime, compliance, and data
+          integrity. Open any project for the full breakdown.
         </motion.p>
       </div>
     </section>
