@@ -7,6 +7,7 @@ const FOOTER_LINKS = {
     { href: "/industries", label: "Industries" },
     { href: "/technologies", label: "Technologies" },
     { href: "/#work", label: "Work" },
+    { href: "/case-studies", label: "Case Studies" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
   ],
