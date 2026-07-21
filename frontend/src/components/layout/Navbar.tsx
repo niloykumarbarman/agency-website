@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/#services", label: "Services" },
   { href: "/solutions", label: "Solutions" },
   { href: "/industries", label: "Industries" },
+  { href: "/technologies", label: "Technologies" },
   { href: "/#process", label: "Process" },
   { href: "/#work", label: "Work" },
   { href: "/about", label: "About" },
