@@ -35,6 +35,9 @@ public class GetAllCaseStudiesQueryHandler : IRequestHandler<GetAllCaseStudiesQu
                 Slug = c.Slug,
                 ClientName = c.ClientName,
                 Industry = c.Industry,
+                Challenge = c.Challenge,
+                Solution = c.Solution,
+                Results = c.Results,
                 CoverImageUrl = c.CoverImageUrl
             })
             .ToListAsync(cancellationToken);
