@@ -10,6 +10,7 @@ const FOOTER_LINKS = {
     { href: "/case-studies", label: "Case Studies" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
+    { href: "/book-consultation", label: "Book Consultation" },
   ],
   Services: [
     { href: "/#services", label: "Platform engineering" },
