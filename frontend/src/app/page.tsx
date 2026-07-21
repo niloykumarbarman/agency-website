@@ -5,6 +5,7 @@ import Services from "@/components/sections/Services";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import Process from "@/components/sections/Process";
 import Technologies from "@/components/sections/Technologies";
+import Portfolio from "@/components/sections/Portfolio";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <WhyChooseUs />
         <Process />
         <Technologies />
+        <Portfolio />
       </main>
       <Footer />
     </>
