@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { User, CalendarDays } from "lucide-react";
@@ -101,6 +102,7 @@ export default function BlogPostList() {
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   className="flex flex-col bg-paper"
                 >
+                  <Link href={`/blog/${post.slug}`} className="flex flex-1 flex-col">
                   <div className="relative aspect-[16/9] w-full overflow-hidden bg-graphite/10">
                     {post.coverImageUrl && (
                       <Image
@@ -133,6 +135,7 @@ export default function BlogPostList() {
                       </span>
                     </div>
                   </div>
+                  </Link>
                 </motion.article>
               ))}
             </div>
