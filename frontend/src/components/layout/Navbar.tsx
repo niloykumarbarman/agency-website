@@ -5,10 +5,10 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { href: "#services", label: "Services" },
-  { href: "#process", label: "Process" },
-  { href: "#work", label: "Work" },
-  { href: "#about", label: "About" },
+  { href: "/#services", label: "Services" },
+  { href: "/#process", label: "Process" },
+  { href: "/#work", label: "Work" },
+  { href: "/about", label: "About" },
 ];
 
 export default function Navbar() {
