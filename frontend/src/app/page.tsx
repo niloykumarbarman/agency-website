@@ -9,6 +9,7 @@ import Portfolio from "@/components/sections/Portfolio";
 import CaseStudies from "@/components/sections/CaseStudies";
 import TrustGuarantees from "@/components/sections/TrustGuarantees";
 import FAQ from "@/components/sections/FAQ";
+import Contact from "@/components/sections/Contact";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
         <CaseStudies />
         <TrustGuarantees />
         <FAQ />
+      <Contact />
       </main>
       <Footer />
     </>
