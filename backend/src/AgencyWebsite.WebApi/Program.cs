@@ -58,6 +58,15 @@ builder.Services.AddScoped<ICacheService, RedisCacheService>();
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()
     ?? throw new InvalidOperationException("JwtSettings configuration section is missing.");
 
+if (string.IsNullOrWhiteSpace(jwtSettings.SecretKey) || jwtSettings.SecretKey.Length < 32)
+{
+    throw new InvalidOperationException(
+        "JwtSettings:SecretKey is missing or too short (needs 32+ characters). " +
+        "For local development, set it via: dotnet user-secrets set \"JwtSettings:SecretKey\" \"<your-secret>\" " +
+        "(run from backend/src/AgencyWebsite.WebApi). For production, set the JwtSettings__SecretKey environment " +
+        "variable or inject it via your secret manager. See backend/SECRETS.md for details.");
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
