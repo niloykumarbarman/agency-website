@@ -15,5 +15,6 @@ public interface IAppDbContext
     DbSet<Admin> Admins { get; }
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
+    DbSet<ConsultationRequest> ConsultationRequests { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

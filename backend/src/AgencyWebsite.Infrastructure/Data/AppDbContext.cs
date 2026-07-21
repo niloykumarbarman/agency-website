@@ -20,6 +20,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Admin> Admins => Set<Admin>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<ConsultationRequest> ConsultationRequests => Set<ConsultationRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
