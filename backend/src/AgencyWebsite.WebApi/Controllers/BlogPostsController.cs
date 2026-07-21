@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.BlogPosts.Commands.CreateBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Commands.DeleteBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Commands.UpdateBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Queries.GetAllBlogPosts;
+using AgencyWebsite.Application.Features.BlogPosts.Queries.GetBlogPostBySlug;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ public class BlogPostsController : ControllerBase
     public async Task<ActionResult<List<BlogPostDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllBlogPostsQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{slug}")]
+    public async Task<ActionResult<BlogPostDetailDto>> GetBySlug(string slug, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetBlogPostBySlugQuery { Slug = slug }, cancellationToken);
+        if (result is null) return NotFound();
         return Ok(result);
     }
 
