@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/technologies", label: "Technologies" },
   { href: "/#process", label: "Process" },
   { href: "/#work", label: "Work" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/case-studies", label: "Case Studies" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
