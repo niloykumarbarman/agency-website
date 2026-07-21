@@ -8,6 +8,7 @@ const FOOTER_LINKS = {
     { href: "/technologies", label: "Technologies" },
     { href: "/#work", label: "Work" },
     { href: "/contact", label: "Contact" },
+    { href: "/blog", label: "Blog" },
   ],
   Services: [
     { href: "/#services", label: "Platform engineering" },
