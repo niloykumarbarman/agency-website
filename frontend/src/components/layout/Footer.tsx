@@ -3,6 +3,7 @@ import Link from "next/link";
 const FOOTER_LINKS = {
   Company: [
     { href: "/about", label: "About" },
+    { href: "/solutions", label: "Solutions" },
     { href: "/#work", label: "Work" },
     { href: "/contact", label: "Contact" },
   ],
