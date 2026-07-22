@@ -69,7 +69,7 @@ export default function AboutPrinciples() {
           {...fadeUp(1)}
           className="mt-4 max-w-2xl text-balance text-3xl font-semibold leading-tight md:text-4xl"
         >
-          How Anchorpoint <span className="text-signal">actually works.</span>
+          How Ferrowave <span className="text-signal">actually works.</span>
         </motion.h2>
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-xl bg-paper/10 sm:grid-cols-2">

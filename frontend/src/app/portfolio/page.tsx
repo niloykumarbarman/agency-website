@@ -6,7 +6,7 @@ import PortfolioCaseStudies from "@/components/sections/PortfolioCaseStudies";
 import PortfolioCTA from "@/components/sections/PortfolioCTA";
 
 export const metadata: Metadata = {
-  title: "Portfolio | Anchorpoint",
+  title: "Portfolio | Ferrowave",
   description:
     "A visual look at the systems we have shipped — browse the portfolio and open any project for the full case study.",
 };

@@ -5,9 +5,9 @@ import PrivacyHero from "@/components/sections/PrivacyHero";
 import PrivacyContent from "@/components/sections/PrivacyContent";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Anchorpoint",
+  title: "Privacy Policy | Ferrowave",
   description:
-    "How Anchorpoint collects, uses, and protects your information.",
+    "How Ferrowave collects, uses, and protects your information.",
 };
 
 export default function PrivacyPage() {

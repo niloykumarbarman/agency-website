@@ -30,7 +30,7 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
             <p className="font-display text-lg font-semibold">
-              Anchorpoint<span className="text-signal">.</span>
+              Ferrowave<span className="text-signal">.</span>
             </p>
             <p className="mt-3 max-w-xs text-sm text-paper/60">
               We architect and build the software systems enterprise teams
@@ -60,7 +60,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col gap-4 border-t border-paper/10 pt-8 font-mono text-xs text-paper/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} Anchorpoint Systems. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Ferrowave Systems. All rights reserved.</p>
           <p>Built with Next.js &amp; ASP.NET Core</p>
         </div>
       </div>

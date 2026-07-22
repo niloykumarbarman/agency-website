@@ -6,7 +6,7 @@ import CaseStudiesList from "@/components/sections/CaseStudiesList";
 import CaseStudiesCTA from "@/components/sections/CaseStudiesCTA";
 
 export const metadata: Metadata = {
-  title: "Case Studies | Anchorpoint",
+  title: "Case Studies | Ferrowave",
   description:
     "How we approach hard engineering problems, from the constraint we started with to the system running in production today.",
 };

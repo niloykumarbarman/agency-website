@@ -6,9 +6,9 @@ import SolutionsDetailList from "@/components/sections/SolutionsDetailList";
 import SolutionsCTA from "@/components/sections/SolutionsCTA";
 
 export const metadata: Metadata = {
-  title: "Solutions | Anchorpoint",
+  title: "Solutions | Ferrowave",
   description:
-    "Outcome-focused solutions from Anchorpoint: custom software, modernization, cloud, data, and AI integration.",
+    "Outcome-focused solutions from Ferrowave: custom software, modernization, cloud, data, and AI integration.",
 };
 
 export default function SolutionsPage() {

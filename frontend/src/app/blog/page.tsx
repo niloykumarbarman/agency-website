@@ -6,7 +6,7 @@ import BlogPostList from "@/components/sections/BlogPostList";
 import BlogCTA from "@/components/sections/BlogCTA";
 
 export const metadata: Metadata = {
-  title: "Blog | Anchorpoint",
+  title: "Blog | Ferrowave",
   description:
     "Engineering practices, architecture decisions, and lessons from building enterprise systems.",
 };

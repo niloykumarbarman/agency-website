@@ -6,9 +6,9 @@ import TechnologiesDetailList from "@/components/sections/TechnologiesDetailList
 import TechnologiesCTA from "@/components/sections/TechnologiesCTA";
 
 export const metadata: Metadata = {
-  title: "Technologies | Anchorpoint",
+  title: "Technologies | Ferrowave",
   description:
-    "The tools and platforms Anchorpoint relies on to build reliable, secure, and maintainable software.",
+    "The tools and platforms Ferrowave relies on to build reliable, secure, and maintainable software.",
 };
 
 export default function TechnologiesPage() {

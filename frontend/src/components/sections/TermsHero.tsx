@@ -43,7 +43,7 @@ export default function TermsHero() {
           className="mt-6 max-w-2xl text-lg text-wire"
         >
           These terms govern your use of this website and, where applicable,
-          the services Anchorpoint provides. Please read them carefully.
+          the services Ferrowave provides. Please read them carefully.
         </motion.p>
 
         <motion.p

@@ -44,18 +44,18 @@ export default function BookConsultationCTA() {
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <a
-            href="mailto:hello@anchorpoint.dev"
+            href="mailto:niloybarman611@gmail.com"
             className="group inline-flex items-center gap-2 rounded-lg border border-wire/30 bg-paper/5 px-6 py-3 font-medium text-paper transition-all hover:-translate-y-0.5 hover:border-signal/50 hover:bg-paper/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             <Mail className="h-4 w-4 text-signal" />
-            hello@anchorpoint.dev
+            niloybarman611@gmail.com
           </a>
           <a
-            href="tel:+15550000000"
+            href="tel:+8801766644823"
             className="group inline-flex items-center gap-2 rounded-lg border border-wire/30 bg-paper/5 px-6 py-3 font-medium text-paper transition-all hover:-translate-y-0.5 hover:border-signal/50 hover:bg-paper/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             <Phone className="h-4 w-4 text-signal" />
-            +1 555 000 0000
+            +880 1766-644823
           </a>
         </motion.div>
       </div>

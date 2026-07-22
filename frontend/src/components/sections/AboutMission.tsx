@@ -38,12 +38,12 @@ export default function AboutMission() {
           className="mt-4 text-balance text-3xl font-semibold leading-tight text-graphite md:text-4xl"
         >
           Most agencies sell a team.{" "}
-          <span className="text-signal">Anchorpoint sells a standard.</span>
+          <span className="text-signal">Ferrowave sells a standard.</span>
         </motion.h2>
 
         <motion.div {...fadeUp(2)} className="mt-6 space-y-4 text-lg text-graphite/70">
           <p>
-            Anchorpoint started from a simple frustration: enterprise clients
+            Ferrowave started from a simple frustration: enterprise clients
             are routinely sold &ldquo;best practices&rdquo; that never make it
             past the sales deck &mdash; rate-limited auth that isn&apos;t
             actually rate-limited, audit logs that don&apos;t audit anything,
