@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { buildMetadata, organizationJsonLd, siteConfig } from "@/lib/seo";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -21,9 +22,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ferrowave — Enterprise Software Engineering",
-  description:
-    "Ferrowave designs and builds production-grade software systems for enterprise teams: APIs, platforms, and the infrastructure that holds them together.",
+  metadataBase: new URL(siteConfig.url),
+  ...buildMetadata({
+    title: "Ferrowave — Enterprise Software Engineering",
+    description: siteConfig.description,
+    path: "",
+  }),
 };
 
 export default function RootLayout({
@@ -38,6 +42,12 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-graphite">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd()),
+          }}
+        />
         {children}
       </body>
     </html>

@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CaseStudiesHero from "@/components/sections/CaseStudiesHero";
 import CaseStudiesList from "@/components/sections/CaseStudiesList";
 import CaseStudiesCTA from "@/components/sections/CaseStudiesCTA";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Case Studies | Ferrowave",
   description:
     "How we approach hard engineering problems, from the constraint we started with to the system running in production today.",
-};
+  path: "/case-studies",
+});
 
 export default function CaseStudiesPage() {
   return (
