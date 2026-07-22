@@ -6,9 +6,9 @@ import BookConsultationForm from "@/components/sections/BookConsultationForm";
 import BookConsultationCTA from "@/components/sections/BookConsultationCTA";
 
 export const metadata: Metadata = {
-  title: "Book a Consultation | Anchorpoint",
+  title: "Book a Consultation | Ferrowave",
   description:
-    "Book a free consultation with Anchorpoint. Tell us about your project and preferred timing, and one of our engineers will reach out to schedule a focused session.",
+    "Book a free consultation with Ferrowave. Tell us about your project and preferred timing, and one of our engineers will reach out to schedule a focused session.",
 };
 
 export default function BookConsultationPage() {

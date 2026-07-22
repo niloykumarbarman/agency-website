@@ -6,9 +6,9 @@ import IndustriesDetailList from "@/components/sections/IndustriesDetailList";
 import IndustriesCTA from "@/components/sections/IndustriesCTA";
 
 export const metadata: Metadata = {
-  title: "Industries | Anchorpoint",
+  title: "Industries | Ferrowave",
   description:
-    "Industries where Anchorpoint has built the deepest domain context: FinTech, Healthcare, E-commerce, Logistics, SaaS, and EdTech.",
+    "Industries where Ferrowave has built the deepest domain context: FinTech, Healthcare, E-commerce, Logistics, SaaS, and EdTech.",
 };
 
 export default function IndustriesPage() {

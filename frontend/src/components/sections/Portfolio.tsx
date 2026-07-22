@@ -37,7 +37,7 @@ const PROJECTS: Project[] = [
     tags: ["REST API", "JWT Auth", "Rate Limiting"],
   },
   {
-    client: "Anchorpoint",
+    client: "Ferrowave",
     category: "Internal Platform",
     title: "This website and its backend platform",
     description:

@@ -6,9 +6,9 @@ import CareersJobList from "@/components/sections/CareersJobList";
 import CareersCTA from "@/components/sections/CareersCTA";
 
 export const metadata: Metadata = {
-  title: "Careers | Anchorpoint",
+  title: "Careers | Ferrowave",
   description:
-    "Join Anchorpoint. See our current openings or reach out even if there isn't a role listed right now.",
+    "Join Ferrowave. See our current openings or reach out even if there isn't a role listed right now.",
 };
 
 export default function CareersPage() {

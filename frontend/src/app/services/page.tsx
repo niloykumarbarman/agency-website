@@ -6,7 +6,7 @@ import ServicesDetailList from "@/components/sections/ServicesDetailList";
 import ServicesCTA from "@/components/sections/ServicesCTA";
 
 export const metadata: Metadata = {
-  title: "Services | Anchorpoint",
+  title: "Services | Ferrowave",
   description:
     "Platform engineering, API design, system migration, cloud infrastructure, security engineering, and performance engineering — scoped in detail.",
 };

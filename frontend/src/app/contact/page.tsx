@@ -5,9 +5,9 @@ import ContactHero from "@/components/sections/ContactHero";
 import ContactForm from "@/components/sections/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact | Anchorpoint",
+  title: "Contact | Ferrowave",
   description:
-    "Tell Anchorpoint about your project. We respond within 48 hours with a clear, honest read on scope, timeline, and approach.",
+    "Tell Ferrowave about your project. We respond within 48 hours with a clear, honest read on scope, timeline, and approach.",
 };
 
 export default function ContactPage() {

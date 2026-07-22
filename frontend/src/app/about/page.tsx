@@ -7,9 +7,9 @@ import AboutPrinciples from "@/components/sections/AboutPrinciples";
 import AboutCTA from "@/components/sections/AboutCTA";
 
 export const metadata: Metadata = {
-  title: "About | Anchorpoint",
+  title: "About | Ferrowave",
   description:
-    "Anchorpoint is a founder-led software engineering studio built on production-grade security, transparency, and real engineering standards.",
+    "Ferrowave is a founder-led software engineering studio built on production-grade security, transparency, and real engineering standards.",
 };
 
 export default function AboutPage() {

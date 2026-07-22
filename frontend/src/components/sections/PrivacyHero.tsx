@@ -42,7 +42,7 @@ export default function PrivacyHero() {
           transition={{ duration: 0.5, delay: 0.16 }}
           className="mt-6 max-w-2xl text-lg text-wire"
         >
-          This policy explains what information Anchorpoint collects, why we
+          This policy explains what information Ferrowave collects, why we
           collect it, and the choices you have. No jargon, no hidden clauses.
         </motion.p>
 

@@ -18,11 +18,11 @@ export async function generateMetadata({
   const post = await fetchBlogPostBySlug(slug);
 
   if (!post) {
-    return { title: "Article not found | Anchorpoint" };
+    return { title: "Article not found | Ferrowave" };
   }
 
   return {
-    title: `${post.title} | Anchorpoint`,
+    title: `${post.title} | Ferrowave`,
     description: post.excerpt,
   };
 }

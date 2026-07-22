@@ -77,7 +77,7 @@ export default function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-paper/70">
-            Anchorpoint designs, builds, and hardens production software for
+            Ferrowave designs, builds, and hardens production software for
             enterprise teams — APIs, platforms, and the infrastructure that
             keeps them connected under real load.
           </p>

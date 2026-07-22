@@ -48,7 +48,7 @@ export default function AboutHero() {
           {...fadeUp(2)}
           className="mx-auto mt-6 max-w-2xl text-lg text-paper/70"
         >
-          Anchorpoint is built and led by Niloy Kumar Barman — a software
+          Ferrowave is built and led by Niloy Kumar Barman — a software
           engineer who believes enterprise clients deserve the same security,
           transparency, and engineering rigor that large teams promise but
           rarely deliver in full.

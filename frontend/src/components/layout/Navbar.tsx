@@ -25,7 +25,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-wire/60 bg-paper/90 backdrop-blur-sm">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="font-display text-lg font-semibold tracking-tight text-ink">
-          Anchorpoint
+          Ferrowave
           <span className="ml-0.5 text-signal">.</span>
         </Link>
 

@@ -12,19 +12,19 @@ const sections = [
   {
     title: "Use of the Website",
     body: [
-      "This website and its content are provided for informational purposes about Anchorpoint's services. You agree not to misuse the site, attempt unauthorized access to any systems, or interfere with its normal operation.",
+      "This website and its content are provided for informational purposes about Ferrowave's services. You agree not to misuse the site, attempt unauthorized access to any systems, or interfere with its normal operation.",
     ],
   },
   {
     title: "Intellectual Property",
     body: [
-      "All content on this website, including text, graphics, logos, and design, is the property of Anchorpoint unless otherwise stated, and may not be reproduced or distributed without prior written permission.",
+      "All content on this website, including text, graphics, logos, and design, is the property of Ferrowave unless otherwise stated, and may not be reproduced or distributed without prior written permission.",
     ],
   },
   {
     title: "Service Engagements",
     body: [
-      "Any project work, deliverables, timelines, and fees are governed by a separate written agreement between Anchorpoint and the client, entered into after a scoping and consultation process. These website terms do not by themselves constitute a service contract.",
+      "Any project work, deliverables, timelines, and fees are governed by a separate written agreement between Ferrowave and the client, entered into after a scoping and consultation process. These website terms do not by themselves constitute a service contract.",
     ],
   },
   {
@@ -42,13 +42,13 @@ const sections = [
   {
     title: "Limitation of Liability",
     body: [
-      "To the extent permitted by law, Anchorpoint is not liable for any indirect, incidental, or consequential damages arising from your use of this website.",
+      "To the extent permitted by law, Ferrowave is not liable for any indirect, incidental, or consequential damages arising from your use of this website.",
     ],
   },
   {
     title: "External Links",
     body: [
-      "This site may link to third-party websites. Anchorpoint is not responsible for the content or practices of those external sites.",
+      "This site may link to third-party websites. Ferrowave is not responsible for the content or practices of those external sites.",
     ],
   },
   {

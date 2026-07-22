@@ -71,7 +71,7 @@ export default function WhyChooseUs() {
           className="max-w-2xl"
         >
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
-            /why-anchorpoint
+            /why-ferrowave
           </p>
           <h2 className="mt-5 text-balance font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             Built by people who{" "}

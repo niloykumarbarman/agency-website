@@ -21,9 +21,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Anchorpoint — Enterprise Software Engineering",
+  title: "Ferrowave — Enterprise Software Engineering",
   description:
-    "Anchorpoint designs and builds production-grade software systems for enterprise teams: APIs, platforms, and the infrastructure that holds them together.",
+    "Ferrowave designs and builds production-grade software systems for enterprise teams: APIs, platforms, and the infrastructure that holds them together.",
 };
 
 export default function RootLayout({
