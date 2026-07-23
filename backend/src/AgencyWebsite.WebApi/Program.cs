@@ -157,6 +157,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRateLimiter();
 app.UseCors("FrontendPolicy");
 app.UseAuthentication();

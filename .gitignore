@@ -22,3 +22,7 @@ Thumbs.db
 
 # Docker
 *.log
+
+# Uploaded media files (local file storage) — keep folder via .gitkeep, ignore contents
+backend/src/AgencyWebsite.WebApi/wwwroot/uploads/*
+!backend/src/AgencyWebsite.WebApi/wwwroot/uploads/.gitkeep
