@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Trash2, Loader2, RefreshCw, Plus, X, Pencil } from "lucide-react";
+import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, BookOpenText } from "lucide-react";
 import {
   fetchAdminCaseStudies,
   createCaseStudy,
@@ -22,6 +22,10 @@ const EMPTY_FORM: CaseStudyFormPayload = {
   coverImageUrl: "",
   isPublished: false,
 };
+
+const inputClass =
+  "mt-1 w-full rounded-lg border border-graphite/15 px-3 py-2.5 text-sm outline-none transition focus:border-signal focus:ring-2 focus:ring-signal/10";
+const labelClass = "block font-mono text-xs uppercase tracking-wider text-graphite/50";
 
 export default function AdminCaseStudiesPage() {
   const [items, setItems] = useState<AdminCaseStudy[]>([]);
@@ -126,14 +130,14 @@ export default function AdminCaseStudiesPage() {
           <button
             onClick={load}
             disabled={loading}
-            className="flex items-center gap-2 rounded-md border border-graphite/20 px-4 py-2 text-sm font-medium text-graphite transition hover:border-signal hover:text-signal disabled:opacity-60"
+            className="flex items-center gap-2 rounded-lg border border-graphite/15 bg-white px-4 py-2 text-sm font-medium text-graphite shadow-sm transition hover:border-signal hover:text-signal disabled:opacity-60"
           >
             <RefreshCw className={loading ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
             Refresh
           </button>
           <button
             onClick={openCreateForm}
-            className="flex items-center gap-2 rounded-md bg-signal px-4 py-2 text-sm font-medium text-ink transition hover:brightness-110"
+            className="flex items-center gap-2 rounded-lg bg-signal px-4 py-2 text-sm font-medium text-ink shadow-sm transition hover:brightness-110"
           >
             <Plus className="h-4 w-4" />
             New Case Study
@@ -142,18 +146,18 @@ export default function AdminCaseStudiesPage() {
       </div>
 
       {error && (
-        <div className="mt-6 rounded-md border border-ember/40 bg-ember/10 px-4 py-3 text-sm text-ember">
+        <div className="mt-6 rounded-lg border border-ember/40 bg-ember/10 px-4 py-3 text-sm text-ember">
           {error}
         </div>
       )}
 
       {showForm && (
-        <div className="mt-8 rounded-lg border border-graphite/10 bg-graphite/5 p-6">
+        <div className="admin-fade-in mt-8 rounded-xl border border-graphite/10 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-graphite">
               {editingId ? "Edit Case Study" : "New Case Study"}
             </h2>
-            <button onClick={closeForm} className="text-graphite/50 hover:text-graphite">
+            <button onClick={closeForm} className="text-graphite/40 transition hover:text-graphite">
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -167,77 +171,77 @@ export default function AdminCaseStudiesPage() {
 
           <form onSubmit={handleSubmit} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Title</label>
+              <label className={labelClass}>Title</label>
               <input
                 required
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Slug</label>
+              <label className={labelClass}>Slug</label>
               <input
                 required
                 value={form.slug}
                 onChange={(e) => setForm({ ...form, slug: e.target.value })}
                 placeholder="lowercase-hyphen-separated"
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Client Name</label>
+              <label className={labelClass}>Client Name</label>
               <input
                 required
                 value={form.clientName}
                 onChange={(e) => setForm({ ...form, clientName: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Industry</label>
+              <label className={labelClass}>Industry</label>
               <input
                 value={form.industry}
                 onChange={(e) => setForm({ ...form, industry: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Challenge</label>
+              <label className={labelClass}>Challenge</label>
               <textarea
                 required
                 rows={3}
                 value={form.challenge}
                 onChange={(e) => setForm({ ...form, challenge: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Solution</label>
+              <label className={labelClass}>Solution</label>
               <textarea
                 required
                 rows={3}
                 value={form.solution}
                 onChange={(e) => setForm({ ...form, solution: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Results</label>
+              <label className={labelClass}>Results</label>
               <textarea
                 required
                 rows={3}
                 value={form.results}
                 onChange={(e) => setForm({ ...form, results: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block font-mono text-xs uppercase tracking-wider text-graphite/60">Cover Image URL</label>
+              <label className={labelClass}>Cover Image URL</label>
               <input
                 value={form.coverImageUrl}
                 onChange={(e) => setForm({ ...form, coverImageUrl: e.target.value })}
-                className="mt-1 w-full rounded-md border border-graphite/20 px-3 py-2 text-sm outline-none focus:border-signal"
+                className={inputClass}
               />
             </div>
             <div className="md:col-span-2 flex items-center gap-2">
@@ -246,7 +250,7 @@ export default function AdminCaseStudiesPage() {
                 type="checkbox"
                 checked={form.isPublished}
                 onChange={(e) => setForm({ ...form, isPublished: e.target.checked })}
-                className="h-4 w-4 rounded border-graphite/30"
+                className="h-4 w-4 rounded border-graphite/30 text-signal focus:ring-signal/30"
               />
               <label htmlFor="isPublished" className="text-sm text-graphite">
                 Published
@@ -256,14 +260,14 @@ export default function AdminCaseStudiesPage() {
               <button
                 type="button"
                 onClick={closeForm}
-                className="rounded-md border border-graphite/20 px-4 py-2 text-sm text-graphite/70"
+                className="rounded-lg border border-graphite/15 px-4 py-2 text-sm text-graphite/70 transition hover:bg-graphite/5"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 rounded-md bg-signal px-4 py-2 text-sm font-medium text-ink transition hover:brightness-110 disabled:opacity-60"
+                className="flex items-center gap-2 rounded-lg bg-signal px-4 py-2 text-sm font-medium text-ink shadow-sm transition hover:brightness-110 disabled:opacity-60"
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                 {editingId ? "Save Changes" : "Create Case Study"}
@@ -279,31 +283,34 @@ export default function AdminCaseStudiesPage() {
           Loading case studies...
         </div>
       ) : items.length === 0 ? (
-        <p className="mt-10 text-graphite/60">No case studies yet.</p>
+        <div className="mt-10 flex flex-col items-center gap-3 rounded-xl border border-dashed border-graphite/15 bg-white/50 py-16 text-center">
+          <BookOpenText className="h-8 w-8 text-graphite/30" />
+          <p className="text-graphite/60">No case studies yet.</p>
+        </div>
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-lg border border-graphite/10">
+        <div className="mt-8 overflow-x-auto rounded-xl border border-graphite/10 bg-white shadow-sm">
           <table className="w-full min-w-[800px] text-left text-sm">
-            <thead className="bg-graphite/5 font-mono text-xs uppercase tracking-wider text-graphite/60">
+            <thead className="bg-graphite/5 font-mono text-xs uppercase tracking-wider text-graphite/50">
               <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Client</th>
-                <th className="px-4 py-3">Industry</th>
-                <th className="px-4 py-3">Slug</th>
-                <th className="px-4 py-3"></th>
+                <th className="px-5 py-4">Title</th>
+                <th className="px-5 py-4">Client</th>
+                <th className="px-5 py-4">Industry</th>
+                <th className="px-5 py-4">Slug</th>
+                <th className="px-5 py-4"></th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
-                <tr key={item.id} className="border-t border-graphite/10">
-                  <td className="px-4 py-3 font-medium text-graphite">{item.title}</td>
-                  <td className="px-4 py-3 text-graphite/70">{item.clientName}</td>
-                  <td className="px-4 py-3 text-graphite/70">{item.industry}</td>
-                  <td className="px-4 py-3 text-graphite/60">{item.slug}</td>
-                  <td className="px-4 py-3">
+                <tr key={item.id} className="border-t border-graphite/8 transition hover:bg-graphite/[0.03]">
+                  <td className="px-5 py-4 font-medium text-graphite">{item.title}</td>
+                  <td className="px-5 py-4 text-graphite/70">{item.clientName}</td>
+                  <td className="px-5 py-4 text-graphite/70">{item.industry}</td>
+                  <td className="px-5 py-4 text-graphite/60">{item.slug}</td>
+                  <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => openEditForm(item)}
-                        className="text-graphite/40 transition hover:text-signal"
+                        className="text-graphite/30 transition hover:scale-110 hover:text-signal"
                         title="Edit"
                       >
                         <Pencil className="h-4 w-4" />
@@ -313,7 +320,7 @@ export default function AdminCaseStudiesPage() {
                           <button
                             onClick={() => handleDelete(item.id)}
                             disabled={deletingId === item.id}
-                            className="rounded-md bg-ember px-2 py-1 text-xs font-medium text-paper hover:brightness-110"
+                            className="rounded-md bg-ember px-2 py-1 text-xs font-medium text-paper transition hover:brightness-110"
                           >
                             Confirm
                           </button>
@@ -327,7 +334,7 @@ export default function AdminCaseStudiesPage() {
                       ) : (
                         <button
                           onClick={() => setConfirmDeleteId(item.id)}
-                          className="text-graphite/40 transition hover:text-ember"
+                          className="text-graphite/30 transition hover:scale-110 hover:text-ember"
                           title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />
