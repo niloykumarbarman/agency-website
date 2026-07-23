@@ -21,6 +21,9 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<ConsultationRequest> ConsultationRequests => Set<ConsultationRequest>();
+    public DbSet<HeroContent> HeroContents => Set<HeroContent>();
+    public DbSet<TechnologyItem> TechnologyItems => Set<TechnologyItem>();
+    public DbSet<FaqItem> FaqItems => Set<FaqItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

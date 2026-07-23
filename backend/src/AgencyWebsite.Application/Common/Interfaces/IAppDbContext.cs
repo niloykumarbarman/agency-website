@@ -16,5 +16,8 @@ public interface IAppDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<ConsultationRequest> ConsultationRequests { get; }
+    DbSet<HeroContent> HeroContents { get; }
+    DbSet<TechnologyItem> TechnologyItems { get; }
+    DbSet<FaqItem> FaqItems { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
