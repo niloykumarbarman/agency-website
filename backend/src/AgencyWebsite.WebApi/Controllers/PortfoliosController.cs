@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.Portfolios.Commands.CreatePortfolio;
 using AgencyWebsite.Application.Features.Portfolios.Commands.DeletePortfolio;
 using AgencyWebsite.Application.Features.Portfolios.Commands.UpdatePortfolio;
 using AgencyWebsite.Application.Features.Portfolios.Queries.GetAllPortfolios;
+using AgencyWebsite.Application.Features.Portfolios.Queries.GetAllPortfoliosAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ public class PortfoliosController : ControllerBase
     public async Task<ActionResult<List<PortfolioDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllPortfoliosQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<AdminPortfolioDto>>> GetAllForAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllPortfoliosAdminQuery(), cancellationToken);
         return Ok(result);
     }
 
