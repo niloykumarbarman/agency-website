@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.Services.Commands.CreateService;
 using AgencyWebsite.Application.Features.Services.Commands.DeleteService;
 using AgencyWebsite.Application.Features.Services.Commands.UpdateService;
 using AgencyWebsite.Application.Features.Services.Queries.GetAllServices;
+using AgencyWebsite.Application.Features.Services.Queries.GetAllServicesAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ public class ServicesController : ControllerBase
     public async Task<ActionResult<List<ServiceDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllServicesQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<AdminServiceDto>>> GetAllForAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllServicesAdminQuery(), cancellationToken);
         return Ok(result);
     }
 
