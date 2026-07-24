@@ -22,6 +22,7 @@ public class GetAllTechnologiesAdminQueryHandler : IRequestHandler<GetAllTechnol
             {
                 Id = t.Id,
                 Name = t.Name,
+                DisplayName = t.DisplayName,
                 Category = t.Category,
                 DisplayOrder = t.DisplayOrder,
                 IsActive = t.IsActive

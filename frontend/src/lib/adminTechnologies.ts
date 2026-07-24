@@ -3,6 +3,7 @@ import { adminFetch } from "@/lib/adminAuth";
 export interface AdminTechnology {
   id: string;
   name: string;
+  displayName: string;
   category: number;
   displayOrder: number;
   isActive: boolean;
@@ -10,6 +11,7 @@ export interface AdminTechnology {
 
 export interface TechnologyFormPayload {
   name: string;
+  displayName: string;
   category: number;
   displayOrder: number;
   isActive: boolean;

@@ -32,6 +32,7 @@ public class GetAllTechnologiesQueryHandler : IRequestHandler<GetAllTechnologies
             {
                 Id = t.Id,
                 Name = t.Name,
+                DisplayName = t.DisplayName,
                 Category = t.Category,
                 DisplayOrder = t.DisplayOrder
             })

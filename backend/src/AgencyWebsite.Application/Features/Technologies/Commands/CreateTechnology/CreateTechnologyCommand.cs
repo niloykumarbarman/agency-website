@@ -6,6 +6,7 @@ namespace AgencyWebsite.Application.Features.Technologies.Commands.CreateTechnol
 public class CreateTechnologyCommand : IRequest<Guid>
 {
     public string Name { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
     public TechnologyCategory Category { get; set; }
     public int DisplayOrder { get; set; }
 }

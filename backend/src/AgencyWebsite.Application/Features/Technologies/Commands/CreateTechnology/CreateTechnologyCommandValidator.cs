@@ -7,6 +7,7 @@ public class CreateTechnologyCommandValidator : AbstractValidator<CreateTechnolo
     public CreateTechnologyCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
+        RuleFor(x => x.DisplayName).NotEmpty().MaximumLength(150);
         RuleFor(x => x.Category).IsInEnum();
     }
 }
