@@ -29,6 +29,7 @@ public class UpdateHeroCommandHandler : IRequestHandler<UpdateHeroCommand, Unit>
         hero.PrimaryCtaUrl = request.PrimaryCtaUrl;
         hero.SecondaryCtaText = request.SecondaryCtaText;
         hero.SecondaryCtaUrl = request.SecondaryCtaUrl;
+        hero.BackgroundImageUrl = request.BackgroundImageUrl;
         hero.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);

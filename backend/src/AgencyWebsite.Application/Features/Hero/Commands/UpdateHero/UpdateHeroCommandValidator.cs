@@ -13,5 +13,6 @@ public class UpdateHeroCommandValidator : AbstractValidator<UpdateHeroCommand>
         RuleFor(x => x.PrimaryCtaUrl).NotEmpty().MaximumLength(300);
         RuleFor(x => x.SecondaryCtaText).NotEmpty().MaximumLength(100);
         RuleFor(x => x.SecondaryCtaUrl).NotEmpty().MaximumLength(300);
+        RuleFor(x => x.BackgroundImageUrl).MaximumLength(500);
     }
 }
