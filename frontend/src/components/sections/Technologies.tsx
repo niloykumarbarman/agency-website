@@ -1,25 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-
-type Tech = {
-  name: string;
-  category: string;
-};
-
-const TECHNOLOGIES: Tech[] = [
-  { name: ".NET 10", category: "Backend runtime" },
-  { name: "Next.js 16", category: "Frontend framework" },
-  { name: "PostgreSQL", category: "Primary database" },
-  { name: "Redis", category: "Caching layer" },
-  { name: "Docker", category: "Containerization" },
-  { name: "TypeScript", category: "Type safety" },
-  { name: "GitHub Actions", category: "CI/CD" },
-  { name: "Nginx", category: "Reverse proxy" },
-];
+import { fetchTechnologies, type TechnologyDto } from "@/lib/technologies";
 
 export default function Technologies() {
   const reduceMotion = useReducedMotion();
+  const [technologies, setTechnologies] = useState<TechnologyDto[]>([]);
+
+  useEffect(() => {
+    fetchTechnologies().then(setTechnologies);
+  }, []);
+
+  if (technologies.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -57,9 +52,9 @@ export default function Technologies() {
         </motion.div>
 
         <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-paper/10 bg-paper/10 sm:grid-cols-4">
-          {TECHNOLOGIES.map((tech, i) => (
+          {technologies.map((tech, i) => (
             <motion.div
-              key={tech.name}
+              key={tech.id}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -74,7 +69,7 @@ export default function Technologies() {
                 {tech.name}
               </p>
               <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper/45">
-                {tech.category}
+                {tech.displayName}
               </p>
             </motion.div>
           ))}
