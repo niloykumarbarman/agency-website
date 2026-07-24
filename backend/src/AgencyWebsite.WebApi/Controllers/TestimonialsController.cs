@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.Testimonials.Commands.CreateTestimonial
 using AgencyWebsite.Application.Features.Testimonials.Commands.DeleteTestimonial;
 using AgencyWebsite.Application.Features.Testimonials.Commands.UpdateTestimonial;
 using AgencyWebsite.Application.Features.Testimonials.Queries.GetAllTestimonials;
+using AgencyWebsite.Application.Features.Testimonials.Queries.GetAllTestimonialsAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ public class TestimonialsController : ControllerBase
     public async Task<ActionResult<List<TestimonialDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllTestimonialsQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<AdminTestimonialDto>>> GetAllForAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllTestimonialsAdminQuery(), cancellationToken);
         return Ok(result);
     }
 
