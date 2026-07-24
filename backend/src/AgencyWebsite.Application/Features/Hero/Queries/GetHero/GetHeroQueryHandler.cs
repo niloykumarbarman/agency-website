@@ -43,7 +43,8 @@ public class GetHeroQueryHandler : IRequestHandler<GetHeroQuery, HeroDto>
                 PrimaryCtaText = "Book a Consultation",
                 PrimaryCtaUrl = "#contact",
                 SecondaryCtaText = "View Our Work",
-                SecondaryCtaUrl = "#portfolio"
+                SecondaryCtaUrl = "#portfolio",
+                BackgroundImageUrl = "/uploads/hero-placeholder.jpg"
             };
             _context.HeroContents.Add(hero);
             await _context.SaveChangesAsync(cancellationToken);
@@ -57,7 +58,8 @@ public class GetHeroQueryHandler : IRequestHandler<GetHeroQuery, HeroDto>
             PrimaryCtaText = hero.PrimaryCtaText,
             PrimaryCtaUrl = hero.PrimaryCtaUrl,
             SecondaryCtaText = hero.SecondaryCtaText,
-            SecondaryCtaUrl = hero.SecondaryCtaUrl
+            SecondaryCtaUrl = hero.SecondaryCtaUrl,
+            BackgroundImageUrl = hero.BackgroundImageUrl
         };
 
         await _cache.SetAsync(CacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);
