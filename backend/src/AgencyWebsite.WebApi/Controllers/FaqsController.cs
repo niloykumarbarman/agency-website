@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.Faqs.Commands.CreateFaq;
 using AgencyWebsite.Application.Features.Faqs.Commands.DeleteFaq;
 using AgencyWebsite.Application.Features.Faqs.Commands.UpdateFaq;
 using AgencyWebsite.Application.Features.Faqs.Queries.GetAllFaqs;
+using AgencyWebsite.Application.Features.Faqs.Queries.GetAllFaqsAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,14 @@ public class FaqsController : ControllerBase
         var result = await _sender.Send(new GetAllFaqsQuery(), cancellationToken);
         return Ok(result);
     }
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<AdminFaqDto>>> GetAllAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllFaqsAdminQuery(), cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Guid>> Create(CreateFaqCommand command, CancellationToken cancellationToken)
