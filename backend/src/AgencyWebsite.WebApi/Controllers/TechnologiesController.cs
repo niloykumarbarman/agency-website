@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.Technologies.Commands.CreateTechnology;
 using AgencyWebsite.Application.Features.Technologies.Commands.DeleteTechnology;
 using AgencyWebsite.Application.Features.Technologies.Commands.UpdateTechnology;
 using AgencyWebsite.Application.Features.Technologies.Queries.GetAllTechnologies;
+using AgencyWebsite.Application.Features.Technologies.Queries.GetAllTechnologiesAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,14 @@ public class TechnologiesController : ControllerBase
         var result = await _sender.Send(new GetAllTechnologiesQuery(), cancellationToken);
         return Ok(result);
     }
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<AdminTechnologyDto>>> GetAllAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllTechnologiesAdminQuery(), cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<Guid>> Create(CreateTechnologyCommand command, CancellationToken cancellationToken)
