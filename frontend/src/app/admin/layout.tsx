@@ -9,6 +9,12 @@ import {
   BookOpenText,
   Briefcase,
   Mail,
+  Wrench,
+  FolderKanban,
+  Quote,
+  PanelTop,
+  Cpu,
+  HelpCircle,
   LogOut,
 } from "lucide-react";
 import { clearAdminToken, isAdminAuthenticated } from "@/lib/adminAuth";
@@ -19,6 +25,12 @@ const NAV_ITEMS = [
   { href: "/admin/case-studies", label: "Case Studies", icon: BookOpenText },
   { href: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { href: "/admin/messages", label: "Messages", icon: Mail },
+  { href: "/admin/services", label: "Services", icon: Wrench },
+  { href: "/admin/portfolio", label: "Portfolio", icon: FolderKanban },
+  { href: "/admin/testimonials", label: "Testimonials", icon: Quote },
+  { href: "/admin/hero", label: "Hero", icon: PanelTop },
+  { href: "/admin/technologies", label: "Technologies", icon: Cpu },
+  { href: "/admin/faq", label: "FAQ", icon: HelpCircle },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
