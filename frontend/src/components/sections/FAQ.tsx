@@ -1,45 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
-
-type FaqItem = {
-  question: string;
-  answer: string;
-};
-
-const FAQS: FaqItem[] = [
-  {
-    question: "What does a typical engagement look like?",
-    answer:
-      "Most engagements start with a two-to-three week discovery phase to map requirements and constraints, followed by design, then build in short, reviewable increments. You see working software early and often, not just at the end.",
-  },
-  {
-    question: "Can you work with our existing systems and team?",
-    answer:
-      "Yes. We regularly integrate with existing databases, APIs, and internal tools, and we work alongside in-house engineers rather than replacing them. We document as we go so your team can maintain what we build.",
-  },
-  {
-    question: "How do you handle security and compliance?",
-    answer:
-      "Authentication, rate limiting, and audit logging are built into every system by default, not added at the end. For regulated industries, we scope compliance requirements during discovery and design around them from day one.",
-  },
-  {
-    question: "What happens after launch?",
-    answer:
-      "We offer ongoing support and monitoring arrangements scoped to your needs, from a fixed post-launch stabilization period to a longer-term retainer. You always retain full ownership of the code and infrastructure.",
-  },
-  {
-    question: "How is pricing structured?",
-    answer:
-      "We scope fixed-price for well-defined projects and time-and-materials for evolving ones. Every proposal includes a clear breakdown before any work begins, no surprise invoices.",
-  },
-];
+import { fetchFaqs, type FaqDto } from "@/lib/faq";
 
 export default function FAQ() {
   const reduceMotion = useReducedMotion();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [faqs, setFaqs] = useState<FaqDto[]>([]);
+
+  useEffect(() => {
+    fetchFaqs().then(setFaqs);
+  }, []);
+
+  if (faqs.length === 0) {
+    return null;
+  }
 
   return (
     <section id="faq" className="bg-grain relative overflow-hidden bg-ink text-paper">
@@ -69,10 +46,10 @@ export default function FAQ() {
         </motion.div>
 
         <div className="mt-14 flex flex-col divide-y divide-paper/10 border-t border-paper/10">
-          {FAQS.map((faq, i) => {
+          {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
-              <div key={faq.question}>
+              <div key={faq.id}>
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
