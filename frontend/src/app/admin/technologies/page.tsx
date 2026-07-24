@@ -16,6 +16,7 @@ import {
 
 const emptyForm: TechnologyFormPayload = {
   name: "",
+  displayName: "",
   category: 0,
   displayOrder: 0,
   isActive: true,
@@ -23,6 +24,7 @@ const emptyForm: TechnologyFormPayload = {
 
 const fields: FieldConfig<TechnologyFormPayload>[] = [
   { key: "name", label: "Name", type: "text", required: true, colSpan: 2 },
+  { key: "displayName", label: "Display Caption", type: "text", required: true, colSpan: 2 },
   {
     key: "category",
     label: "Category (numeric enum)",
@@ -71,6 +73,7 @@ export default function AdminTechnologiesPage() {
       remove={deleteTechnology}
       toForm={(item) => ({
         name: item.name,
+        displayName: item.displayName,
         category: item.category,
         displayOrder: item.displayOrder,
         isActive: item.isActive,

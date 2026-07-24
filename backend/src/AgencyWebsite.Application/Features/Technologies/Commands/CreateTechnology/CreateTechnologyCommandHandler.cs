@@ -22,6 +22,7 @@ public class CreateTechnologyCommandHandler : IRequestHandler<CreateTechnologyCo
         var technology = new TechnologyItem
         {
             Name = request.Name,
+            DisplayName = request.DisplayName,
             Category = request.Category,
             DisplayOrder = request.DisplayOrder
         };

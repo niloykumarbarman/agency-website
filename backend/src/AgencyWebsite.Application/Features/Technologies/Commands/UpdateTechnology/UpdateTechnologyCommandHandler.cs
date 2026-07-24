@@ -24,6 +24,7 @@ public class UpdateTechnologyCommandHandler : IRequestHandler<UpdateTechnologyCo
             ?? throw new KeyNotFoundException($"TechnologyItem with Id '{request.Id}' was not found.");
 
         technology.Name = request.Name;
+        technology.DisplayName = request.DisplayName;
         technology.Category = request.Category;
         technology.DisplayOrder = request.DisplayOrder;
         technology.IsActive = request.IsActive;
