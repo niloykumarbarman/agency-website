@@ -19,6 +19,8 @@ const FALLBACK_HERO: HeroDto = {
   backgroundImageUrl: "",
 };
 
+const MotionLink = motion(Link);
+
 export default function Hero() {
   const [hero, setHero] = useState<HeroDto>(FALLBACK_HERO);
 
@@ -47,7 +49,28 @@ export default function Hero() {
             sizes="100vw"
             className="object-cover"
           />
-        ) : null}
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 opacity-[0.06]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, var(--color-wire) 1px, transparent 1px), linear-gradient(to bottom, var(--color-wire) 1px, transparent 1px)",
+                backgroundSize: "48px 48px",
+              }}
+            />
+            <motion.div
+              className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full bg-signal/25 blur-[120px]"
+              animate={{ opacity: [0.35, 0.65, 0.35] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute -bottom-40 right-[-10%] h-[480px] w-[480px] rounded-full bg-ember/20 blur-[140px]"
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+            />
+          </>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
       </div>
 
@@ -70,17 +93,23 @@ export default function Hero() {
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Link href={hero.primaryCtaUrl}
-              className="group inline-flex items-center justify-center gap-2 rounded-sm bg-ember px-6 py-3.5 font-mono text-sm font-medium text-paper shadow-[0_8px_30px_-8px_rgba(255,107,53,0.55)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-ember/90 hover:shadow-[0_12px_36px_-8px_rgba(255,107,53,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            <MotionLink href={hero.primaryCtaUrl}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="group inline-flex items-center justify-center gap-2 rounded-sm bg-ember px-6 py-3.5 font-mono text-sm font-medium text-paper shadow-[0_8px_30px_-8px_rgba(255,107,53,0.55)] transition-shadow duration-200 hover:bg-ember/90 hover:shadow-[0_12px_36px_-8px_rgba(255,107,53,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             >
               {hero.primaryCtaText}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-            <Link href={hero.secondaryCtaUrl}
-              className="inline-flex items-center justify-center rounded-sm border border-ink/20 px-6 py-3.5 font-mono text-sm text-ink/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-ink/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            </MotionLink>
+            <MotionLink href={hero.secondaryCtaUrl}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="inline-flex items-center justify-center rounded-sm border border-ink/20 px-6 py-3.5 font-mono text-sm text-ink/80 transition-colors duration-200 hover:border-ink/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             >
               {hero.secondaryCtaText}
-            </Link>
+            </MotionLink>
           </div>
         </motion.div>
       </div>

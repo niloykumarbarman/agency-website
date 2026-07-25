@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/#services", label: "Services" },
@@ -18,8 +18,24 @@ const NAV_LINKS = [
   { href: "/book-consultation", label: "Book Consultation" },
 ];
 
+const MORE_LABELS = ["Industries", "Case Studies", "About", "Blog"];
+const PRIMARY_LINKS = NAV_LINKS.filter((link) => !MORE_LABELS.includes(link.label));
+const MORE_LINKS = NAV_LINKS.filter((link) => MORE_LABELS.includes(link.label));
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (moreRef.current && !moreRef.current.contains(event.target as Node)) {
+        setMoreOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-wire/60 bg-paper/90 backdrop-blur-sm">
@@ -29,17 +45,44 @@ export default function Navbar() {
           <span className="ml-0.5 text-signal">.</span>
         </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
+        <ul className="hidden items-center gap-6 md:flex">
+          {PRIMARY_LINKS.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="font-mono text-sm text-graphite/70 transition-colors hover:text-ink"
+                className="whitespace-nowrap font-mono text-sm text-graphite/70 transition-colors hover:text-ink"
               >
                 {link.label}
               </Link>
             </li>
           ))}
+          <li className="relative" ref={moreRef}>
+            <button
+              type="button"
+              onClick={() => setMoreOpen((prev) => !prev)}
+              className="flex items-center gap-1 whitespace-nowrap font-mono text-sm text-graphite/70 transition-colors hover:text-ink"
+              aria-haspopup="true"
+              aria-expanded={moreOpen}
+            >
+              More
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+            </button>
+            {moreOpen && (
+              <ul className="absolute right-0 top-full mt-2 w-48 rounded-sm border border-wire/60 bg-paper py-2 shadow-lg">
+                {MORE_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMoreOpen(false)}
+                      className="block px-4 py-2 font-mono text-sm text-graphite/70 transition-colors hover:bg-wire/20 hover:text-ink"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
         </ul>
 
         <Link
