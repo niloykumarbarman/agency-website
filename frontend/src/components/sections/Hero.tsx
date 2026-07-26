@@ -19,7 +19,7 @@ const FALLBACK_HERO: HeroDto = {
   backgroundImageUrl: "",
 };
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 type TelemetryPill = {
   label: string;
