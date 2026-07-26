@@ -19,3 +19,18 @@ export async function fetchCaseStudies(): Promise<CaseStudy[]> {
   }
   return res.json();
 }
+
+export async function fetchCaseStudyBySlug(
+  slug: string
+): Promise<CaseStudy | null> {
+  const res = await fetch(`${CASE_STUDIES_API_URL}/${slug}`, {
+    cache: "no-store",
+  });
+  if (res.status === 404) {
+    return null;
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to fetch case study: ${res.status}`);
+  }
+  return res.json();
+}

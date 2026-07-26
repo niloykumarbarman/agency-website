@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.CaseStudies.Commands.CreateCaseStudy;
 using AgencyWebsite.Application.Features.CaseStudies.Commands.DeleteCaseStudy;
 using AgencyWebsite.Application.Features.CaseStudies.Commands.UpdateCaseStudy;
 using AgencyWebsite.Application.Features.CaseStudies.Queries.GetAllCaseStudies;
+using AgencyWebsite.Application.Features.CaseStudies.Queries.GetCaseStudyBySlug;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ public class CaseStudiesController : ControllerBase
     public async Task<ActionResult<List<CaseStudyDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllCaseStudiesQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{slug}")]
+    public async Task<ActionResult<CaseStudyDto>> GetBySlug(string slug, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetCaseStudyBySlugQuery { Slug = slug }, cancellationToken);
+        if (result is null) return NotFound();
         return Ok(result);
     }
 

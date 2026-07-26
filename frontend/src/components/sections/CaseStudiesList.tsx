@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { fetchCaseStudies, type CaseStudy } from "@/lib/caseStudies";
 
 const ILLUSTRATIVE_SUFFIX = " (Illustrative Example)";
@@ -110,9 +112,10 @@ export default function CaseStudiesList() {
                   <motion.article
                     key={study.id}
                     {...fadeUp(i)}
-                    className="bg-paper p-8 md:p-12"
+                    className="group bg-paper p-8 transition-colors duration-300 hover:bg-ink/[0.02] md:p-12"
                   >
-                    <div className="flex flex-wrap items-center gap-3">
+                    <Link href={`/case-studies/${study.slug}`}>
+                      <div className="flex flex-wrap items-center gap-3">
                       <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-signal">
                         {study.industry} — {name}
                       </p>
@@ -153,7 +156,12 @@ export default function CaseStudiesList() {
                         </p>
                       </div>
                     </div>
-                  </motion.article>
+                  <span className="mt-6 inline-flex items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-graphite/50 transition-colors group-hover:text-ember">
+                        Read full case study
+                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </span>
+                      </Link>
+                    </motion.article>
                 );
               })}
             </div>
