@@ -3,7 +3,7 @@ import { buildMetadata } from "@/lib/seo";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PortfolioHero from "@/components/sections/PortfolioHero";
-import PortfolioCaseStudies from "@/components/sections/PortfolioCaseStudies";
+import PortfolioGrid from "@/components/sections/PortfolioGrid";
 import PortfolioCTA from "@/components/sections/PortfolioCTA";
 
 export const metadata: Metadata = buildMetadata({
@@ -19,7 +19,7 @@ export default function PortfolioPage() {
       <Navbar />
       <main>
         <PortfolioHero />
-        <PortfolioCaseStudies />
+        <PortfolioGrid />
         <PortfolioCTA />
       </main>
       <Footer />
