@@ -72,11 +72,11 @@ export default function Capabilities() {
                   }`}
                 >
                   <span
-                    className={`flex h-9 w-9 items-center justify-center rounded-sm ${
+                    className={`flex h-11 w-11 items-center justify-center rounded-sm ${
                       isSignal ? "bg-signal/15 text-signal" : "bg-ember/15 text-ember"
                     }`}
                   >
-                    <Icon className="h-4.5 w-4.5" strokeWidth={1.75} />
+                    <Icon className="h-5.5 w-5.5" strokeWidth={1.75} />
                   </span>
                   <div>
                     <p className="font-display text-base font-semibold text-paper">
