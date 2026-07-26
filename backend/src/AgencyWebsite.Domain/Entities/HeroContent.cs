@@ -9,4 +9,5 @@ public class HeroContent : BaseEntity
     public string SecondaryCtaText { get; set; } = string.Empty;
     public string SecondaryCtaUrl { get; set; } = string.Empty;
     public string BackgroundImageUrl { get; set; } = string.Empty;
+    public ICollection<HeroTelemetryPill> TelemetryPills { get; set; } = new List<HeroTelemetryPill>();
 }

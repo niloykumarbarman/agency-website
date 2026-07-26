@@ -24,6 +24,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<HeroContent> HeroContents => Set<HeroContent>();
     public DbSet<TechnologyItem> TechnologyItems => Set<TechnologyItem>();
     public DbSet<FaqItem> FaqItems => Set<FaqItem>();
+    public DbSet<HeroTelemetryPill> HeroTelemetryPills => Set<HeroTelemetryPill>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
