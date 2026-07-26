@@ -130,7 +130,7 @@ export default function ContactForm() {
               type="tel"
               value={form.phone}
               onChange={handleChange}
-              placeholder="+1 555 000 0000"
+              placeholder="+880 17666823"
               className="rounded-lg border border-wire bg-paper px-4 py-3 text-ink placeholder:text-graphite/40 outline-none transition focus-visible:border-signal focus-visible:ring-2 focus-visible:ring-signal/30"
             />
           </div>

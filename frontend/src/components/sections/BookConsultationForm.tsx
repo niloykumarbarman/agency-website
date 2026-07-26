@@ -188,7 +188,7 @@ export default function BookConsultationForm() {
                 maxLength={50}
                 value={form.phone}
                 onChange={handleChange}
-                placeholder="+1 555 000 0000"
+                placeholder="+880 17666823"
                 className={inputClasses}
               />
             </div>
