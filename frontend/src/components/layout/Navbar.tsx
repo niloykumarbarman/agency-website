@@ -50,9 +50,10 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="whitespace-nowrap font-mono text-sm text-graphite/70 transition-colors hover:text-ink"
+                className="group relative whitespace-nowrap font-mono text-sm text-graphite/70 transition-colors duration-300 hover:text-ink"
               >
                 {link.label}
+                <span className="pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-signal transition-transform duration-300 ease-out group-hover:scale-x-100" />
               </Link>
             </li>
           ))}
@@ -87,7 +88,7 @@ export default function Navbar() {
 
         <Link
           href="/contact"
-          className="hidden rounded-sm bg-ink px-5 py-2.5 font-mono text-sm text-paper transition-colors hover:bg-signal md:inline-block"
+          className="hidden rounded-sm bg-ink px-5 py-2.5 font-mono text-sm text-paper shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-signal hover:shadow-lg hover:shadow-signal/25 md:inline-block"
         >
           Start a project
         </Link>
