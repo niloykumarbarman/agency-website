@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export type BlogPostStatus = "Draft" | "Published" | "Archived";
 
@@ -40,7 +41,7 @@ export interface BlogPostFormPayload {
   status: BlogPostStatus;
 }
 
-export const BLOG_POSTS_ADMIN_API_URL = "http://localhost:5240/api/blog-posts";
+export const BLOG_POSTS_ADMIN_API_URL = `${API_BASE_URL}/blog-posts`;
 
 export async function fetchAdminBlogPosts(): Promise<AdminBlogPost[]> {
   const res = await adminFetch(BLOG_POSTS_ADMIN_API_URL);

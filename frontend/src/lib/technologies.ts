@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:5240/api";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface TechnologyDto {
   id: string;

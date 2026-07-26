@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminCaseStudy {
   id: string;
@@ -24,7 +25,7 @@ export interface CaseStudyFormPayload {
   isPublished: boolean;
 }
 
-export const CASE_STUDIES_ADMIN_API_URL = "http://localhost:5240/api/case-studies";
+export const CASE_STUDIES_ADMIN_API_URL = `${API_BASE_URL}/case-studies`;
 
 export async function fetchAdminCaseStudies() {
   const res = await adminFetch(CASE_STUDIES_ADMIN_API_URL);

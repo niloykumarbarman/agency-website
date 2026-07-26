@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface CaseStudy {
   id: string;
   title: string;
@@ -10,7 +11,7 @@ export interface CaseStudy {
   coverImageUrl: string;
 }
 
-export const CASE_STUDIES_API_URL = "http://localhost:5240/api/case-studies";
+export const CASE_STUDIES_API_URL = `${API_BASE_URL}/case-studies`;
 
 export async function fetchCaseStudies(): Promise<CaseStudy[]> {
   const res = await fetch(CASE_STUDIES_API_URL, { cache: "no-store" });

@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export type ConsultationStatus =
   | "New"
@@ -42,7 +43,7 @@ export interface AdminConsultationRequest {
 }
 
 export const CONSULTATION_REQUESTS_ADMIN_API_URL =
-  "http://localhost:5240/api/consultation-requests";
+  `${API_BASE_URL}/consultation-requests`;
 
 export async function fetchAdminConsultationRequests(): Promise<
   AdminConsultationRequest[]

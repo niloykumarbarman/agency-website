@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminTechnology {
   id: string;
@@ -17,7 +18,7 @@ export interface TechnologyFormPayload {
   isActive: boolean;
 }
 
-const TECHNOLOGIES_BASE_API_URL = "http://localhost:5240/api/technologies";
+const TECHNOLOGIES_BASE_API_URL = `${API_BASE_URL}/technologies`;
 export const TECHNOLOGIES_ADMIN_API_URL = `${TECHNOLOGIES_BASE_API_URL}/admin`;
 
 export async function fetchAdminTechnologies() {

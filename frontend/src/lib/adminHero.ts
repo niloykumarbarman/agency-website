@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminHero {
   id: string;
@@ -21,7 +22,7 @@ export interface HeroFormPayload {
   backgroundImageUrl: string;
 }
 
-export const HERO_ADMIN_API_URL = "http://localhost:5240/api/hero";
+export const HERO_ADMIN_API_URL = `${API_BASE_URL}/hero`;
 
 export async function fetchAdminHero() {
   const res = await adminFetch(HERO_ADMIN_API_URL);

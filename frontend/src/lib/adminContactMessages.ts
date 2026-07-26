@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export type ContactMessageStatus = "New" | "InProgress" | "Resolved" | "Spam";
 
@@ -28,7 +29,7 @@ export interface AdminContactMessage {
   createdAt: string;
 }
 
-export const CONTACT_MESSAGES_ADMIN_API_URL = "http://localhost:5240/api/contact-messages";
+export const CONTACT_MESSAGES_ADMIN_API_URL = `${API_BASE_URL}/contact-messages`;
 
 export async function fetchAdminContactMessages(): Promise<AdminContactMessage[]> {
   const res = await adminFetch(CONTACT_MESSAGES_ADMIN_API_URL);

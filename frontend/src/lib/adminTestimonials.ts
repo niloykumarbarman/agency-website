@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminTestimonial {
   id: string;
@@ -21,7 +22,7 @@ export interface TestimonialFormPayload {
   isFeatured: boolean;
 }
 
-export const TESTIMONIALS_ADMIN_API_URL = "http://localhost:5240/api/testimonials";
+export const TESTIMONIALS_ADMIN_API_URL = `${API_BASE_URL}/testimonials`;
 
 export async function fetchAdminTestimonials() {
   const res = await adminFetch(`${TESTIMONIALS_ADMIN_API_URL}/admin`);

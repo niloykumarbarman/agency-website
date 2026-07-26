@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface LoginPayload {
   email: string;
   password: string;
@@ -10,7 +11,7 @@ export interface LoginResponse {
   errorMessage: string | null;
 }
 
-export const AUTH_LOGIN_API_URL = "http://localhost:5240/api/auth/login";
+export const AUTH_LOGIN_API_URL = `${API_BASE_URL}/auth/login`;
 
 const TOKEN_STORAGE_KEY = "ferrowave_admin_token";
 

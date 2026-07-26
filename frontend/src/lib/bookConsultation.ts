@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export type ServiceInterest =
   | "WebDevelopment"
   | "MobileApp"
@@ -27,7 +28,7 @@ export interface ConsultationRequestPayload {
 }
 
 export const CONSULTATION_REQUESTS_API_URL =
-  "http://localhost:5240/api/consultation-requests";
+  `${API_BASE_URL}/consultation-requests`;
 
 export async function submitConsultationRequest(
   payload: ConsultationRequestPayload

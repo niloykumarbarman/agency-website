@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface Portfolio {
   id: string;
   title: string;
@@ -10,7 +11,7 @@ export interface Portfolio {
   isFeatured: boolean;
 }
 
-export const PORTFOLIOS_API_URL = "http://localhost:5240/api/portfolios";
+export const PORTFOLIOS_API_URL = `${API_BASE_URL}/portfolios`;
 
 export async function fetchPortfolios(): Promise<Portfolio[]> {
   const res = await fetch(PORTFOLIOS_API_URL, { cache: "no-store" });

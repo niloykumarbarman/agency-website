@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface ContactMessagePayload {
   fullName: string;
   email: string;
@@ -7,7 +8,7 @@ export interface ContactMessagePayload {
 }
 
 export const CONTACT_MESSAGES_API_URL =
-  "http://localhost:5240/api/contact-messages";
+  `${API_BASE_URL}/contact-messages`;
 
 export async function submitContactMessage(
   payload: ContactMessagePayload

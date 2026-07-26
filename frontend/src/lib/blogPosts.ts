@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface BlogPost {
   id: string;
   title: string;
@@ -8,7 +9,7 @@ export interface BlogPost {
   publishedAt: string | null;
 }
 
-export const BLOG_POSTS_API_URL = "http://localhost:5240/api/blog-posts";
+export const BLOG_POSTS_API_URL = `${API_BASE_URL}/blog-posts`;
 
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
   const res = await fetch(BLOG_POSTS_API_URL, { cache: "no-store" });

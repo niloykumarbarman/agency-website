@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminFaq {
   id: string;
@@ -15,7 +16,7 @@ export interface FaqFormPayload {
   isActive: boolean;
 }
 
-const FAQ_BASE_API_URL = "http://localhost:5240/api/faqs";
+const FAQ_BASE_API_URL = `${API_BASE_URL}/faqs`;
 export const FAQ_ADMIN_API_URL = `${FAQ_BASE_API_URL}/admin`;
 
 export async function fetchAdminFaqs() {

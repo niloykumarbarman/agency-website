@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminService {
   id: string;
@@ -21,7 +22,7 @@ export interface ServiceFormPayload {
   isActive: boolean;
 }
 
-export const SERVICES_ADMIN_API_URL = "http://localhost:5240/api/services";
+export const SERVICES_ADMIN_API_URL = `${API_BASE_URL}/services`;
 
 export async function fetchAdminServices() {
   const res = await adminFetch(`${SERVICES_ADMIN_API_URL}/admin`);

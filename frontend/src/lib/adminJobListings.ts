@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export type JobListingStatus = "Draft" | "Open" | "Closed" | "Archived";
 
@@ -38,7 +39,7 @@ export interface JobListingFormPayload {
   status: JobListingStatus;
 }
 
-export const JOB_LISTINGS_ADMIN_API_URL = "http://localhost:5240/api/job-listings";
+export const JOB_LISTINGS_ADMIN_API_URL = `${API_BASE_URL}/job-listings`;
 
 export async function fetchAdminJobListings(): Promise<AdminJobListing[]> {
   const res = await adminFetch(JOB_LISTINGS_ADMIN_API_URL);

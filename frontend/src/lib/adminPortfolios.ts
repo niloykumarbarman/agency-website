@@ -1,4 +1,5 @@
 import { adminFetch } from "@/lib/adminAuth";
+import { API_BASE_URL } from "./apiConfig";
 
 export interface AdminPortfolio {
   id: string;
@@ -25,7 +26,7 @@ export interface PortfolioFormPayload {
   displayOrder: number;
 }
 
-export const PORTFOLIOS_ADMIN_API_URL = "http://localhost:5240/api/portfolios";
+export const PORTFOLIOS_ADMIN_API_URL = `${API_BASE_URL}/portfolios`;
 
 export async function fetchAdminPortfolios() {
   const res = await adminFetch(`${PORTFOLIOS_ADMIN_API_URL}/admin`);

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./apiConfig";
 export interface JobListing {
   id: string;
   title: string;
@@ -7,7 +8,7 @@ export interface JobListing {
   employmentType: string;
 }
 
-export const JOB_LISTINGS_API_URL = "http://localhost:5240/api/job-listings";
+export const JOB_LISTINGS_API_URL = `${API_BASE_URL}/job-listings`;
 
 export async function fetchJobListings(): Promise<JobListing[]> {
   const res = await fetch(JOB_LISTINGS_API_URL, { cache: "no-store" });
