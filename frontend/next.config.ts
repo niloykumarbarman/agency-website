@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         port: "5240",
       },
+      {
+        protocol: "https",
+        hostname: "media.istockphoto.com",
+      },
     ],
   },
 };

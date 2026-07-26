@@ -88,7 +88,11 @@ export default function BlogPostList() {
           )}
 
           {status === "success" && posts.length > 0 && (
-            <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-graphite/10 bg-graphite/10 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              className={`grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-graphite/10 bg-graphite/10 sm:grid-cols-2 ${
+                posts.length >= 3 ? "lg:grid-cols-3" : ""
+              }`}
+            >
               {posts.map((post, i) => (
                 <motion.article
                   key={post.id}
