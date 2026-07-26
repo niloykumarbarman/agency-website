@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import DraggableMarquee from "@/components/DraggableMarquee";
 import { fetchTechnologies, type TechnologyDto } from "@/lib/technologies";
 
 export default function Technologies() {
-  const reduceMotion = useReducedMotion();
   const [technologies, setTechnologies] = useState<TechnologyDto[]>([]);
 
   useEffect(() => {
@@ -48,33 +48,41 @@ export default function Technologies() {
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-paper/70">
             No stack chosen for a pitch deck. Every tool here is one we
             operate in production, including this site.
-          </p>
+        </p>
         </motion.div>
 
-        <div className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-paper/10 bg-paper/10 sm:grid-cols-4">
-          {technologies.map((tech, i) => (
-            <motion.div
-              key={tech.id}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={
-                reduceMotion
-                  ? { duration: 0.3 }
-                  : { duration: 0.5, ease: "easeOut", delay: i * 0.06 }
-              }
-              className="bg-ink p-6"
-            >
-              <p className="font-display text-lg font-semibold tracking-tight">
-                {tech.name}
-              </p>
-              <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper/45">
-                {tech.displayName}
-              </p>
-            </motion.div>
-          ))}
+        <div className="relative mt-16 overflow-hidden">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-ink to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-ink to-transparent" />
+
+          <DraggableMarquee trackClassName="items-stretch gap-3">
+            {[...technologies, ...technologies].map((tech, i) => {
+              const isSignal = i % 2 === 0;
+              return (
+                <div
+                  key={`${tech.id}-${i}`}
+                  className={`flex min-w-[180px] flex-col justify-center whitespace-nowrap rounded-sm border bg-ink px-6 py-5 transition-colors ${
+                    isSignal
+                      ? "border-signal/25 hover:border-signal/60"
+                      : "border-ember/25 hover:border-ember/60"
+                  }`}
+                >
+                  <span
+                    className={`mb-2 h-1.5 w-1.5 rounded-full ${isSignal ? "bg-signal" : "bg-ember"}`}
+                  />
+                  <p className="font-display text-lg font-semibold tracking-tight">
+                    {tech.name}
+                  </p>
+                  <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper/45">
+                    {tech.displayName}
+                  </p>
+                </div>
+              );
+            })}
+          </DraggableMarquee>
         </div>
       </div>
+
     </section>
   );
 }

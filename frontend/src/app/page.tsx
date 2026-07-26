@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
+import Capabilities from "@/components/sections/Capabilities";
 import ClientShowcase from "@/components/sections/ClientShowcase";
 import Services from "@/components/sections/Services";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
@@ -18,6 +19,7 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <Capabilities />
         <ClientShowcase />
         <Services />
         <WhyChooseUs />

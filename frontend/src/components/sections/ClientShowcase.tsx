@@ -1,12 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import DraggableMarquee from "@/components/DraggableMarquee";
 
 const CLIENTS = [
   "Meridian Logistics",
   "Northbridge Health",
   "Verity Payments",
-  "Anchorpoint",
+  "Ferrowave",
   "Solstice Analytics",
   "Kestrel Freight Networks",
   "Bramwell & Cole Financial",
@@ -38,7 +39,7 @@ export default function ClientShowcase() {
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-paper to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-paper to-transparent" />
 
-          <div className="marquee-track flex w-max items-center gap-3">
+          <DraggableMarquee trackClassName="items-center gap-3">
             {[...CLIENTS, ...CLIENTS].map((name, i) => {
               const isSignal = i % 2 === 0;
               return (
@@ -57,26 +58,10 @@ export default function ClientShowcase() {
                 </div>
               );
             })}
-          </div>
+          </DraggableMarquee>
         </div>
       </div>
 
-      <style jsx>{`
-        .marquee-track {
-          animation: marquee-scroll 28s linear infinite;
-        }
-        .marquee-track:hover {
-          animation-play-state: paused;
-        }
-        @keyframes marquee-scroll {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </section>
   );
 }

@@ -21,6 +21,102 @@ const FALLBACK_HERO: HeroDto = {
 
 const MotionLink = motion(Link);
 
+type TelemetryPill = {
+  label: string;
+  accent: "signal" | "ember";
+  top: string;
+  left: string;
+  delay: number;
+};
+
+const TELEMETRY_PILLS: TelemetryPill[] = [
+  { label: "deploy \u2192 production", accent: "signal", top: "6%", left: "8%", delay: 0 },
+  { label: "p95 latency 41ms", accent: "ember", top: "2%", left: "52%", delay: 0.6 },
+  { label: "tests: 1,204 passed", accent: "signal", top: "38%", left: "62%", delay: 1.2 },
+  { label: "zero-downtime migration", accent: "ember", top: "58%", left: "4%", delay: 0.3 },
+  { label: "uptime 99.98%", accent: "signal", top: "78%", left: "44%", delay: 0.9 },
+];
+
+const NODES = [
+  { x: 60, y: 40 },
+  { x: 180, y: 90 },
+  { x: 90, y: 170 },
+  { x: 230, y: 200 },
+  { x: 160, y: 280 },
+];
+
+const EDGES: [number, number][] = [
+  [0, 1],
+  [1, 2],
+  [1, 3],
+  [2, 4],
+  [3, 4],
+];
+
+function NodeGraph() {
+  return (
+    <svg
+      viewBox="0 0 300 340"
+      className="h-full w-full"
+      aria-hidden="true"
+    >
+      {EDGES.map(([a, b], i) => (
+        <motion.line
+          key={`edge-${i}`}
+          x1={NODES[a].x}
+          y1={NODES[a].y}
+          x2={NODES[b].x}
+          y2={NODES[b].y}
+          stroke="var(--color-wire)"
+          strokeOpacity={0.35}
+          strokeWidth={1}
+          strokeDasharray="4 5"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.4, delay: i * 0.15, ease: "easeOut" }}
+        />
+      ))}
+      {NODES.map((n, i) => (
+        <motion.circle
+          key={`node-${i}`}
+          cx={n.x}
+          cy={n.y}
+          r={5}
+          fill={i % 2 === 0 ? "var(--color-signal)" : "var(--color-ember)"}
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+        />
+      ))}
+    </svg>
+  );
+}
+
+function TelemetryCluster() {
+  return (
+    <div className="relative hidden h-[420px] flex-1 lg:block">
+      <div className="absolute inset-0 opacity-80">
+        <NodeGraph />
+      </div>
+      {TELEMETRY_PILLS.map((pill, i) => (
+        <motion.div
+          key={pill.label}
+          className="absolute flex items-center gap-2 rounded-full border border-wire/30 bg-ink/50 px-3 py-1.5 font-mono text-[11px] text-paper/90 backdrop-blur-sm"
+          style={{ top: pill.top, left: pill.left }}
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: pill.delay }}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${
+              pill.accent === "signal" ? "bg-signal" : "bg-ember"
+            }`}
+          />
+          {pill.label}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 export default function Hero() {
   const [hero, setHero] = useState<HeroDto>(FALLBACK_HERO);
 
@@ -74,7 +170,7 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[640px] max-w-6xl items-end px-6 pb-20 pt-32 sm:min-h-[680px] md:pt-40">
+      <div className="relative mx-auto flex min-h-[640px] max-w-6xl items-end justify-between gap-8 px-6 pb-20 pt-32 sm:min-h-[680px] md:pt-40">
         <motion.div initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
@@ -112,6 +208,8 @@ export default function Hero() {
             </MotionLink>
           </div>
         </motion.div>
+
+        <TelemetryCluster />
       </div>
     </section>
   );

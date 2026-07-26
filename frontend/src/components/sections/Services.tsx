@@ -12,6 +12,7 @@ import {
 
 type Service = {
   icon: typeof Layers;
+  tag: string;
   title: string;
   description: string;
 };
@@ -19,36 +20,42 @@ type Service = {
 const SERVICES: Service[] = [
   {
     icon: Layers,
+    tag: "platform",
     title: "Platform Engineering",
     description:
       "Internal developer platforms, service scaffolding, and golden paths that let product teams ship without reinventing infrastructure each time.",
   },
   {
     icon: Workflow,
+    tag: "integration",
     title: "API Design & Integration",
     description:
       "Contract-first REST and event-driven APIs, versioning strategy, and integration layers that hold up under multi-team, multi-vendor load.",
   },
   {
     icon: RefreshCw,
+    tag: "migration",
     title: "System Migration",
     description:
       "Legacy modernization and cloud migration executed in reversible stages, with data integrity and uptime treated as non-negotiable.",
   },
   {
     icon: Cloud,
+    tag: "devops",
     title: "Cloud Infrastructure & DevOps",
     description:
       "Infrastructure as code, container orchestration, and CI/CD pipelines built for repeatable, auditable deployments at scale.",
   },
   {
     icon: ShieldCheck,
+    tag: "security",
     title: "Security & Compliance Engineering",
     description:
       "Threat modeling, access control, audit logging, and hardened authentication built into the system, not bolted on afterward.",
   },
   {
     icon: Gauge,
+    tag: "reliability",
     title: "Performance & Reliability Engineering",
     description:
       "Caching strategy, load testing, and observability that keep latency low and SLAs intact as traffic and complexity grow.",
@@ -97,6 +104,7 @@ export default function Services() {
         <div className="mt-16 grid gap-px overflow-hidden rounded-sm border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((service, i) => {
             const Icon = service.icon;
+            const isSignal = i % 2 === 0;
             return (
               <motion.div
                 key={service.title}
@@ -110,10 +118,20 @@ export default function Services() {
                 }
                 className="group relative bg-paper p-8 transition-colors duration-300 hover:bg-ink hover:text-paper"
               >
-                <Icon
-                  className="h-6 w-6 text-signal transition-colors duration-300 group-hover:text-ember"
-                  strokeWidth={1.75}
-                />
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`flex h-16 w-16 items-center justify-center rounded-sm transition-colors duration-300 ${
+                      isSignal
+                        ? "bg-signal/15 text-signal group-hover:bg-signal/30"
+                        : "bg-ember/15 text-ember group-hover:bg-ember/30"
+                    }`}
+                  >
+                    <Icon className="h-7 w-7" strokeWidth={1.6} />
+                  </span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-graphite/40 transition-colors duration-300 group-hover:text-paper/40">
+                    /{service.tag}
+                  </span>
+                </div>
                 <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">
                   {service.title}
                 </h3>
