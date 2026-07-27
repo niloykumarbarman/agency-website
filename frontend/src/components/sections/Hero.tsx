@@ -18,11 +18,11 @@ const FALLBACK_HERO: HeroDto = {
   secondaryCtaUrl: "#work",
   backgroundImageUrl: "",
   telemetryPills: [
-    { id: "fallback-1", label: "deploy \u2192 production", accent: 0, top: 6, left: 8, displayOrder: 0 },
-    { id: "fallback-2", label: "p95 latency 41ms", accent: 1, top: 2, left: 52, displayOrder: 1 },
-    { id: "fallback-3", label: "tests: 1,204 passed", accent: 0, top: 38, left: 62, displayOrder: 2 },
-    { id: "fallback-4", label: "zero-downtime migration", accent: 1, top: 58, left: 4, displayOrder: 3 },
-    { id: "fallback-5", label: "uptime 99.98%", accent: 0, top: 78, left: 44, displayOrder: 4 },
+    { id: "fallback-1", label: "deploy \u2192 production", accent: "Signal", top: 6, left: 8, displayOrder: 0 },
+    { id: "fallback-2", label: "p95 latency 41ms", accent: "Ember", top: 2, left: 52, displayOrder: 1 },
+    { id: "fallback-3", label: "tests: 1,204 passed", accent: "Signal", top: 38, left: 62, displayOrder: 2 },
+    { id: "fallback-4", label: "zero-downtime migration", accent: "Ember", top: 58, left: 4, displayOrder: 3 },
+    { id: "fallback-5", label: "uptime 99.98%", accent: "Signal", top: 78, left: 44, displayOrder: 4 },
   ],
 };
 
@@ -98,7 +98,7 @@ function TelemetryCluster({ pills }: { pills: TelemetryPillDto[] }) {
         >
           <span
             className={`h-1.5 w-1.5 rounded-full ${
-              pill.accent === 0 ? "bg-signal" : "bg-ember"
+              pill.accent === "Signal" ? "bg-signal" : "bg-ember"
             }`}
           />
           {pill.label}

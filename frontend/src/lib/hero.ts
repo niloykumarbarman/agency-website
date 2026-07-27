@@ -3,7 +3,7 @@ import { API_BASE_URL } from "./apiConfig";
 export interface TelemetryPillDto {
   id: string;
   label: string;
-  accent: number; // 0 = Signal, 1 = Ember (raw enum int, no JsonStringEnumConverter)
+  accent: "Signal" | "Ember"; // serialized as string name via .ToString() in TelemetryPillDto
   top: number;
   left: number;
   displayOrder: number;
