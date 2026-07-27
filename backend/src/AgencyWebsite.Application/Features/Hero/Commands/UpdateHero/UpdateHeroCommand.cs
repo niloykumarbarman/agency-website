@@ -12,4 +12,5 @@ public class UpdateHeroCommand : IRequest<Unit>
     public string SecondaryCtaText { get; set; } = string.Empty;
     public string SecondaryCtaUrl { get; set; } = string.Empty;
     public string BackgroundImageUrl { get; set; } = string.Empty;
+    public List<TelemetryPillInput> TelemetryPills { get; set; } = new();
 }

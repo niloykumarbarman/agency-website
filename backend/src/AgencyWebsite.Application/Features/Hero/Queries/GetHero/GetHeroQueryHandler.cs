@@ -31,6 +31,7 @@ public class GetHeroQueryHandler : IRequestHandler<GetHeroQuery, HeroDto>
         // the public site always has content to render and the admin panel
         // always has a row to edit.
         var hero = await _context.HeroContents
+            .Include(h => h.TelemetryPills)
             .Where(h => !h.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -59,7 +60,19 @@ public class GetHeroQueryHandler : IRequestHandler<GetHeroQuery, HeroDto>
             PrimaryCtaUrl = hero.PrimaryCtaUrl,
             SecondaryCtaText = hero.SecondaryCtaText,
             SecondaryCtaUrl = hero.SecondaryCtaUrl,
-            BackgroundImageUrl = hero.BackgroundImageUrl
+            BackgroundImageUrl = hero.BackgroundImageUrl,
+            TelemetryPills = hero.TelemetryPills
+                .OrderBy(p => p.DisplayOrder)
+                .Select(p => new TelemetryPillDto
+                {
+                    Id = p.Id,
+                    Label = p.Label,
+                    Accent = p.Accent.ToString(),
+                    Top = p.Top,
+                    Left = p.Left,
+                    DisplayOrder = p.DisplayOrder
+                })
+                .ToList()
         };
 
         await _cache.SetAsync(CacheKey, result, TimeSpan.FromMinutes(5), cancellationToken);

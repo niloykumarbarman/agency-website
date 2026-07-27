@@ -1,4 +1,6 @@
 using AgencyWebsite.Application.Common.Interfaces;
+using AgencyWebsite.Domain.Entities;
+using AgencyWebsite.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +22,7 @@ public class UpdateHeroCommandHandler : IRequestHandler<UpdateHeroCommand, Unit>
     public async Task<Unit> Handle(UpdateHeroCommand request, CancellationToken cancellationToken)
     {
         var hero = await _context.HeroContents
+            .Include(h => h.TelemetryPills)
             .FirstOrDefaultAsync(h => h.Id == request.Id && !h.IsDeleted, cancellationToken)
             ?? throw new KeyNotFoundException($"HeroContent with Id '{request.Id}' was not found.");
 
@@ -31,6 +34,20 @@ public class UpdateHeroCommandHandler : IRequestHandler<UpdateHeroCommand, Unit>
         hero.SecondaryCtaUrl = request.SecondaryCtaUrl;
         hero.BackgroundImageUrl = request.BackgroundImageUrl;
         hero.UpdatedAt = DateTime.UtcNow;
+
+        hero.TelemetryPills.Clear();
+        foreach (var pill in request.TelemetryPills)
+        {
+            hero.TelemetryPills.Add(new HeroTelemetryPill
+            {
+                Label = pill.Label,
+                Accent = Enum.Parse<TelemetryAccent>(pill.Accent),
+                Top = pill.Top,
+                Left = pill.Left,
+                DisplayOrder = pill.DisplayOrder,
+                HeroContentId = hero.Id
+            });
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
         await _cache.RemoveAsync(CacheKey, cancellationToken);
