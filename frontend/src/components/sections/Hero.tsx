@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { fetchHero, resolveImageUrl, type HeroDto } from "@/lib/hero";
+import { fetchHero, resolveImageUrl, type HeroDto, type TelemetryPillDto } from "@/lib/hero";
 
 const FALLBACK_HERO: HeroDto = {
   id: "fallback",
@@ -17,25 +17,16 @@ const FALLBACK_HERO: HeroDto = {
   secondaryCtaText: "See our systems",
   secondaryCtaUrl: "#work",
   backgroundImageUrl: "",
+  telemetryPills: [
+    { id: "fallback-1", label: "deploy \u2192 production", accent: 0, top: 6, left: 8, displayOrder: 0 },
+    { id: "fallback-2", label: "p95 latency 41ms", accent: 1, top: 2, left: 52, displayOrder: 1 },
+    { id: "fallback-3", label: "tests: 1,204 passed", accent: 0, top: 38, left: 62, displayOrder: 2 },
+    { id: "fallback-4", label: "zero-downtime migration", accent: 1, top: 58, left: 4, displayOrder: 3 },
+    { id: "fallback-5", label: "uptime 99.98%", accent: 0, top: 78, left: 44, displayOrder: 4 },
+  ],
 };
 
 const MotionLink = motion.create(Link);
-
-type TelemetryPill = {
-  label: string;
-  accent: "signal" | "ember";
-  top: string;
-  left: string;
-  delay: number;
-};
-
-const TELEMETRY_PILLS: TelemetryPill[] = [
-  { label: "deploy \u2192 production", accent: "signal", top: "6%", left: "8%", delay: 0 },
-  { label: "p95 latency 41ms", accent: "ember", top: "2%", left: "52%", delay: 0.6 },
-  { label: "tests: 1,204 passed", accent: "signal", top: "38%", left: "62%", delay: 1.2 },
-  { label: "zero-downtime migration", accent: "ember", top: "58%", left: "4%", delay: 0.3 },
-  { label: "uptime 99.98%", accent: "signal", top: "78%", left: "44%", delay: 0.9 },
-];
 
 const NODES = [
   { x: 60, y: 40 },
@@ -91,23 +82,23 @@ function NodeGraph() {
   );
 }
 
-function TelemetryCluster() {
+function TelemetryCluster({ pills }: { pills: TelemetryPillDto[] }) {
   return (
     <div className="relative hidden h-[420px] flex-1 lg:block">
       <div className="absolute inset-0 opacity-80">
         <NodeGraph />
       </div>
-      {TELEMETRY_PILLS.map((pill, i) => (
+      {pills.map((pill, i) => (
         <motion.div
-          key={pill.label}
+          key={pill.id}
           className="absolute flex items-center gap-2 rounded-full border border-wire/30 bg-ink/50 px-3 py-1.5 font-mono text-[11px] text-paper/90 backdrop-blur-sm"
-          style={{ top: pill.top, left: pill.left }}
+          style={{ top: `${pill.top}%`, left: `${pill.left}%` }}
           animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: pill.delay }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }}
         >
           <span
             className={`h-1.5 w-1.5 rounded-full ${
-              pill.accent === "signal" ? "bg-signal" : "bg-ember"
+              pill.accent === 0 ? "bg-signal" : "bg-ember"
             }`}
           />
           {pill.label}
@@ -133,6 +124,7 @@ export default function Hero() {
   }, []);
 
   const backgroundSrc = hero.backgroundImageUrl ? resolveImageUrl(hero.backgroundImageUrl) : "";
+  const pills = hero.telemetryPills && hero.telemetryPills.length > 0 ? hero.telemetryPills : FALLBACK_HERO.telemetryPills;
 
   return (
     <section className="relative isolate overflow-hidden bg-ink">
@@ -209,7 +201,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        <TelemetryCluster />
+        <TelemetryCluster pills={pills} />
       </div>
     </section>
   );

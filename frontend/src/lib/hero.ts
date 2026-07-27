@@ -1,5 +1,14 @@
 import { API_BASE_URL } from "./apiConfig";
 
+export interface TelemetryPillDto {
+  id: string;
+  label: string;
+  accent: number; // 0 = Signal, 1 = Ember (raw enum int, no JsonStringEnumConverter)
+  top: number;
+  left: number;
+  displayOrder: number;
+}
+
 export interface HeroDto {
   id: string;
   title: string;
@@ -9,6 +18,7 @@ export interface HeroDto {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   backgroundImageUrl: string;
+  telemetryPills: TelemetryPillDto[];
 }
 
 export async function fetchHero(): Promise<HeroDto | null> {
