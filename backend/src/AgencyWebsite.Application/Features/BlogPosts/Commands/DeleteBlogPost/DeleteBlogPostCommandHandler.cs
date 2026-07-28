@@ -27,6 +27,7 @@ public class DeleteBlogPostCommandHandler : IRequestHandler<DeleteBlogPostComman
         await _context.SaveChangesAsync(cancellationToken);
 
         await _cache.RemoveAsync("blogposts:all", cancellationToken);
+        await _cache.RemoveAsync("blogposts:slug:" + blogPost.Slug, cancellationToken);
 
         return Unit.Value;
     }

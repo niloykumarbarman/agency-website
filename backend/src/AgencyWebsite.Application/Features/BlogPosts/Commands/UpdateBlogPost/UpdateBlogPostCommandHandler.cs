@@ -22,6 +22,8 @@ public class UpdateBlogPostCommandHandler : IRequestHandler<UpdateBlogPostComman
             .FirstOrDefaultAsync(b => b.Id == request.Id && !b.IsDeleted, cancellationToken)
             ?? throw new KeyNotFoundException($"BlogPost with Id '{request.Id}' was not found.");
 
+        var originalSlug = blogPost.Slug;
+
         blogPost.Title = request.Title;
         blogPost.Slug = request.Slug;
         blogPost.Excerpt = request.Excerpt;
@@ -40,6 +42,11 @@ public class UpdateBlogPostCommandHandler : IRequestHandler<UpdateBlogPostComman
         await _context.SaveChangesAsync(cancellationToken);
 
         await _cache.RemoveAsync("blogposts:all", cancellationToken);
+        await _cache.RemoveAsync("blogposts:slug:" + originalSlug, cancellationToken);
+        if (request.Slug != originalSlug)
+        {
+            await _cache.RemoveAsync("blogposts:slug:" + request.Slug, cancellationToken);
+        }
 
         return Unit.Value;
     }
