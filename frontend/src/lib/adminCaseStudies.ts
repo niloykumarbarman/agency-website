@@ -11,6 +11,7 @@ export interface AdminCaseStudy {
   solution: string;
   results: string;
   coverImageUrl: string;
+  isPublished: boolean;
 }
 
 export interface CaseStudyFormPayload {
@@ -28,7 +29,7 @@ export interface CaseStudyFormPayload {
 export const CASE_STUDIES_ADMIN_API_URL = `${API_BASE_URL}/case-studies`;
 
 export async function fetchAdminCaseStudies() {
-  const res = await adminFetch(CASE_STUDIES_ADMIN_API_URL);
+  const res = await adminFetch(`${CASE_STUDIES_ADMIN_API_URL}/admin`);
   if (!res.ok) {
     throw new Error(`Failed to fetch case studies: ${res.status}`);
   }

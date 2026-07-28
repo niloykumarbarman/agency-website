@@ -71,9 +71,7 @@ export default function AdminCaseStudiesPage() {
       solution: item.solution,
       results: item.results,
       coverImageUrl: item.coverImageUrl,
-      // NOTE: the backend list DTO does not expose IsPublished, so we
-      // cannot know the real current value here — defaults to unchecked.
-      isPublished: false,
+      isPublished: item.isPublished,
     });
     setEditingId(item.id);
     setShowForm(true);
@@ -161,13 +159,6 @@ export default function AdminCaseStudiesPage() {
               <X className="h-5 w-5" />
             </button>
           </div>
-
-          {editingId && (
-            <p className="mt-2 text-xs text-graphite/50">
-              Note: the published toggle defaults to off when editing, since
-              the API does not return the current published state.
-            </p>
-          )}
 
           <form onSubmit={handleSubmit} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
@@ -296,6 +287,7 @@ export default function AdminCaseStudiesPage() {
                 <th className="px-5 py-4">Client</th>
                 <th className="px-5 py-4">Industry</th>
                 <th className="px-5 py-4">Slug</th>
+                <th className="px-5 py-4">Published</th>
                 <th className="px-5 py-4"></th>
               </tr>
             </thead>
@@ -306,6 +298,17 @@ export default function AdminCaseStudiesPage() {
                   <td className="px-5 py-4 text-graphite/70">{item.clientName}</td>
                   <td className="px-5 py-4 text-graphite/70">{item.industry}</td>
                   <td className="px-5 py-4 text-graphite/60">{item.slug}</td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-1 font-mono text-xs uppercase tracking-wider ${
+                        item.isPublished
+                          ? "bg-[color:var(--color-signal)]/10 text-[color:var(--color-signal)]"
+                          : "bg-graphite/8 text-graphite/50"
+                      }`}
+                    >
+                      {item.isPublished ? "Published" : "Draft"}
+                    </span>
+                  </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <button
