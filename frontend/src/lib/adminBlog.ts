@@ -25,6 +25,7 @@ export interface AdminBlogPost {
   coverImageUrl: string;
   authorName: string;
   publishedAt: string | null;
+  status: BlogPostStatus;
 }
 
 export interface AdminBlogPostDetail extends AdminBlogPost {
@@ -42,9 +43,10 @@ export interface BlogPostFormPayload {
 }
 
 export const BLOG_POSTS_ADMIN_API_URL = `${API_BASE_URL}/blog-posts`;
+export const BLOG_POSTS_ADMIN_LIST_API_URL = `${API_BASE_URL}/blog-posts/admin`;
 
 export async function fetchAdminBlogPosts(): Promise<AdminBlogPost[]> {
-  const res = await adminFetch(BLOG_POSTS_ADMIN_API_URL);
+  const res = await adminFetch(BLOG_POSTS_ADMIN_LIST_API_URL);
   if (!res.ok) {
     throw new Error(`Failed to fetch blog posts: ${res.status}`);
   }

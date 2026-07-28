@@ -79,10 +79,7 @@ export default function AdminBlogPage() {
         content: detail.content,
         coverImageUrl: detail.coverImageUrl,
         authorName: detail.authorName,
-        // NOTE: the backend list/detail DTOs do not expose the Status enum,
-        // only publishedAt. This is a best-effort guess, not the real value —
-        // Archived posts cannot be distinguished from Draft this way.
-        status: detail.publishedAt ? "Published" : "Draft",
+        status: detail.status,
       });
       setEditingSlug(slug);
       setShowForm(true);
@@ -176,11 +173,6 @@ export default function AdminBlogPage() {
               <X className="h-5 w-5" />
             </button>
           </div>
-
-          <p className="mt-2 text-xs text-graphite/50">
-            Note: status shown here is a best-effort guess from publish date,
-            since the API does not return the actual status field.
-          </p>
 
           <form onSubmit={handleSubmit} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
@@ -304,13 +296,16 @@ export default function AdminBlogPage() {
                     <span
                       className={
                         "rounded-full border px-3 py-1 text-xs font-medium " +
-                        (item.publishedAt ? STATUS_STYLES.Published : STATUS_STYLES.Draft)
+                        (STATUS_STYLES[item.status] ?? STATUS_STYLES.Draft)
                       }
                     >
-                      {item.publishedAt
-                        ? new Date(item.publishedAt).toLocaleDateString()
-                        : "Draft"}
+                      {item.status}
                     </span>
+                    {item.publishedAt && (
+                      <div className="mt-1 text-xs text-graphite/40">
+                        {new Date(item.publishedAt).toLocaleDateString()}
+                      </div>
+                    )}
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">

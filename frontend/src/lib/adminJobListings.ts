@@ -26,6 +26,9 @@ export interface AdminJobListing {
   department: string;
   location: string;
   employmentType: string;
+  description: string;
+  requirements: string;
+  status: JobListingStatus;
 }
 
 export interface JobListingFormPayload {
@@ -40,9 +43,10 @@ export interface JobListingFormPayload {
 }
 
 export const JOB_LISTINGS_ADMIN_API_URL = `${API_BASE_URL}/job-listings`;
+export const JOB_LISTINGS_ADMIN_LIST_API_URL = `${API_BASE_URL}/job-listings/admin`;
 
 export async function fetchAdminJobListings(): Promise<AdminJobListing[]> {
-  const res = await adminFetch(JOB_LISTINGS_ADMIN_API_URL);
+  const res = await adminFetch(JOB_LISTINGS_ADMIN_LIST_API_URL);
   if (!res.ok) {
     throw new Error(`Failed to fetch job listings: ${res.status}`);
   }

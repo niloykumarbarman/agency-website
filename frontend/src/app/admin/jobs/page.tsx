@@ -69,13 +69,9 @@ export default function AdminJobListingsPage() {
       department: item.department,
       location: item.location,
       employmentType: item.employmentType,
-      // NOTE: the list API never returns description, requirements, or
-      // status, so these cannot be prefilled. Re-enter them below, and
-      // confirm the correct Status -- leaving it as Draft will overwrite
-      // the existing status on save.
-      description: "",
-      requirements: "",
-      status: "Draft",
+      description: item.description,
+      requirements: item.requirements,
+      status: item.status,
     });
     setEditingId(item.id);
     setShowForm(true);
@@ -163,15 +159,6 @@ export default function AdminJobListingsPage() {
               <X className="h-5 w-5" />
             </button>
           </div>
-
-          {editingId && (
-            <p className="mt-2 text-xs text-graphite/50">
-              Note: Description, Requirements, and Status are not returned by
-              the list API and cannot be prefilled. Please re-enter them and
-              confirm the correct Status before saving, or the existing
-              values will be overwritten.
-            </p>
-          )}
 
           <form onSubmit={handleSubmit} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
