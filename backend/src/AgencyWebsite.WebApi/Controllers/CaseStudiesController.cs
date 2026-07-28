@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.CaseStudies.Commands.CreateCaseStudy;
 using AgencyWebsite.Application.Features.CaseStudies.Commands.DeleteCaseStudy;
 using AgencyWebsite.Application.Features.CaseStudies.Commands.UpdateCaseStudy;
 using AgencyWebsite.Application.Features.CaseStudies.Queries.GetAllCaseStudies;
+using AgencyWebsite.Application.Features.CaseStudies.Queries.GetAllCaseStudiesAdmin;
 using AgencyWebsite.Application.Features.CaseStudies.Queries.GetCaseStudyBySlug;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +33,14 @@ public class CaseStudiesController : ControllerBase
     {
         var result = await _sender.Send(new GetCaseStudyBySlugQuery { Slug = slug }, cancellationToken);
         if (result is null) return NotFound();
+        return Ok(result);
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<AdminCaseStudyDto>>> GetAllForAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllCaseStudiesAdminQuery(), cancellationToken);
         return Ok(result);
     }
 
