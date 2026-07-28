@@ -7,7 +7,7 @@ import CaseStudiesList from "@/components/sections/CaseStudiesList";
 import CaseStudiesCTA from "@/components/sections/CaseStudiesCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Case Studies | Ferrowave",
+  title: "Case Studies | Devliora",
   description:
     "How we approach hard engineering problems, from the constraint we started with to the system running in production today.",
   path: "/case-studies",

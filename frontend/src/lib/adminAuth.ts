@@ -13,7 +13,7 @@ export interface LoginResponse {
 
 export const AUTH_LOGIN_API_URL = `${API_BASE_URL}/auth/login`;
 
-const TOKEN_STORAGE_KEY = "ferrowave_admin_token";
+const TOKEN_STORAGE_KEY = "devliora_admin_token";
 
 export async function loginAdmin(payload: LoginPayload): Promise<LoginResponse> {
   const res = await fetch(AUTH_LOGIN_API_URL, {

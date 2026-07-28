@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
           /admin/login
         </span>
         <h1 className="mt-4 text-balance text-3xl font-semibold leading-tight text-paper md:text-4xl">
-          Ferrowave <span className="text-signal">Admin</span>
+          Devliora <span className="text-signal">Admin</span>
         </h1>
         <p className="mt-3 text-graphite-200 text-wire/70">
           Sign in to manage consultations, content, and messages.
@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-2 w-full rounded-md border border-wire/20 bg-paper/5 px-4 py-3 text-paper outline-none transition focus:border-signal"
-              placeholder="admin@ferrowave.dev"
+              placeholder="admin@devliora.dev"
             />
           </div>
 

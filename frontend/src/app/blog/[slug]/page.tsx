@@ -19,11 +19,11 @@ export async function generateMetadata({
   const post = await fetchBlogPostBySlug(slug);
 
   if (!post) {
-    return { title: "Article not found | Ferrowave" };
+    return { title: "Article not found | Devliora" };
   }
 
   return buildMetadata({
-    title: `${post.title} | Ferrowave`,
+    title: `${post.title} | Devliora`,
     description: post.excerpt,
     path: `/blog/${post.slug}`,
     image: post.coverImageUrl || undefined,

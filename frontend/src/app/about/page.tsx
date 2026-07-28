@@ -8,9 +8,9 @@ import AboutPrinciples from "@/components/sections/AboutPrinciples";
 import AboutCTA from "@/components/sections/AboutCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "About | Ferrowave",
+  title: "About | Devliora",
   description:
-    "Ferrowave is a founder-led software engineering studio built on production-grade security, transparency, and real engineering standards.",
+    "Devliora is a founder-led software engineering studio built on production-grade security, transparency, and real engineering standards.",
   path: "/about",
 });
 

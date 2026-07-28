@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   ...buildMetadata({
-    title: "Ferrowave — Enterprise Software Engineering",
+    title: "Devliora — Enterprise Software Engineering",
     description: siteConfig.description,
     path: "",
   }),

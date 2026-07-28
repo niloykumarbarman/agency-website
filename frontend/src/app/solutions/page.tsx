@@ -7,9 +7,9 @@ import SolutionsDetailList from "@/components/sections/SolutionsDetailList";
 import SolutionsCTA from "@/components/sections/SolutionsCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Solutions | Ferrowave",
+  title: "Solutions | Devliora",
   description:
-    "Outcome-focused solutions from Ferrowave: custom software, modernization, cloud, data, and AI integration.",
+    "Outcome-focused solutions from Devliora: custom software, modernization, cloud, data, and AI integration.",
   path: "/solutions",
 });
 

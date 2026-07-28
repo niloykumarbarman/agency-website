@@ -7,11 +7,11 @@ import type { Metadata } from "next";
  * derives from it.
  */
 export const siteConfig = {
-  name: "Ferrowave",
+  name: "Devliora",
   // TODO: replace with the final production domain once purchased/confirmed.
-  url: "https://ferrowave.com",
+  url: "https://devliora.com",
   description:
-    "Ferrowave designs and builds production-grade software systems for enterprise teams: APIs, platforms, and the infrastructure that holds them together.",
+    "Devliora designs and builds production-grade software systems for enterprise teams: APIs, platforms, and the infrastructure that holds them together.",
   // Drop a real logo/brand image at this path (frontend/public/og-image.png,
   // 1200x630px) to replace the generated placeholder.
   ogImage: "/og-image.png",

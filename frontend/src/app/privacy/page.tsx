@@ -6,9 +6,9 @@ import PrivacyHero from "@/components/sections/PrivacyHero";
 import PrivacyContent from "@/components/sections/PrivacyContent";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Privacy Policy | Ferrowave",
+  title: "Privacy Policy | Devliora",
   description:
-    "How Ferrowave collects, uses, and protects your information.",
+    "How Devliora collects, uses, and protects your information.",
   path: "/privacy",
 });
 

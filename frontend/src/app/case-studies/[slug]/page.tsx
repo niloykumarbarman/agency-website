@@ -31,13 +31,13 @@ export async function generateMetadata({
   const study = await fetchCaseStudyBySlug(slug);
   if (!study) {
     return buildMetadata({
-      title: "Case Study | Ferrowave",
+      title: "Case Study | Devliora",
       description: "Case study details.",
       path: `/case-studies/${slug}`,
     });
   }
   return buildMetadata({
-    title: `${study.title} | Ferrowave`,
+    title: `${study.title} | Devliora`,
     description: study.results.slice(0, 160),
     path: `/case-studies/${study.slug}`,
   });

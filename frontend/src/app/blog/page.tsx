@@ -7,7 +7,7 @@ import BlogPostList from "@/components/sections/BlogPostList";
 import BlogCTA from "@/components/sections/BlogCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Blog | Ferrowave",
+  title: "Blog | Devliora",
   description:
     "Engineering practices, architecture decisions, and lessons from building enterprise systems.",
   path: "/blog",

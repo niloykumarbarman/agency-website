@@ -7,7 +7,7 @@ const CLIENTS = [
   "Meridian Logistics",
   "Northbridge Health",
   "Verity Payments",
-  "Ferrowave",
+  "Devliora",
   "Solstice Analytics",
   "Kestrel Freight Networks",
   "Bramwell & Cole Financial",

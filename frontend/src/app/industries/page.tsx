@@ -7,9 +7,9 @@ import IndustriesDetailList from "@/components/sections/IndustriesDetailList";
 import IndustriesCTA from "@/components/sections/IndustriesCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Industries | Ferrowave",
+  title: "Industries | Devliora",
   description:
-    "Industries where Ferrowave has built the deepest domain context: FinTech, Healthcare, E-commerce, Logistics, SaaS, and EdTech.",
+    "Industries where Devliora has built the deepest domain context: FinTech, Healthcare, E-commerce, Logistics, SaaS, and EdTech.",
   path: "/industries",
 });
 

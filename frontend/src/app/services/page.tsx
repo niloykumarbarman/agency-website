@@ -7,7 +7,7 @@ import ServicesDetailList from "@/components/sections/ServicesDetailList";
 import ServicesCTA from "@/components/sections/ServicesCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Services | Ferrowave",
+  title: "Services | Devliora",
   description:
     "Platform engineering, API design, system migration, cloud infrastructure, security engineering, and performance engineering — scoped in detail.",
   path: "/services",

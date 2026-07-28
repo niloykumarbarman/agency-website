@@ -11,7 +11,7 @@ const FALLBACK_HERO: HeroDto = {
   id: "fallback",
   title: "We architect the systems your business runs on.",
   subtitle:
-    "Ferrowave designs, builds, and hardens production software for enterprise teams — APIs, platforms, and the infrastructure that keeps them connected under real load.",
+    "Devliora designs, builds, and hardens production software for enterprise teams — APIs, platforms, and the infrastructure that keeps them connected under real load.",
   primaryCtaText: "Start a project",
   primaryCtaUrl: "#contact",
   secondaryCtaText: "See our systems",

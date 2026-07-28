@@ -92,7 +92,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <div className="flex items-center gap-2 px-6 py-6">
           <LayoutDashboard className="h-5 w-5 text-signal" />
           <span className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-            Ferrowave Admin
+            Devliora Admin
           </span>
         </div>
 

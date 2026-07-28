@@ -7,9 +7,9 @@ import TechnologiesDetailList from "@/components/sections/TechnologiesDetailList
 import TechnologiesCTA from "@/components/sections/TechnologiesCTA";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Technologies | Ferrowave",
+  title: "Technologies | Devliora",
   description:
-    "The tools and platforms Ferrowave relies on to build reliable, secure, and maintainable software.",
+    "The tools and platforms Devliora relies on to build reliable, secure, and maintainable software.",
   path: "/technologies",
 });
 
