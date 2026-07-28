@@ -18,6 +18,7 @@ export interface HeroDto {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   backgroundImageUrl: string;
+  backgroundVideoUrl: string;
   telemetryPills: TelemetryPillDto[];
 }
 

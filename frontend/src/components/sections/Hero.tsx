@@ -17,6 +17,7 @@ const FALLBACK_HERO: HeroDto = {
   secondaryCtaText: "See our systems",
   secondaryCtaUrl: "#work",
   backgroundImageUrl: "",
+  backgroundVideoUrl: "",
   telemetryPills: [
     { id: "fallback-1", label: "deploy \u2192 production", accent: "Signal", top: 6, left: 8, displayOrder: 0 },
     { id: "fallback-2", label: "p95 latency 41ms", accent: "Ember", top: 2, left: 52, displayOrder: 1 },
@@ -124,12 +125,23 @@ export default function Hero() {
   }, []);
 
   const backgroundSrc = hero.backgroundImageUrl ? resolveImageUrl(hero.backgroundImageUrl) : "";
+  const videoSrc = hero.backgroundVideoUrl ? resolveImageUrl(hero.backgroundVideoUrl) : "";
   const pills = hero.telemetryPills && hero.telemetryPills.length > 0 ? hero.telemetryPills : FALLBACK_HERO.telemetryPills;
 
   return (
     <section className="relative isolate overflow-hidden bg-ink">
       <div className="absolute inset-0">
-        {backgroundSrc ? (
+        {videoSrc ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src={videoSrc} />
+          </video>
+        ) : backgroundSrc ? (
           <Image src={backgroundSrc}
             alt=""
             fill

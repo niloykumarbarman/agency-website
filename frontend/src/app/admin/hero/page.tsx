@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Loader2, Save, ImageIcon, Plus, Trash2 } from "lucide-react";
+import { Loader2, Save, ImageIcon, Video, Plus, Trash2 } from "lucide-react";
 import {
   fetchAdminHero,
   updateHero,
@@ -23,6 +23,7 @@ const emptyForm: HeroFormPayload = {
   secondaryCtaText: "",
   secondaryCtaUrl: "",
   backgroundImageUrl: "",
+  backgroundVideoUrl: "",
   telemetryPills: [],
 };
 
@@ -65,6 +66,7 @@ export default function AdminHeroPage() {
           secondaryCtaText: data.secondaryCtaText,
           secondaryCtaUrl: data.secondaryCtaUrl,
           backgroundImageUrl: data.backgroundImageUrl,
+          backgroundVideoUrl: data.backgroundVideoUrl,
           telemetryPills: [],
         });
         const sortedPills = [...data.telemetryPills].sort(
@@ -252,6 +254,32 @@ export default function AdminHeroPage() {
               <div className="flex flex-col items-center gap-2 text-graphite/30">
                 <ImageIcon className="h-6 w-6" />
                 <span className="text-xs">No image URL set</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="md:col-span-2">
+          <label className={labelClass}>Background Video URL</label>
+          <input
+            value={form.backgroundVideoUrl}
+            onChange={(e) => setField("backgroundVideoUrl", e.target.value)}
+            className={inputClass}
+          />
+          <div className="mt-3 flex h-40 w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-graphite/15 bg-graphite/5">
+            {form.backgroundVideoUrl ? (
+              <video
+                src={form.backgroundVideoUrl}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-2 text-graphite/30">
+                <Video className="h-6 w-6" />
+                <span className="text-xs">No video URL set</span>
               </div>
             )}
           </div>

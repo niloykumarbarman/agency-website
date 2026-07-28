@@ -27,6 +27,7 @@ export interface AdminHero {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   backgroundImageUrl: string;
+  backgroundVideoUrl: string;
   telemetryPills: AdminTelemetryPill[];
 }
 
@@ -38,6 +39,7 @@ export interface HeroFormPayload {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   backgroundImageUrl: string;
+  backgroundVideoUrl: string;
   telemetryPills: TelemetryPillInput[];
 }
 
