@@ -4,6 +4,7 @@ using AgencyWebsite.Application.Features.BlogPosts.Commands.UpdateBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Queries.GetAllBlogPosts;
 using AgencyWebsite.Application.Features.BlogPosts.Queries.GetAllBlogPostsAdmin;
 using AgencyWebsite.Application.Features.BlogPosts.Queries.GetBlogPostBySlug;
+using AgencyWebsite.Application.Features.BlogPosts.Queries.GetBlogPostByIdAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,14 @@ public class BlogPostsController : ControllerBase
     public async Task<ActionResult<BlogPostDetailDto>> GetBySlug(string slug, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetBlogPostBySlugQuery { Slug = slug }, cancellationToken);
+        if (result is null) return NotFound();
+        return Ok(result);
+    }
+    [HttpGet("admin/{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<BlogPostAdminDetailDto>> GetByIdAdmin(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetBlogPostByIdAdminQuery { Id = id }, cancellationToken);
         if (result is null) return NotFound();
         return Ok(result);
     }

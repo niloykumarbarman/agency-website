@@ -53,10 +53,10 @@ export async function fetchAdminBlogPosts(): Promise<AdminBlogPost[]> {
   return res.json();
 }
 
-export async function fetchAdminBlogPostBySlug(
-  slug: string
+export async function fetchAdminBlogPostById(
+  id: string
 ): Promise<AdminBlogPostDetail> {
-  const res = await adminFetch(`${BLOG_POSTS_ADMIN_API_URL}/${slug}`);
+  const res = await adminFetch(`${BLOG_POSTS_ADMIN_API_URL}/admin/${id}`);
   if (!res.ok) {
     throw new Error(`Failed to fetch blog post: ${res.status}`);
   }

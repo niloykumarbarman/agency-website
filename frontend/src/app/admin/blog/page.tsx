@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, Newspaper } from "lucide-react";
 import {
   fetchAdminBlogPosts,
-  fetchAdminBlogPostBySlug,
+  fetchAdminBlogPostById,
   createBlogPost,
   updateBlogPost,
   deleteBlogPost,
@@ -39,7 +39,7 @@ export default function AdminBlogPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [editingSlug, setEditingSlug] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<BlogPostFormPayload>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -64,14 +64,14 @@ export default function AdminBlogPage() {
 
   const openCreateForm = () => {
     setForm(EMPTY_FORM);
-    setEditingSlug(null);
+    setEditingId(null);
     setShowForm(true);
   };
 
-  const openEditForm = async (slug: string) => {
+  const openEditForm = async (id: string) => {
     setError("");
     try {
-      const detail = await fetchAdminBlogPostBySlug(slug);
+      const detail = await fetchAdminBlogPostById(id);
       setForm({
         title: detail.title,
         slug: detail.slug,
@@ -81,7 +81,7 @@ export default function AdminBlogPage() {
         authorName: detail.authorName,
         status: detail.status,
       });
-      setEditingSlug(slug);
+      setEditingId(id);
       setShowForm(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load post for editing.");
@@ -90,7 +90,7 @@ export default function AdminBlogPage() {
 
   const closeForm = () => {
     setShowForm(false);
-    setEditingSlug(null);
+    setEditingId(null);
     setForm(EMPTY_FORM);
   };
 
@@ -99,11 +99,8 @@ export default function AdminBlogPage() {
     setSaving(true);
     setError("");
     try {
-      if (editingSlug) {
-        const current = items.find((i) => i.slug === editingSlug);
-        if (current) {
-          await updateBlogPost(current.id, form);
-        }
+      if (editingId) {
+        await updateBlogPost(editingId, form);
       } else {
         await createBlogPost(form);
       }
@@ -167,7 +164,7 @@ export default function AdminBlogPage() {
         <div className="admin-fade-in mt-8 rounded-xl border border-graphite/10 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-graphite">
-              {editingSlug ? "Edit Post" : "New Post"}
+              {editingId ? "Edit Post" : "New Post"}
             </h2>
             <button onClick={closeForm} className="text-graphite/40 transition hover:text-graphite">
               <X className="h-5 w-5" />
@@ -257,7 +254,7 @@ export default function AdminBlogPage() {
                 className="flex items-center gap-2 rounded-lg bg-signal px-4 py-2 text-sm font-medium text-ink shadow-sm transition hover:brightness-110 disabled:opacity-60"
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                {editingSlug ? "Save Changes" : "Create Post"}
+                {editingId ? "Save Changes" : "Create Post"}
               </button>
             </div>
           </form>
@@ -310,7 +307,7 @@ export default function AdminBlogPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => openEditForm(item.slug)}
+                        onClick={() => openEditForm(item.id)}
                         className="text-graphite/30 transition hover:scale-110 hover:text-signal"
                         title="Edit"
                       >
