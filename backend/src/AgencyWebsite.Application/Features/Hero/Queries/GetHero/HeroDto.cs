@@ -10,5 +10,6 @@ public class HeroDto
     public string SecondaryCtaText { get; set; } = string.Empty;
     public string SecondaryCtaUrl { get; set; } = string.Empty;
     public string BackgroundImageUrl { get; set; } = string.Empty;
+    public string BackgroundVideoUrl { get; set; } = string.Empty;
     public List<TelemetryPillDto> TelemetryPills { get; set; } = new();
 }

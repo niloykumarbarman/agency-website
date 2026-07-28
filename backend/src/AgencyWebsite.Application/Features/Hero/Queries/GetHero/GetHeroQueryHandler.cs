@@ -45,7 +45,8 @@ public class GetHeroQueryHandler : IRequestHandler<GetHeroQuery, HeroDto>
                 PrimaryCtaUrl = "#contact",
                 SecondaryCtaText = "View Our Work",
                 SecondaryCtaUrl = "#portfolio",
-                BackgroundImageUrl = "/uploads/hero-placeholder.jpg"
+                BackgroundImageUrl = "/uploads/hero-placeholder.jpg",
+                BackgroundVideoUrl = ""
             };
             _context.HeroContents.Add(hero);
             await _context.SaveChangesAsync(cancellationToken);
@@ -61,6 +62,7 @@ public class GetHeroQueryHandler : IRequestHandler<GetHeroQuery, HeroDto>
             SecondaryCtaText = hero.SecondaryCtaText,
             SecondaryCtaUrl = hero.SecondaryCtaUrl,
             BackgroundImageUrl = hero.BackgroundImageUrl,
+            BackgroundVideoUrl = hero.BackgroundVideoUrl,
             TelemetryPills = hero.TelemetryPills
                 .OrderBy(p => p.DisplayOrder)
                 .Select(p => new TelemetryPillDto

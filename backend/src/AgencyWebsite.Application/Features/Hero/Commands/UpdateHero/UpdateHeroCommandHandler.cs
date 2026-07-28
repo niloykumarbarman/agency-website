@@ -33,6 +33,7 @@ public class UpdateHeroCommandHandler : IRequestHandler<UpdateHeroCommand, Unit>
         hero.SecondaryCtaText = request.SecondaryCtaText;
         hero.SecondaryCtaUrl = request.SecondaryCtaUrl;
         hero.BackgroundImageUrl = request.BackgroundImageUrl;
+        hero.BackgroundVideoUrl = request.BackgroundVideoUrl;
         hero.UpdatedAt = DateTime.UtcNow;
 
         hero.TelemetryPills.Clear();

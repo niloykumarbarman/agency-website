@@ -15,6 +15,7 @@ public class UpdateHeroCommandValidator : AbstractValidator<UpdateHeroCommand>
         RuleFor(x => x.SecondaryCtaText).NotEmpty().MaximumLength(100);
         RuleFor(x => x.SecondaryCtaUrl).NotEmpty().MaximumLength(300);
         RuleFor(x => x.BackgroundImageUrl).MaximumLength(500);
+        RuleFor(x => x.BackgroundVideoUrl).MaximumLength(500);
 
         RuleForEach(x => x.TelemetryPills).ChildRules(pill =>
         {
