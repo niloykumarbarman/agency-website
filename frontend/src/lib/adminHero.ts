@@ -1,6 +1,23 @@
 import { adminFetch } from "@/lib/adminAuth";
 import { API_BASE_URL } from "./apiConfig";
 
+export interface AdminTelemetryPill {
+  id: string;
+  label: string;
+  accent: "Signal" | "Ember";
+  top: number;
+  left: number;
+  displayOrder: number;
+}
+
+export interface TelemetryPillInput {
+  label: string;
+  accent: "Signal" | "Ember";
+  top: number;
+  left: number;
+  displayOrder: number;
+}
+
 export interface AdminHero {
   id: string;
   title: string;
@@ -10,6 +27,7 @@ export interface AdminHero {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   backgroundImageUrl: string;
+  telemetryPills: AdminTelemetryPill[];
 }
 
 export interface HeroFormPayload {
@@ -20,6 +38,7 @@ export interface HeroFormPayload {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   backgroundImageUrl: string;
+  telemetryPills: TelemetryPillInput[];
 }
 
 export const HERO_ADMIN_API_URL = `${API_BASE_URL}/hero`;

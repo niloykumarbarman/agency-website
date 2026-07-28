@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { Loader2, Save, ImageIcon } from "lucide-react";
+import { Loader2, Save, ImageIcon, Plus, Trash2 } from "lucide-react";
 import {
   fetchAdminHero,
   updateHero,
   type HeroFormPayload,
+  type TelemetryPillInput,
 } from "@/lib/adminHero";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-graphite/15 px-3 py-2.5 text-sm outline-none transition focus:border-signal focus:ring-2 focus:ring-signal/10";
 const labelClass = "block font-mono text-xs uppercase tracking-wider text-graphite/50";
+
+type PillRow = TelemetryPillInput & { rowKey: string };
 
 const emptyForm: HeroFormPayload = {
   title: "",
@@ -20,11 +23,28 @@ const emptyForm: HeroFormPayload = {
   secondaryCtaText: "",
   secondaryCtaUrl: "",
   backgroundImageUrl: "",
+  telemetryPills: [],
 };
+
+function makeRowKey(): string {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+function emptyPillRow(displayOrder: number): PillRow {
+  return {
+    rowKey: makeRowKey(),
+    label: "",
+    accent: "Signal",
+    top: 0,
+    left: 0,
+    displayOrder,
+  };
+}
 
 export default function AdminHeroPage() {
   const [heroId, setHeroId] = useState<string | null>(null);
   const [form, setForm] = useState<HeroFormPayload>(emptyForm);
+  const [pills, setPills] = useState<PillRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -45,7 +65,21 @@ export default function AdminHeroPage() {
           secondaryCtaText: data.secondaryCtaText,
           secondaryCtaUrl: data.secondaryCtaUrl,
           backgroundImageUrl: data.backgroundImageUrl,
+          telemetryPills: [],
         });
+        const sortedPills = [...data.telemetryPills].sort(
+          (a, b) => a.displayOrder - b.displayOrder
+        );
+        setPills(
+          sortedPills.map((pill) => ({
+            rowKey: makeRowKey(),
+            label: pill.label,
+            accent: pill.accent,
+            top: pill.top,
+            left: pill.left,
+            displayOrder: pill.displayOrder,
+          }))
+        );
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load hero content.");
       } finally {
@@ -60,6 +94,36 @@ export default function AdminHeroPage() {
     setSuccess(false);
   };
 
+  const addPill = () => {
+    setPills((prev) => [...prev, emptyPillRow(prev.length)]);
+    setSuccess(false);
+  };
+
+  const removePill = (rowKey: string) => {
+    setPills((prev) => prev.filter((p) => p.rowKey !== rowKey));
+    setSuccess(false);
+  };
+
+  const setPillField = (
+    rowKey: string,
+    key: keyof TelemetryPillInput,
+    value: string
+  ) => {
+    setPills((prev) =>
+      prev.map((p) => {
+        if (p.rowKey !== rowKey) return p;
+        if (key === "accent") {
+          return { ...p, accent: value as "Signal" | "Ember" };
+        }
+        if (key === "top" || key === "left" || key === "displayOrder") {
+          return { ...p, [key]: Number(value) };
+        }
+        return { ...p, [key]: value };
+      })
+    );
+    setSuccess(false);
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!heroId) return;
@@ -67,7 +131,14 @@ export default function AdminHeroPage() {
     setError("");
     setSuccess(false);
     try {
-      await updateHero(heroId, form);
+      const telemetryPills: TelemetryPillInput[] = pills.map((p) => ({
+        label: p.label,
+        accent: p.accent,
+        top: p.top,
+        left: p.left,
+        displayOrder: p.displayOrder,
+      }));
+      await updateHero(heroId, { ...form, telemetryPills });
       setSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save hero content.");
@@ -183,6 +254,104 @@ export default function AdminHeroPage() {
                 <span className="text-xs">No image URL set</span>
               </div>
             )}
+          </div>
+        </div>
+
+        <div className="md:col-span-2">
+          <div className="flex items-center justify-between">
+            <label className={labelClass}>Telemetry Pills</label>
+            <button
+              type="button"
+              onClick={addPill}
+              className="flex items-center gap-1 rounded-lg border border-graphite/15 px-3 py-1.5 text-xs font-medium text-graphite transition hover:border-signal hover:text-signal"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add Pill
+            </button>
+          </div>
+
+          {pills.length === 0 && (
+            <div className="mt-3 rounded-lg border border-dashed border-graphite/15 px-4 py-6 text-center text-xs text-graphite/40">
+              No telemetry pills yet. Click &quot;Add Pill&quot; to create one.
+            </div>
+          )}
+
+          <div className="mt-3 space-y-3">
+            {pills.map((pill, index) => (
+              <div
+                key={pill.rowKey}
+                className="grid grid-cols-2 gap-3 rounded-lg border border-graphite/10 p-4 md:grid-cols-6"
+              >
+                <div className="md:col-span-2">
+                  <label className={labelClass}>Label</label>
+                  <input
+                    value={pill.label}
+                    onChange={(e) =>
+                      setPillField(pill.rowKey, "label", e.target.value)
+                    }
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Accent</label>
+                  <select
+                    value={pill.accent}
+                    onChange={(e) =>
+                      setPillField(pill.rowKey, "accent", e.target.value)
+                    }
+                    className={inputClass}
+                  >
+                    <option value="Signal">Signal</option>
+                    <option value="Ember">Ember</option>
+                  </select>
+                </div>
+                <div>
+                  <label className={labelClass}>Top (%)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={pill.top}
+                    onChange={(e) =>
+                      setPillField(pill.rowKey, "top", e.target.value)
+                    }
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Left (%)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={pill.left}
+                    onChange={(e) =>
+                      setPillField(pill.rowKey, "left", e.target.value)
+                    }
+                    className={inputClass}
+                  />
+                </div>
+                <div className="flex items-end gap-2">
+                  <div className="flex-1">
+                    <label className={labelClass}>Order</label>
+                    <input
+                      type="number"
+                      value={pill.displayOrder}
+                      onChange={(e) =>
+                        setPillField(pill.rowKey, "displayOrder", e.target.value)
+                      }
+                      className={inputClass}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removePill(pill.rowKey)}
+                    className="mb-0.5 rounded-lg border border-ember/30 p-2.5 text-ember transition hover:bg-ember/10"
+                    aria-label={`Remove pill ${index + 1}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
