@@ -1,0 +1,41 @@
+using Devliora.Application.Common.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace Devliora.Application.Features.CaseStudies.Commands.UpdateCaseStudy;
+
+public class UpdateCaseStudyCommandHandler : IRequestHandler<UpdateCaseStudyCommand, Unit>
+{
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public UpdateCaseStudyCommandHandler(IAppDbContext context, ICacheService cache)
+    {
+        _context = context;
+        _cache = cache;
+    }
+
+    public async Task<Unit> Handle(UpdateCaseStudyCommand request, CancellationToken cancellationToken)
+    {
+        var caseStudy = await _context.CaseStudies
+            .FirstOrDefaultAsync(c => c.Id == request.Id && !c.IsDeleted, cancellationToken)
+            ?? throw new KeyNotFoundException($"CaseStudy with Id '{request.Id}' was not found.");
+
+        caseStudy.Title = request.Title;
+        caseStudy.Slug = request.Slug;
+        caseStudy.ClientName = request.ClientName;
+        caseStudy.Industry = request.Industry;
+        caseStudy.Challenge = request.Challenge;
+        caseStudy.Solution = request.Solution;
+        caseStudy.Results = request.Results;
+        caseStudy.CoverImageUrl = request.CoverImageUrl;
+        caseStudy.IsPublished = request.IsPublished;
+        caseStudy.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("casestudies:all", cancellationToken);
+
+        return Unit.Value;
+    }
+}

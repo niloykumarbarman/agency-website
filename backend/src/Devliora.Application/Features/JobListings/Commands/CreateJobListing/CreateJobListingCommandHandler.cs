@@ -1,0 +1,39 @@
+using Devliora.Application.Common.Interfaces;
+using Devliora.Domain.Entities;
+using MediatR;
+
+namespace Devliora.Application.Features.JobListings.Commands.CreateJobListing;
+
+public class CreateJobListingCommandHandler : IRequestHandler<CreateJobListingCommand, Guid>
+{
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public CreateJobListingCommandHandler(IAppDbContext context, ICacheService cache)
+    {
+        _context = context;
+        _cache = cache;
+    }
+
+    public async Task<Guid> Handle(CreateJobListingCommand request, CancellationToken cancellationToken)
+    {
+        var jobListing = new JobListing
+        {
+            Title = request.Title,
+            Slug = request.Slug,
+            Department = request.Department,
+            Location = request.Location,
+            EmploymentType = request.EmploymentType,
+            Description = request.Description,
+            Requirements = request.Requirements,
+            Status = request.Status
+        };
+
+        _context.JobListings.Add(jobListing);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("joblistings:all", cancellationToken);
+
+        return jobListing.Id;
+    }
+}

@@ -1,0 +1,34 @@
+using Devliora.Application.Common.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace Devliora.Application.Features.BlogPosts.Commands.DeleteBlogPost;
+
+public class DeleteBlogPostCommandHandler : IRequestHandler<DeleteBlogPostCommand, Unit>
+{
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public DeleteBlogPostCommandHandler(IAppDbContext context, ICacheService cache)
+    {
+        _context = context;
+        _cache = cache;
+    }
+
+    public async Task<Unit> Handle(DeleteBlogPostCommand request, CancellationToken cancellationToken)
+    {
+        var blogPost = await _context.BlogPosts
+            .FirstOrDefaultAsync(b => b.Id == request.Id && !b.IsDeleted, cancellationToken)
+            ?? throw new KeyNotFoundException($"BlogPost with Id '{request.Id}' was not found.");
+
+        blogPost.IsDeleted = true;
+        blogPost.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("blogposts:all", cancellationToken);
+        await _cache.RemoveAsync("blogposts:slug:" + blogPost.Slug, cancellationToken);
+
+        return Unit.Value;
+    }
+}

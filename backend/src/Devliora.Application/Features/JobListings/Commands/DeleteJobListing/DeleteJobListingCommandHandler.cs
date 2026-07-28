@@ -1,0 +1,33 @@
+using Devliora.Application.Common.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace Devliora.Application.Features.JobListings.Commands.DeleteJobListing;
+
+public class DeleteJobListingCommandHandler : IRequestHandler<DeleteJobListingCommand, Unit>
+{
+    private readonly IAppDbContext _context;
+    private readonly ICacheService _cache;
+
+    public DeleteJobListingCommandHandler(IAppDbContext context, ICacheService cache)
+    {
+        _context = context;
+        _cache = cache;
+    }
+
+    public async Task<Unit> Handle(DeleteJobListingCommand request, CancellationToken cancellationToken)
+    {
+        var jobListing = await _context.JobListings
+            .FirstOrDefaultAsync(j => j.Id == request.Id && !j.IsDeleted, cancellationToken)
+            ?? throw new KeyNotFoundException($"JobListing with Id '{request.Id}' was not found.");
+
+        jobListing.IsDeleted = true;
+        jobListing.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        await _cache.RemoveAsync("joblistings:all", cancellationToken);
+
+        return Unit.Value;
+    }
+}

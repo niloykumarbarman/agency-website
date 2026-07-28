@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Devliora.Application/Devliora.Application.csproj" />
+    <Project Path="src/Devliora.Domain/Devliora.Domain.csproj" />
+    <Project Path="src/Devliora.Infrastructure/Devliora.Infrastructure.csproj" />
+    <Project Path="src/Devliora.WebApi/Devliora.WebApi.csproj" />
+  </Folder>
+</Solution>

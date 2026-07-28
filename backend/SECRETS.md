@@ -7,10 +7,10 @@ below. This prevents the signing key from ever living in git history again.
 
 ## Local development — `dotnet user-secrets`
 
-Run this once, from `backend/src/AgencyWebsite.WebApi`:
+Run this once, from `backend/src/Devliora.WebApi`:
 
 ```bash
-cd backend/src/AgencyWebsite.WebApi
+cd backend/src/Devliora.WebApi
 dotnet user-secrets init
 dotnet user-secrets set "JwtSettings:SecretKey" "<paste-a-long-random-value-here>"
 ```
@@ -22,7 +22,7 @@ openssl rand -base64 48
 ```
 
 `dotnet user-secrets init` adds a `UserSecretsId` to
-`AgencyWebsite.WebApi.csproj` (safe to commit — it's just an ID, not a
+`Devliora.WebApi.csproj` (safe to commit — it's just an ID, not a
 secret). The actual secret value is stored outside the repo, at
 `~/.microsoft/usersecrets/<UserSecretsId>/secrets.json`, and ASP.NET Core
 loads it automatically in the `Development` environment. Nothing else to
