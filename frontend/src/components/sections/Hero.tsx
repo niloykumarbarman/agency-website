@@ -174,25 +174,54 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[640px] max-w-6xl items-end justify-between gap-8 px-6 pb-20 pt-32 sm:min-h-[680px] md:pt-40">
-        <motion.div initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="w-full max-w-2xl rounded-lg bg-paper p-8 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-10"
+      <div className="relative flex min-h-[640px] max-w-6xl items-end justify-between gap-8 pl-4 pr-6 pb-4 pt-32 sm:min-h-[680px] sm:pl-6 md:pt-40">
+        <motion.div initial="hidden"
+          animate="show"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
+          className="relative w-full max-w-xl overflow-hidden rounded-lg bg-paper p-6 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-8"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
+          <div className="pointer-events-none absolute inset-0 z-10 flex">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="h-full flex-1 bg-ink"
+                style={{ transformOrigin: "top" }}
+                initial={{ scaleY: 1 }}
+                animate={{ scaleY: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut", delay: 0.15 + i * 0.04 }}
+              />
+            ))}
+          </div>
+
+          <motion.p
+            variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="font-mono text-xs uppercase tracking-[0.2em] text-signal"
+          >
             /enterprise-software-engineering
-          </p>
+          </motion.p>
 
-          <h1 className="mt-4 font-display text-3xl font-semibold leading-[1.1] tracking-tight text-ink sm:text-4xl md:text-[2.75rem]">
+          <motion.h1
+            variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="mt-4 font-display text-3xl font-semibold leading-[1.1] tracking-tight text-ink sm:text-4xl md:text-[2.75rem]"
+          >
             {hero.title}
-          </h1>
+          </motion.h1>
 
-          <p className="mt-5 text-base leading-relaxed text-graphite/80 sm:text-lg">
+          <motion.p
+            variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="mt-5 text-base leading-relaxed text-graphite/80 sm:text-lg"
+          >
             {hero.subtitle}
-          </p>
+          </motion.p>
 
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"
+          >
             <MotionLink href={hero.primaryCtaUrl}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
@@ -210,8 +239,8 @@ export default function Hero() {
             >
               {hero.secondaryCtaText}
             </MotionLink>
-          </div>
-        </motion.div>
+          </motion.div>
+</motion.div>
 
         <TelemetryCluster pills={pills} />
       </div>
