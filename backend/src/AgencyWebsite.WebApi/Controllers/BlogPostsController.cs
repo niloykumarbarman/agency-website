@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.BlogPosts.Commands.CreateBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Commands.DeleteBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Commands.UpdateBlogPost;
 using AgencyWebsite.Application.Features.BlogPosts.Queries.GetAllBlogPosts;
+using AgencyWebsite.Application.Features.BlogPosts.Queries.GetAllBlogPostsAdmin;
 using AgencyWebsite.Application.Features.BlogPosts.Queries.GetBlogPostBySlug;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +25,14 @@ public class BlogPostsController : ControllerBase
     public async Task<ActionResult<List<BlogPostDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllBlogPostsQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<BlogPostAdminDto>>> GetAllAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllBlogPostsAdminQuery(), cancellationToken);
         return Ok(result);
     }
 

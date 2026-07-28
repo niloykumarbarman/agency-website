@@ -2,6 +2,7 @@ using AgencyWebsite.Application.Features.JobListings.Commands.CreateJobListing;
 using AgencyWebsite.Application.Features.JobListings.Commands.DeleteJobListing;
 using AgencyWebsite.Application.Features.JobListings.Commands.UpdateJobListing;
 using AgencyWebsite.Application.Features.JobListings.Queries.GetAllJobListings;
+using AgencyWebsite.Application.Features.JobListings.Queries.GetAllJobListingsAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,14 @@ public class JobListingsController : ControllerBase
     public async Task<ActionResult<List<JobListingDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllJobListingsQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<JobListingAdminDto>>> GetAllAdmin(CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetAllJobListingsAdminQuery(), cancellationToken);
         return Ok(result);
     }
 
