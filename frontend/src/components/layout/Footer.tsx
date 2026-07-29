@@ -44,16 +44,15 @@ const FOOTER_LINKS = {
     { href: "/solutions", label: "Solutions" },
     { href: "/industries", label: "Industries" },
     { href: "/technologies", label: "Technologies" },
-    { href: "/#work", label: "Work" },
     { href: "/case-studies", label: "Case Studies" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
     { href: "/book-consultation", label: "Book Consultation" },
   ],
   Services: [
-    { href: "/#services", label: "Platform engineering" },
-    { href: "/#services", label: "API design" },
-    { href: "/#services", label: "System migration" },
+    { href: "/services", label: "Platform engineering" },
+    { href: "/services", label: "API design" },
+    { href: "/services", label: "System migration" },
   ],
   Legal: [
     { href: "/privacy", label: "Privacy policy" },
@@ -124,14 +123,16 @@ export default async function Footer() {
 
         <div className="mt-16 select-none overflow-hidden">
           <p
-            className="font-display font-black leading-[0.85] tracking-tight text-paper"
+            className="font-display font-black leading-[0.85] tracking-tight bg-clip-text text-transparent"
             style={{
-              fontSize: "clamp(3rem, 13vw, 10rem)",
-              textShadow:
-                "0.04em 0.04em 0 var(--color-signal), 0.08em 0.08em 0 rgba(243,242,237,0.15)",
+              fontSize: "clamp(4rem, 15vw, 13rem)",
+              backgroundImage:
+                "linear-gradient(100deg, var(--color-paper) 45%, var(--color-signal) 100%)",
+              filter: "drop-shadow(0 0 36px rgba(61, 90, 254, 0.22))",
             }}
           >
-            Devliora<span className="text-signal">.</span>
+            Devliora
+            <span style={{ color: "var(--color-ember)", WebkitTextFillColor: "var(--color-ember)" }}>.</span>
           </p>
         </div>
 

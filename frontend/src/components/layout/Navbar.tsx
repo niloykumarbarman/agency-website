@@ -7,12 +7,10 @@ import { fetchSiteSettings } from "@/lib/siteSettings";
 import { resolveImageUrl } from "@/lib/hero";
 
 const NAV_LINKS = [
-  { href: "/#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "/solutions", label: "Solutions" },
   { href: "/industries", label: "Industries" },
   { href: "/technologies", label: "Technologies" },
-  { href: "/#process", label: "Process" },
-  { href: "/#work", label: "Work" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/case-studies", label: "Case Studies" },
   { href: "/about", label: "About" },
