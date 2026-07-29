@@ -1,6 +1,10 @@
 namespace Devliora.Domain.Enums;
 public enum TechnologyCategory
 {
-    LanguagesFrameworks,
-    DataInfra
+    BackendApis,
+    FrontendUi,
+    CloudInfrastructure,
+    DatabasesCaching,
+    DevOpsCicd,
+    AiMlData
 }

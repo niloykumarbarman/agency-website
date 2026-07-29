@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   Server,
@@ -9,61 +10,69 @@ import {
   GitBranch,
   BrainCircuit,
 } from "lucide-react";
+import { fetchTechnologies, TechnologyDto } from "@/lib/technologies";
 
-type TechCategory = {
+type CategoryMeta = {
   icon: typeof Server;
   title: string;
   description: string;
-  tools: string[];
 };
 
-const CATEGORIES: TechCategory[] = [
-  {
+const CATEGORY_META: Record<number, CategoryMeta> = {
+  0: {
     icon: Server,
     title: "Backend & APIs",
     description:
       "Type-safe, well-tested services built for correctness and long-term maintainability.",
-    tools: ["ASP.NET Core", "Node.js", "Python", "MediatR", "FluentValidation"],
   },
-  {
+  1: {
     icon: LayoutTemplate,
     title: "Frontend & UI",
     description:
       "Fast, accessible interfaces that hold up across devices and screen sizes.",
-    tools: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
   },
-  {
+  2: {
     icon: Cloud,
     title: "Cloud & Infrastructure",
     description:
       "Infrastructure that scales predictably and fails gracefully under load.",
-    tools: ["AWS", "Azure", "Docker", "Kubernetes", "Terraform"],
   },
-  {
+  3: {
     icon: Database,
     title: "Databases & Caching",
     description:
       "Data layers chosen for consistency, speed, and the access patterns that matter.",
-    tools: ["PostgreSQL", "Redis", "MongoDB", "SQL Server"],
   },
-  {
+  4: {
     icon: GitBranch,
     title: "DevOps & CI/CD",
     description:
       "Automated pipelines so every release ships the same way, every time.",
-    tools: ["GitHub Actions", "Nginx", "Let's Encrypt", "GitHub"],
   },
-  {
+  5: {
     icon: BrainCircuit,
     title: "AI/ML & Data",
     description:
       "Practical AI integration focused on real workflows, not novelty.",
-    tools: ["Python ML Stack", "LLM Integration", "Ollama", "Data Pipelines"],
   },
-];
+};
+
+const CATEGORY_ORDER = [0, 1, 2, 3, 4, 5];
 
 export default function TechnologiesDetailList() {
   const reducedMotion = useReducedMotion();
+  const [technologies, setTechnologies] = useState<TechnologyDto[]>([]);
+
+  useEffect(() => {
+    fetchTechnologies().then(setTechnologies);
+  }, []);
+
+  const groups = CATEGORY_ORDER.map((categoryId) => {
+    const items = technologies
+      .filter((t) => t.category === categoryId)
+      .sort((a, b) => a.displayOrder - b.displayOrder);
+    return { categoryId, meta: CATEGORY_META[categoryId], items };
+  }).filter((group) => group.items.length > 0);
 
   return (
     <section className="relative overflow-hidden bg-paper px-6 py-24 sm:py-28">
@@ -88,11 +97,11 @@ export default function TechnologiesDetailList() {
         </motion.h2>
 
         <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-graphite/10 bg-graphite/10 sm:grid-cols-2 lg:grid-cols-3">
-          {CATEGORIES.map((category, i) => {
-            const Icon = category.icon;
+          {groups.map((group, i) => {
+            const Icon = group.meta.icon;
             return (
               <motion.div
-                key={category.title}
+                key={group.categoryId}
                 initial={{ opacity: 0, y: reducedMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -104,20 +113,20 @@ export default function TechnologiesDetailList() {
                 </div>
 
                 <h3 className="mt-6 font-display text-lg font-medium text-ink">
-                  {category.title}
+                  {group.meta.title}
                 </h3>
 
                 <p className="mt-2 text-sm leading-relaxed text-graphite">
-                  {category.description}
+                  {group.meta.description}
                 </p>
 
                 <ul className="mt-6 flex flex-wrap gap-2 border-t border-graphite/10 pt-6">
-                  {category.tools.map((tool) => (
+                  {group.items.map((tool) => (
                     <li
-                      key={tool}
+                      key={tool.id}
                       className="rounded-full border border-graphite/15 px-3 py-1 font-mono text-xs text-graphite"
                     >
-                      {tool}
+                      {tool.displayName}
                     </li>
                   ))}
                 </ul>
