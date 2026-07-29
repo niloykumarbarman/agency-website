@@ -14,6 +14,20 @@ import {
   type TechnologyFormPayload,
 } from "@/lib/adminTechnologies";
 
+const CATEGORY_LABELS: Record<number, string> = {
+  0: "Backend & APIs",
+  1: "Frontend & UI",
+  2: "Cloud & Infrastructure",
+  3: "Databases & Caching",
+  4: "DevOps & CI/CD",
+  5: "AI, ML & Data",
+};
+
+const categoryOptions = Object.entries(CATEGORY_LABELS).map(([value, label]) => ({
+  value: Number(value),
+  label,
+}));
+
 const emptyForm: TechnologyFormPayload = {
   name: "",
   displayName: "",
@@ -27,9 +41,10 @@ const fields: FieldConfig<TechnologyFormPayload>[] = [
   { key: "displayName", label: "Display Caption", type: "text", required: true, colSpan: 2 },
   {
     key: "category",
-    label: "Category (numeric enum)",
-    type: "number",
+    label: "Category",
+    type: "select",
     required: true,
+    options: categoryOptions,
   },
   { key: "displayOrder", label: "Display Order", type: "number" },
   { key: "isActive", label: "Active", type: "checkbox" },
@@ -37,7 +52,11 @@ const fields: FieldConfig<TechnologyFormPayload>[] = [
 
 const columns: ColumnConfig<AdminTechnology>[] = [
   { key: "name", label: "Name" },
-  { key: "category", label: "Category" },
+  {
+    key: "category",
+    label: "Category",
+    render: (item) => CATEGORY_LABELS[item.category] ?? "Unknown",
+  },
   { key: "displayOrder", label: "Order" },
   {
     key: "isActive",

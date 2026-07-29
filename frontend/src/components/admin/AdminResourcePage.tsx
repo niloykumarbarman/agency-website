@@ -6,10 +6,11 @@ import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, type LucideIcon } from "lu
 export interface FieldConfig<TForm> {
   key: keyof TForm;
   label: string;
-  type: "text" | "textarea" | "checkbox" | "number";
+  type: "text" | "textarea" | "checkbox" | "number" | "select";
   required?: boolean;
   colSpan?: 1 | 2;
   placeholder?: string;
+  options?: { value: number; label: string }[];
 }
 
 export interface ColumnConfig<T> {
@@ -220,6 +221,26 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
                       onChange={(e) => setFieldValue(field.key, e.target.value)}
                       className={inputClass}
                     />
+                  </div>
+                );
+              }
+
+              if (field.type === "select") {
+                return (
+                  <div key={String(field.key)} className={spanClass}>
+                    <label className={labelClass}>{field.label}</label>
+                    <select
+                      required={field.required}
+                      value={String(value ?? "")}
+                      onChange={(e) => setFieldValue(field.key, Number(e.target.value))}
+                      className={inputClass}
+                    >
+                      {field.options?.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 );
               }
