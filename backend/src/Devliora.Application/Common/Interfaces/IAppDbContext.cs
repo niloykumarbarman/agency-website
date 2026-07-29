@@ -19,5 +19,6 @@ public interface IAppDbContext
     DbSet<HeroContent> HeroContents { get; }
     DbSet<TechnologyItem> TechnologyItems { get; }
     DbSet<FaqItem> FaqItems { get; }
+    DbSet<SiteSettings> SiteSettings { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

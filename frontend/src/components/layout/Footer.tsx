@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { fetchSiteSettings } from "@/lib/siteSettings";
+import { resolveImageUrl } from "@/lib/hero";
 
 const FOOTER_LINKS = {
   Company: [
@@ -23,15 +25,26 @@ const FOOTER_LINKS = {
   ],
 };
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await fetchSiteSettings();
+
   return (
     <footer className="border-t border-wire/60 bg-ink text-paper">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <p className="font-display text-lg font-semibold">
-              Devliora<span className="text-signal">.</span>
-            </p>
+            {settings?.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={resolveImageUrl(settings.logoUrl)}
+                alt="Devliora"
+                className="h-8 w-auto"
+              />
+            ) : (
+              <p className="font-display text-lg font-semibold">
+                Devliora<span className="text-signal">.</span>
+              </p>
+            )}
             <p className="mt-3 max-w-xs text-sm text-paper/60">
               We architect and build the software systems enterprise teams
               depend on to run.

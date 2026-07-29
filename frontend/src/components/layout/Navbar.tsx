@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
+import { fetchSiteSettings } from "@/lib/siteSettings";
+import { resolveImageUrl } from "@/lib/hero";
 
 const NAV_LINKS = [
   { href: "/#services", label: "Services" },
@@ -25,7 +27,16 @@ const MORE_LINKS = NAV_LINKS.filter((link) => MORE_LABELS.includes(link.label));
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("");
   const moreRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    fetchSiteSettings().then((settings) => {
+      if (settings?.logoUrl) {
+        setLogoUrl(settings.logoUrl);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -40,9 +51,16 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-wire/60 bg-paper/90 backdrop-blur-sm">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-display text-lg font-semibold tracking-tight text-ink">
-          Devliora
-          <span className="ml-0.5 text-signal">.</span>
+        <Link href="/" className="flex items-center font-display text-lg font-semibold tracking-tight text-ink">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={resolveImageUrl(logoUrl)} alt="Devliora" className="h-8 w-auto" />
+          ) : (
+            <>
+              Devliora
+              <span className="ml-0.5 text-signal">.</span>
+            </>
+          )}
         </Link>
 
         <ul className="hidden items-center gap-6 md:flex">

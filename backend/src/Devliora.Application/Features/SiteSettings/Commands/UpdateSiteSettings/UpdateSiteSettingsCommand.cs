@@ -1,0 +1,10 @@
+using MediatR;
+
+namespace Devliora.Application.Features.SiteSettings.Commands.UpdateSiteSettings;
+
+public class UpdateSiteSettingsCommand : IRequest<Unit>
+{
+    public Guid Id { get; set; }
+    public string LogoUrl { get; set; } = string.Empty;
+    public string SiteName { get; set; } = string.Empty;
+}

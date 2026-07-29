@@ -1,0 +1,8 @@
+namespace Devliora.Application.Features.SiteSettings.Queries.GetSiteSettings;
+
+public class SiteSettingsDto
+{
+    public Guid Id { get; set; }
+    public string LogoUrl { get; set; } = string.Empty;
+    public string SiteName { get; set; } = string.Empty;
+}
