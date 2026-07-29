@@ -2,6 +2,42 @@ import Link from "next/link";
 import { fetchSiteSettings } from "@/lib/siteSettings";
 import { resolveImageUrl } from "@/lib/hero";
 
+const iconProps = { className: "h-5 w-5", fill: "currentColor", viewBox: "0 0 24 24" } as const;
+
+function FacebookIcon() {
+  return (
+    <svg {...iconProps} aria-hidden="true">
+      <path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg {...iconProps} aria-hidden="true">
+      <path d="M6.5 8.5H3.5V20h3V8.5zM5 3.5a1.8 1.8 0 100 3.6 1.8 1.8 0 000-3.6zM20.5 20.5v-6.3c0-3.4-1.8-5-4.2-5-1.9 0-2.8 1-3.3 1.8v-1.5H10v11h3v-6.1c0-.6.05-1.2.7-1.7a1.8 1.8 0 011.6-.9c1.1 0 1.7.8 1.7 2.4v6.3h3.5z" />
+    </svg>
+  );
+}
+
+function TwitterIcon() {
+  return (
+    <svg {...iconProps} aria-hidden="true">
+      <path d="M20 6.4c-.6.3-1.3.5-2 .6a3.6 3.6 0 001.5-2 7 7 0 01-2.2.9 3.5 3.5 0 00-6 3.2A10 10 0 014 5.9a3.5 3.5 0 001.1 4.7 3.4 3.4 0 01-1.6-.4v.05a3.5 3.5 0 002.8 3.5 3.5 3.5 0 01-1.6.06 3.5 3.5 0 003.3 2.5A7.1 7.1 0 013 17.6a10 10 0 005.4 1.6c6.5 0 10-5.4 10-10v-.5c.7-.5 1.3-1.1 1.6-1.8z" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg {...iconProps} aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="17.2" cy="6.8" r="1.1" />
+    </svg>
+  );
+}
+
 const FOOTER_LINKS = {
   Company: [
     { href: "/about", label: "About" },
@@ -49,6 +85,20 @@ export default async function Footer() {
               We architect and build the software systems enterprise teams
               depend on to run.
             </p>
+            <div className="mt-5 flex items-center gap-4">
+              <a href="#" aria-label="Facebook" className="text-paper/50 transition-colors hover:text-signal">
+                <FacebookIcon />
+              </a>
+              <a href="#" aria-label="LinkedIn" className="text-paper/50 transition-colors hover:text-signal">
+                <LinkedInIcon />
+              </a>
+              <a href="#" aria-label="Twitter" className="text-paper/50 transition-colors hover:text-signal">
+                <TwitterIcon />
+              </a>
+              <a href="#" aria-label="Instagram" className="text-paper/50 transition-colors hover:text-signal">
+                <InstagramIcon />
+              </a>
+            </div>
           </div>
 
           {Object.entries(FOOTER_LINKS).map(([heading, links]) => (
@@ -72,7 +122,20 @@ export default async function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-paper/10 pt-8 font-mono text-xs text-paper/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 select-none overflow-hidden">
+          <p
+            className="font-display font-black leading-[0.85] tracking-tight text-paper"
+            style={{
+              fontSize: "clamp(3rem, 13vw, 10rem)",
+              textShadow:
+                "0.04em 0.04em 0 var(--color-signal), 0.08em 0.08em 0 rgba(243,242,237,0.15)",
+            }}
+          >
+            Devliora<span className="text-signal">.</span>
+          </p>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-4 border-t border-paper/10 pt-8 font-mono text-xs text-paper/40 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} Devliora Systems. All rights reserved.</p>
           <p>Built with Next.js &amp; ASP.NET Core</p>
         </div>
