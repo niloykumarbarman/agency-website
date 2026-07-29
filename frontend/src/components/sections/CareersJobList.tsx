@@ -45,9 +45,6 @@ export default function CareersJobList() {
       />
 
       <div className="relative mx-auto max-w-4xl px-6">
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-          /open-positions
-        </p>
         <h2 className="mt-4 text-balance font-display text-3xl font-semibold text-ink sm:text-4xl">
           Current openings
         </h2>

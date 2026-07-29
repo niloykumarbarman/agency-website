@@ -36,13 +36,6 @@ export default function BlogPostDetailHero({
 
       <div className="relative mx-auto max-w-3xl px-6">
         <motion.div {...fadeUp(0)}>
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-signal transition-colors hover:text-paper"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            /articles
-          </Link>
         </motion.div>
 
         <motion.h1

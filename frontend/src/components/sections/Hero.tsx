@@ -193,13 +193,6 @@ export default function Hero() {
             ))}
           </div>
 
-          <motion.p
-            variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="font-mono text-xs uppercase tracking-[0.2em] text-signal"
-          >
-            /enterprise-software-engineering
-          </motion.p>
 
           <motion.h1
             variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}

@@ -28,9 +28,6 @@ export default function CaseStudiesCTA() {
         transition={{ duration: 0.5 }}
         className="relative mx-auto max-w-2xl text-center"
       >
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-          /get-in-touch
-        </p>
 
         <h2 className="mt-6 text-balance font-display text-3xl font-medium text-paper sm:text-4xl">
           Have a problem worth{" "}

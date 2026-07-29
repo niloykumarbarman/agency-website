@@ -29,12 +29,6 @@ export default function AboutHero() {
       />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <motion.span
-          {...fadeUp(0)}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /about
-        </motion.span>
 
         <motion.h1
           {...fadeUp(1)}

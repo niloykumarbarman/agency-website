@@ -22,12 +22,6 @@ export default function BookConsultationCTA() {
       <div className="pointer-events-none absolute -bottom-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-signal/20 blur-[120px]" />
 
       <div className="relative mx-auto max-w-2xl px-6 text-center">
-        <motion.p
-          {...fadeUp(0)}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /prefer-to-talk-first
-        </motion.p>
         <motion.h2
           {...fadeUp(1)}
           className="mt-6 text-balance font-display text-3xl font-semibold text-paper sm:text-4xl"

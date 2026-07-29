@@ -76,15 +76,6 @@ export default function TechnologiesDetailList() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        <motion.p
-          initial={{ opacity: 0, y: reducedMotion ? 0 : 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /stack
-        </motion.p>
 
         <motion.h2
           initial={{ opacity: 0, y: reducedMotion ? 0 : 20 }}

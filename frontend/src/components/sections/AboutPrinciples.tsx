@@ -58,12 +58,6 @@ export default function AboutPrinciples() {
       />
 
       <div className="relative mx-auto max-w-6xl px-6">
-        <motion.span
-          {...fadeUp(0)}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /principles
-        </motion.span>
 
         <motion.h2
           {...fadeUp(1)}

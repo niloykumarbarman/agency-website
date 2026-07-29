@@ -26,9 +26,6 @@ export default function SolutionsCTA() {
         transition={{ duration: 0.5 }}
         className="relative mx-auto max-w-3xl px-6 text-center"
       >
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-          /get-started
-        </p>
         <h2 className="mt-4 text-balance font-display text-3xl font-semibold text-paper md:text-4xl">
           Not sure which solution fits? <span className="text-signal">Let's talk it through.</span>
         </h2>

@@ -24,9 +24,6 @@ export default function ClientShowcase() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
-            /clients
-          </p>
           <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
             Representative engagements
           </h2>

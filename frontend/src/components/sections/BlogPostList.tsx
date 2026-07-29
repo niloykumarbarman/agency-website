@@ -55,9 +55,6 @@ export default function BlogPostList() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-          /articles
-        </p>
         <h2 className="mt-4 max-w-2xl text-balance font-display text-3xl font-medium text-ink sm:text-4xl">
           Latest <span className="text-signal">from the team</span>
         </h2>

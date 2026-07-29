@@ -26,13 +26,6 @@ export default function TechnologiesHero() {
       />
 
       <div className="relative mx-auto max-w-4xl text-center">
-        <motion.p
-          {...fadeUp}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /technologies
-        </motion.p>
 
         <motion.h1
           {...fadeUp}

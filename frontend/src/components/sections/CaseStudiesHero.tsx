@@ -26,13 +26,6 @@ export default function CaseStudiesHero() {
       />
 
       <div className="relative mx-auto max-w-4xl text-center">
-        <motion.p
-          {...fadeUp}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /case-studies
-        </motion.p>
 
         <motion.h1
           {...fadeUp}

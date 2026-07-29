@@ -69,9 +69,6 @@ export default function Contact() {
 
       <div className="relative mx-auto max-w-6xl px-6">
         <motion.div {...fadeUp(0)} className="max-w-2xl">
-          <span className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-            /contact
-          </span>
           <h2 className="mt-4 text-balance text-4xl font-semibold leading-tight text-graphite md:text-5xl">
             Tell us what you are building.{" "}
             <span className="text-signal">We will tell you how.</span>

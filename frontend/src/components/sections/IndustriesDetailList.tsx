@@ -49,9 +49,6 @@ export default function IndustriesDetailList() {
       <div className="absolute inset-0 bg-[size:56px_56px] bg-[linear-gradient(to_right,rgba(14,20,32,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(14,20,32,0.04)_1px,transparent_1px)]" />
 
       <div className="relative mx-auto max-w-5xl px-6">
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-          /where-we-work
-        </p>
         <h2 className="mt-4 max-w-2xl text-balance font-display text-3xl font-semibold text-ink md:text-4xl">
           Industries where we've built real context
         </h2>

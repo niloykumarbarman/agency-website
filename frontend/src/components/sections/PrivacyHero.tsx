@@ -18,14 +18,6 @@ export default function PrivacyHero() {
       <div className="absolute inset-0 bg-[size:56px_56px] bg-[linear-gradient(to_right,rgba(243,242,237,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(243,242,237,0.04)_1px,transparent_1px)]" />
 
       <div className="relative mx-auto max-w-4xl px-6">
-        <motion.p
-          initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /privacy
-        </motion.p>
 
         <motion.h1
           initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}

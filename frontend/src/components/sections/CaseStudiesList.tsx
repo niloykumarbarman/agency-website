@@ -70,9 +70,6 @@ export default function CaseStudiesList() {
       />
 
       <div className="relative mx-auto max-w-6xl px-6">
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-signal">
-          /work
-        </p>
         <h2 className="mt-4 max-w-2xl text-balance font-display text-3xl font-medium text-ink sm:text-4xl">
           Engagements, <span className="text-signal">start to finish</span>
         </h2>

@@ -20,14 +20,6 @@ export default function CareersHero() {
       <div className="pointer-events-none absolute -bottom-24 left-0 h-80 w-80 rounded-full bg-ember/10 blur-[100px]" />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <motion.p
-          initial={shouldReduceMotion ? undefined : { opacity: 0, y: -12 }}
-          animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-sm uppercase tracking-[0.2em] text-signal"
-        >
-          /careers
-        </motion.p>
         <motion.h1
           initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
           animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}

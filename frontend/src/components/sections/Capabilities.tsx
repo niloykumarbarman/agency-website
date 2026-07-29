@@ -41,9 +41,6 @@ export default function Capabilities() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
-            /capabilities
-          </p>
           <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-paper sm:text-3xl">
             The engineering lifecycle, end to end.
           </h2>

@@ -71,9 +71,6 @@ export default function CaseStudies() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="max-w-2xl"
         >
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-signal">
-            /case-studies
-          </p>
           <h2 className="mt-5 text-balance font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             Two problems that{" "}
             <span className="text-signal">could not stay unsolved</span>.
