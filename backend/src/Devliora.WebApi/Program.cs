@@ -128,6 +128,13 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Apply pending EF Core migrations automatically on startup (safe for prod: no-op if none pending)
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
