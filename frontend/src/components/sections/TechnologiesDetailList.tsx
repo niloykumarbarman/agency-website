@@ -10,6 +10,8 @@ import {
   GitBranch,
   BrainCircuit,
 } from "lucide-react";
+import TechBrandIcon from "@/components/TechBrandIcon";
+import { getTechIcon } from "@/lib/techIcons";
 import { fetchTechnologies, TechnologyDto } from "@/lib/technologies";
 
 type CategoryMeta = {
@@ -121,14 +123,22 @@ export default function TechnologiesDetailList() {
                 </p>
 
                 <ul className="mt-6 flex flex-wrap gap-2 border-t border-graphite/10 pt-6">
-                  {group.items.map((tool) => (
-                    <li
-                      key={tool.id}
-                      className="rounded-full border border-graphite/15 px-3 py-1 font-mono text-xs text-graphite"
-                    >
-                      {tool.displayName}
-                    </li>
-                  ))}
+                  {group.items.map((tool) => {
+                    const hasIcon = !!getTechIcon(tool.name);
+                    return (
+                      <li
+                        key={tool.id}
+                        className="flex items-center gap-1.5 rounded-full border border-graphite/15 px-3 py-1 font-mono text-xs text-graphite"
+                      >
+                        {hasIcon ? (
+                          <TechBrandIcon name={tool.name} className="h-3.5 w-3.5 shrink-0" />
+                        ) : (
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal/60" />
+                        )}
+                        {tool.displayName}
+                      </li>
+                    );
+                  })}
                 </ul>
               </motion.div>
             );

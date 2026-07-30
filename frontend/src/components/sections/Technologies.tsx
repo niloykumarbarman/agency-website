@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DraggableMarquee from "@/components/DraggableMarquee";
+import TechBrandIcon from "@/components/TechBrandIcon";
+import { getTechIcon } from "@/lib/techIcons";
 import { fetchTechnologies, type TechnologyDto } from "@/lib/technologies";
 
 export default function Technologies() {
@@ -55,6 +57,7 @@ export default function Technologies() {
           <DraggableMarquee trackClassName="items-stretch gap-3">
             {[...technologies, ...technologies].map((tech, i) => {
               const isSignal = i % 2 === 0;
+              const hasIcon = !!getTechIcon(tech.name);
               return (
                 <div
                   key={`${tech.id}-${i}`}
@@ -64,9 +67,13 @@ export default function Technologies() {
                       : "border-ember/25 hover:border-ember/60"
                   }`}
                 >
-                  <span
-                    className={`mb-2 h-1.5 w-1.5 rounded-full ${isSignal ? "bg-signal" : "bg-ember"}`}
-                  />
+                  {hasIcon ? (
+                    <TechBrandIcon name={tech.name} className="mb-2 h-5 w-5" />
+                  ) : (
+                    <span
+                      className={`mb-2 h-1.5 w-1.5 rounded-full ${isSignal ? "bg-signal" : "bg-ember"}`}
+                    />
+                  )}
                   <p className="font-display text-lg font-semibold tracking-tight">
                     {tech.name}
                   </p>
