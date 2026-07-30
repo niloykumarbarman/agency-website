@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 
 /**
  * Central site configuration used to build consistent metadata across
- * every page. Update SITE_URL here once you have the final production
- * domain — everything else (canonical URLs, sitemap, OG tags, JSON-LD)
- * derives from it.
+ * every page — canonical URLs, sitemap, OG tags, and JSON-LD all derive
+ * from it.
  */
 export const siteConfig = {
   name: "Devliora",
-  // TODO: replace with the final production domain once purchased/confirmed.
   url: "https://devliora.com",
   description:
     "Devliora designs and builds production-grade software systems for enterprise teams: APIs, platforms, and the infrastructure that holds them together.",
