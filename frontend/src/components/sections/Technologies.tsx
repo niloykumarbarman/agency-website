@@ -61,17 +61,17 @@ export default function Technologies() {
               return (
                 <div
                   key={`${tech.id}-${i}`}
-                  className={`flex min-w-[180px] flex-col justify-center whitespace-nowrap rounded-sm border bg-ink px-6 py-5 transition-colors ${
+                  className={`flex min-w-[200px] flex-col justify-center whitespace-nowrap rounded-sm border bg-ink px-6 py-6 transition-colors ${
                     isSignal
                       ? "border-signal/25 hover:border-signal/60"
                       : "border-ember/25 hover:border-ember/60"
                   }`}
                 >
                   {hasIcon ? (
-                    <TechBrandIcon name={tech.name} className="mb-2 h-5 w-5" />
+                    <TechBrandIcon name={tech.name} className="mb-3 h-9 w-9" />
                   ) : (
                     <span
-                      className={`mb-2 h-1.5 w-1.5 rounded-full ${isSignal ? "bg-signal" : "bg-ember"}`}
+                      className={`mb-3 h-2 w-2 rounded-full ${isSignal ? "bg-signal" : "bg-ember"}`}
                     />
                   )}
                   <p className="font-display text-lg font-semibold tracking-tight">
