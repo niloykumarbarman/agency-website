@@ -7,6 +7,25 @@ import TechBrandIcon from "@/components/TechBrandIcon";
 import { getTechIcon } from "@/lib/techIcons";
 import { fetchTechnologies, type TechnologyDto } from "@/lib/technologies";
 
+type Accent = "signal" | "ember" | "wire";
+
+const CATEGORY_META: Record<number, { label: string; accent: Accent; tilt: string }> = {
+  0: { label: "Backend", accent: "signal", tilt: "-rotate-2" },
+  1: { label: "Frontend", accent: "ember", tilt: "rotate-2" },
+  2: { label: "Cloud", accent: "wire", tilt: "-rotate-1" },
+  3: { label: "Data", accent: "signal", tilt: "rotate-1" },
+  4: { label: "DevOps", accent: "ember", tilt: "-rotate-2" },
+  5: { label: "AI", accent: "wire", tilt: "rotate-2" },
+};
+
+const CATEGORY_ORDER = [0, 1, 2, 3, 4, 5];
+
+const ACCENT_CLASSES: Record<Accent, { blob: string; border: string; dot: string }> = {
+  signal: { blob: "bg-signal/90 text-ink", border: "border-signal/25 hover:border-signal/60", dot: "bg-signal" },
+  ember: { blob: "bg-ember/90 text-ink", border: "border-ember/25 hover:border-ember/60", dot: "bg-ember" },
+  wire: { blob: "bg-wire/90 text-ink", border: "border-wire/25 hover:border-wire/60", dot: "bg-wire" },
+};
+
 export default function Technologies() {
   const [technologies, setTechnologies] = useState<TechnologyDto[]>([]);
 
@@ -18,11 +37,13 @@ export default function Technologies() {
     return null;
   }
 
+  const grouped = CATEGORY_ORDER.map((cat) => ({
+    cat,
+    items: technologies.filter((t) => t.category === cat).sort((a, b) => a.displayOrder - b.displayOrder),
+  })).filter((g) => g.items.length > 0);
+
   return (
-    <section
-      id="technologies"
-      className="bg-grain relative overflow-hidden bg-ink text-paper"
-    >
+    <section id="technologies" className="bg-grain relative overflow-hidden bg-ink text-paper">
       <div
         aria-hidden
         className="pointer-events-none absolute top-[-12%] left-[-10%] h-[440px] w-[440px] rounded-full bg-signal/15 blur-[140px]"
@@ -31,7 +52,6 @@ export default function Technologies() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,theme(colors.paper/4)_1px,transparent_1px),linear-gradient(to_bottom,theme(colors.paper/4)_1px,transparent_1px)] bg-[size:56px_56px]"
       />
-
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -41,52 +61,61 @@ export default function Technologies() {
           className="max-w-2xl"
         >
           <h2 className="mt-5 text-balance font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            The same stack we{" "}
-            <span className="text-signal">run our own systems on</span>.
+            The same stack we <span className="text-signal">run our own systems on</span>.
           </h2>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-paper/70">
-            No stack chosen for a pitch deck. Every tool here is one we
-            operate in production, including this site.
-        </p>
+            No stack chosen for a pitch deck. Every tool here is one we operate in production, including this site.
+          </p>
         </motion.div>
 
-        <div className="relative mt-16 overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-ink to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-ink to-transparent" />
-
-          <DraggableMarquee trackClassName="items-stretch gap-3">
-            {[...technologies, ...technologies].map((tech, i) => {
-              const isSignal = i % 2 === 0;
-              const hasIcon = !!getTechIcon(tech.name);
-              return (
+        <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {grouped.map(({ cat, items }) => {
+            const meta = CATEGORY_META[cat];
+            const accent = ACCENT_CLASSES[meta.accent];
+            return (
+              <motion.div
+                key={cat}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className={`group relative overflow-hidden rounded-sm border bg-graphite/40 pb-5 pt-8 transition-colors ${accent.border}`}
+              >
                 <div
-                  key={`${tech.id}-${i}`}
-                  className={`flex min-w-[200px] flex-col justify-center whitespace-nowrap rounded-sm border bg-ink px-6 py-6 transition-colors ${
-                    isSignal
-                      ? "border-signal/25 hover:border-signal/60"
-                      : "border-ember/25 hover:border-ember/60"
-                  }`}
+                  className={`absolute -top-3 left-6 rounded-tl-[2.5rem] rounded-br-[2.5rem] rounded-tr-md rounded-bl-md px-4 py-2 font-display text-sm font-bold uppercase tracking-wide shadow-lg transition-transform duration-300 ${accent.blob} ${meta.tilt} group-hover:rotate-0`}
                 >
-                  {hasIcon ? (
-                    <TechBrandIcon name={tech.name} className="mb-3 h-9 w-9" />
-                  ) : (
-                    <span
-                      className={`mb-3 h-2 w-2 rounded-full ${isSignal ? "bg-signal" : "bg-ember"}`}
-                    />
-                  )}
-                  <p className="font-display text-lg font-semibold tracking-tight">
-                    {tech.name}
-                  </p>
-                  <p className="mt-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper/45">
-                    {tech.displayName}
-                  </p>
+                  {meta.label}
                 </div>
-              );
-            })}
-          </DraggableMarquee>
+
+                <div className="relative mt-6 overflow-hidden">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-graphite/80 to-transparent" />
+                  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-graphite/80 to-transparent" />
+                  <DraggableMarquee trackClassName="items-stretch gap-3">
+                    {[...items, ...items].map((tech, i) => {
+                      const hasIcon = !!getTechIcon(tech.name);
+                      return (
+                        <div
+                          key={`${tech.id}-${i}`}
+                          className="flex min-w-[120px] flex-col items-center justify-center gap-2 whitespace-nowrap rounded-sm px-4 py-3"
+                        >
+                          {hasIcon ? (
+                            <TechBrandIcon name={tech.name} className="h-8 w-8" />
+                          ) : (
+                            <span className={`h-2 w-2 rounded-full ${accent.dot}`} />
+                          )}
+                          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-paper/60">
+                            {tech.displayName}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </DraggableMarquee>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
-
     </section>
   );
 }
