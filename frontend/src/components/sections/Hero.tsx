@@ -190,7 +190,7 @@ export default function Hero() {
 
   return (
     <section className="relative isolate overflow-hidden bg-ink">
-      <div className="absolute inset-0">
+      <div className="relative h-[280px] w-full overflow-hidden sm:h-[360px] md:h-[440px] lg:h-[520px] xl:h-[600px]">
         {videoSrc ? (
           <video
             ref={videoRef}
@@ -234,15 +234,14 @@ export default function Hero() {
           </>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
+        {videoSrc ? <VideoCaptionOverlay text={activeCaption} /> : null}
       </div>
 
-      {videoSrc ? <VideoCaptionOverlay text={activeCaption} /> : null}
-
-      <div className="relative flex min-h-[560px] max-w-6xl items-end justify-between gap-8 pl-4 pr-4 pb-4 pt-24 sm:min-h-[640px] sm:pl-6 sm:pr-6 sm:pt-28 md:min-h-[680px] md:pt-32 lg:min-h-[720px] lg:pt-40 xl:min-h-[760px]">
+      <div className="relative flex flex-col gap-6 bg-ink px-4 pb-8 pt-6 sm:max-w-6xl sm:gap-8 sm:px-6 sm:pb-10 sm:pt-8 md:px-8 md:pb-12 md:pt-10 lg:px-10 lg:pb-14 lg:pt-12">
         <motion.div initial="hidden"
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
-          className="relative w-full max-w-xl overflow-hidden rounded-lg bg-paper p-4 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-6 md:p-8 lg:rounded-xl lg:p-10"
+          className="relative w-full overflow-hidden rounded-none bg-paper p-4 shadow-none sm:p-6 md:p-8 lg:p-10"
         >
           <div className="pointer-events-none absolute inset-0 z-10 flex">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -299,7 +298,6 @@ export default function Hero() {
           </motion.div>
 </motion.div>
 
-        <TelemetryCluster pills={pills} />
       </div>
     </section>
   );
