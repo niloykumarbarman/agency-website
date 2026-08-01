@@ -139,19 +139,22 @@ function TelemetryCluster({ pills }: { pills: TelemetryPillDto[] }) {
 
 function VideoCaptionOverlay({ text }: { text: string | null }) {
   return (
-    <div className="pointer-events-none absolute left-6 top-40 z-[5] max-w-md overflow-hidden sm:left-10 sm:top-48">
+    <div className="pointer-events-none absolute left-4 top-24 z-[5] w-[70%] max-w-[16rem] overflow-hidden sm:left-6 sm:top-32 sm:max-w-xs md:left-8 md:top-40 md:max-w-sm lg:left-10 lg:top-44 lg:max-w-md xl:left-12 xl:top-48 xl:max-w-lg">
       <AnimatePresence mode="wait">
         {text && (
-          <motion.p
+          <motion.div
             key={text}
-            initial={{ y: 36, opacity: 0 }}
+            initial={{ y: 28, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -36, opacity: 0 }}
+            exit={{ y: -28, opacity: 0 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
-            className="font-display text-2xl font-semibold leading-tight text-paper drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-3xl md:text-4xl"
+            className="flex items-start gap-2.5 sm:gap-3"
           >
-            {text}
-          </motion.p>
+            <span className="mt-2 h-[2px] w-4 shrink-0 bg-ember sm:mt-2.5 sm:w-5 md:mt-3 md:w-6" />
+            <p className="font-display text-lg font-semibold leading-tight tracking-tight text-paper drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
+              {text}
+            </p>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
@@ -235,11 +238,11 @@ export default function Hero() {
 
       {videoSrc ? <VideoCaptionOverlay text={activeCaption} /> : null}
 
-      <div className="relative flex min-h-[640px] max-w-6xl items-end justify-between gap-8 pl-4 pr-6 pb-4 pt-32 sm:min-h-[680px] sm:pl-6 md:pt-40">
+      <div className="relative flex min-h-[560px] max-w-6xl items-end justify-between gap-8 pl-4 pr-4 pb-4 pt-24 sm:min-h-[640px] sm:pl-6 sm:pr-6 sm:pt-28 md:min-h-[680px] md:pt-32 lg:min-h-[720px] lg:pt-40 xl:min-h-[760px]">
         <motion.div initial="hidden"
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
-          className="relative w-full max-w-xl overflow-hidden rounded-lg bg-paper p-6 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-8"
+          className="relative w-full max-w-xl overflow-hidden rounded-lg bg-paper p-5 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-7 md:p-8 lg:rounded-xl lg:p-10"
         >
           <div className="pointer-events-none absolute inset-0 z-10 flex">
             {Array.from({ length: 12 }).map((_, i) => (
