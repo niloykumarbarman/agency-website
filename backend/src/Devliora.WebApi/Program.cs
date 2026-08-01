@@ -133,6 +133,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
+    await Devliora.Infrastructure.Data.DbSeeder.SeedAsync(dbContext);
 }
 
 // Configure the HTTP request pipeline.
