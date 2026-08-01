@@ -242,7 +242,7 @@ export default function Hero() {
         <motion.div initial="hidden"
           animate="show"
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
-          className="relative w-full max-w-xl overflow-hidden rounded-lg bg-paper p-5 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-7 md:p-8 lg:rounded-xl lg:p-10"
+          className="relative w-full max-w-xl overflow-hidden rounded-lg bg-paper p-4 shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] sm:p-6 md:p-8 lg:rounded-xl lg:p-10"
         >
           <div className="pointer-events-none absolute inset-0 z-10 flex">
             {Array.from({ length: 12 }).map((_, i) => (
