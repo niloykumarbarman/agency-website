@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -44,6 +44,34 @@ const EDGES: [number, number][] = [
   [2, 4],
   [3, 4],
 ];
+
+interface VideoCaption {
+  start: number;
+  end: number;
+  text: string;
+}
+
+const VIDEO_CAPTIONS: VideoCaption[] = [
+  { start: 0, end: 10, text: "AI automates enterprise tax work" },
+  { start: 10, end: 20, text: "Business spatial analytics" },
+  { start: 20, end: 30, text: "Machine learning fraud detection" },
+  { start: 30, end: 40, text: "SaaS cross-platform development" },
+  { start: 40, end: 50, text: "AI in regulatory compliance" },
+  { start: 50, end: 60, text: "Ethical AI for children" },
+  { start: 60, end: 70, text: "Smart city IoT" },
+  { start: 70, end: 80, text: "Purchase order automation" },
+  { start: 80, end: 90, text: "Big data analytics platform" },
+  { start: 90, end: 100, text: "Music app for African market" },
+  { start: 100, end: 110, text: "AI automates clinical encounters" },
+  { start: 110, end: 120, text: "Smart sensor agriculture" },
+  { start: 120, end: 130, text: "Drone flying over farmland" },
+  { start: 130, end: 140, text: "AI in furniture manufacturing" },
+];
+
+function getCaptionForTime(t: number): string | null {
+  const match = VIDEO_CAPTIONS.find((c) => t >= c.start && t < c.end);
+  return match ? match.text : null;
+}
 
 function NodeGraph() {
   return (
@@ -109,8 +137,31 @@ function TelemetryCluster({ pills }: { pills: TelemetryPillDto[] }) {
   );
 }
 
+function VideoCaptionOverlay({ text }: { text: string | null }) {
+  return (
+    <div className="pointer-events-none absolute left-6 top-40 z-[5] max-w-md overflow-hidden sm:left-10 sm:top-48">
+      <AnimatePresence mode="wait">
+        {text && (
+          <motion.p
+            key={text}
+            initial={{ y: 36, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -36, opacity: 0 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="font-display text-2xl font-semibold leading-tight text-paper drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-3xl md:text-4xl"
+          >
+            {text}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function Hero() {
   const [hero, setHero] = useState<HeroDto>(FALLBACK_HERO);
+  const [activeCaption, setActiveCaption] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -124,6 +175,12 @@ export default function Hero() {
     };
   }, []);
 
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    setActiveCaption(getCaptionForTime(video.currentTime));
+  };
+
   const backgroundSrc = hero.backgroundImageUrl ? resolveImageUrl(hero.backgroundImageUrl) : "";
   const videoSrc = hero.backgroundVideoUrl ? resolveImageUrl(hero.backgroundVideoUrl) : "";
   const pills = hero.telemetryPills && hero.telemetryPills.length > 0 ? hero.telemetryPills : FALLBACK_HERO.telemetryPills;
@@ -133,6 +190,8 @@ export default function Hero() {
       <div className="absolute inset-0">
         {videoSrc ? (
           <video
+            ref={videoRef}
+            onTimeUpdate={handleTimeUpdate}
             autoPlay
             muted
             loop
@@ -173,6 +232,8 @@ export default function Hero() {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
       </div>
+
+      {videoSrc ? <VideoCaptionOverlay text={activeCaption} /> : null}
 
       <div className="relative flex min-h-[640px] max-w-6xl items-end justify-between gap-8 pl-4 pr-6 pb-4 pt-32 sm:min-h-[680px] sm:pl-6 md:pt-40">
         <motion.div initial="hidden"
@@ -228,7 +289,7 @@ export default function Hero() {
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="inline-flex items-center justify-center rounded-sm border border-ink/20 px-6 py-3.5 font-mono text-sm text-ink/80 transition-colors duration-200 hover:border-ink/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+              className="inline-flex items-center justify-center rounded-sm border border-ink/20 px-6 py-3.5 font-mono text-sm text-ink/80 transition-colors duration-200 hover:border-ink/40 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visibe:ring-offset-2 focus-visible:ring-offset-paper"
             >
               {hero.secondaryCtaText}
             </MotionLink>
