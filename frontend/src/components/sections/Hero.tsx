@@ -190,7 +190,7 @@ export default function Hero() {
 
   return (
     <section className="relative isolate overflow-hidden bg-ink">
-      <div className="relative h-[280px] w-full overflow-hidden sm:h-[360px] md:h-[440px] lg:h-[520px] xl:h-[600px]">
+      <div className="relative h-[280px] w-full overflow-hidden sm:absolute sm:inset-0 sm:h-auto">
         {videoSrc ? (
           <video
             ref={videoRef}
@@ -237,11 +237,18 @@ export default function Hero() {
         {videoSrc ? <VideoCaptionOverlay text={activeCaption} /> : null}
       </div>
 
-      <div className="relative flex flex-col gap-6 bg-ink px-4 pb-8 pt-6 sm:max-w-6xl sm:gap-8 sm:px-6 sm:pb-10 sm:pt-8 md:px-8 md:pb-12 md:pt-10 lg:px-10 lg:pb-14 lg:pt-12">
+      <div className="relative flex flex-col gap-6 bg-ink px-4 pb-8 pt-6 sm:min-h-[520px] sm:max-w-6xl sm:flex-row sm:items-end sm:justify-end sm:gap-8 sm:bg-transparent sm:px-6 sm:pb-10 sm:pt-8 md:min-h-[600px] md:px-8 md:pb-12 md:pt-10 lg:min-h-[680px] lg:px-10 lg:pb-14 lg:pt-12 xl:min-h-[760px]">
         <motion.div initial="hidden"
           animate="show"
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }}
-          className="relative w-full overflow-hidden rounded-none bg-paper p-4 shadow-none sm:p-6 md:p-8 lg:p-10"
+          variants={{
+            hidden: { opacity: 0, y: 56 },
+            show: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.7, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.2 },
+            },
+          }}
+          className="relative w-full overflow-hidden rounded-none bg-paper p-4 shadow-none sm:max-w-md sm:rounded-lg sm:p-6 sm:shadow-[0_24px_60px_-20px_rgba(14,20,32,0.55)] md:max-w-lg md:p-8 lg:rounded-xl lg:p-10"
         >
           <div className="pointer-events-none absolute inset-0 z-10 flex">
             {Array.from({ length: 12 }).map((_, i) => (
