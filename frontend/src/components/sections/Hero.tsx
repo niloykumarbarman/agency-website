@@ -139,7 +139,7 @@ function TelemetryCluster({ pills }: { pills: TelemetryPillDto[] }) {
 
 function VideoCaptionOverlay({ text }: { text: string | null }) {
   return (
-    <div className="pointer-events-none absolute left-4 top-24 z-[5] w-[70%] max-w-[16rem] overflow-hidden sm:left-6 sm:top-32 sm:max-w-xs md:left-8 md:top-40 md:max-w-sm lg:left-10 lg:top-44 lg:max-w-md xl:left-12 xl:top-48 xl:max-w-lg">
+    <div className="pointer-events-none absolute bottom-6 left-4 z-[5] w-[70%] max-w-[16rem] overflow-hidden sm:bottom-10 sm:left-6 sm:max-w-xs md:bottom-12 md:left-8 md:max-w-sm lg:bottom-14 lg:left-10 lg:max-w-md xl:bottom-16 xl:left-12 xl:max-w-lg">
       <AnimatePresence mode="wait">
         {text && (
           <motion.div
@@ -237,7 +237,7 @@ export default function Hero() {
         {videoSrc ? <VideoCaptionOverlay text={activeCaption} /> : null}
       </div>
 
-      <div className="relative flex flex-col gap-6 bg-ink px-4 pb-8 pt-6 sm:min-h-[520px] sm:max-w-6xl sm:flex-row sm:items-end sm:justify-end sm:gap-8 sm:bg-transparent sm:px-6 sm:pb-10 sm:pt-8 md:min-h-[600px] md:px-8 md:pb-12 md:pt-10 lg:min-h-[680px] lg:px-10 lg:pb-14 lg:pt-12 xl:min-h-[760px]">
+      <div className="relative mx-auto flex w-full flex-col gap-6 bg-ink px-4 pb-8 pt-6 sm:min-h-[520px] sm:max-w-6xl sm:flex-row sm:items-end sm:justify-end sm:gap-8 sm:bg-transparent sm:px-6 sm:pb-10 sm:pt-8 md:min-h-[600px] md:px-8 md:pb-12 md:pt-10 lg:min-h-[680px] lg:px-10 lg:pb-14 lg:pt-12 xl:min-h-[760px]">
         <motion.div initial="hidden"
           animate="show"
           variants={{
