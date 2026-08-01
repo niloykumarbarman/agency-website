@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   Layers,
@@ -64,6 +65,20 @@ const SERVICES: Service[] = [
 
 export default function Services() {
   const reduceMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleCardClick = (i: number) => {
+    // On hover-capable devices (mouse/trackpad), hover already drives the
+    // effect -- ignore clicks there so a click doesn't fight hover state.
+    // On touch devices (no hover), tapping toggles the effect instead.
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(hover: hover)").matches
+    ) {
+      return;
+    }
+    setActiveIndex((prev) => (prev === i ? null : i));
+  };
 
   return (
     <section
@@ -102,6 +117,7 @@ export default function Services() {
           {SERVICES.map((service, i) => {
             const Icon = service.icon;
             const isSignal = i % 2 === 0;
+            const isActive = activeIndex === i;
             return (
               <motion.div
                 key={service.title}
@@ -113,26 +129,45 @@ export default function Services() {
                     ? { duration: 0.3 }
                     : { duration: 0.5, ease: "easeOut", delay: i * 0.08 }
                 }
-                className="group relative bg-paper p-8 transition-colors duration-300 hover:bg-ink hover:text-paper"
+                onMouseEnter={() => setActiveIndex(i)}
+                onMouseLeave={() =>
+                  setActiveIndex((prev) => (prev === i ? null : prev))
+                }
+                onClick={() => handleCardClick(i)}
+                className={`group relative cursor-pointer p-8 transition-colors duration-300 ${
+                  isActive ? "bg-ink text-paper" : "bg-paper"
+                }`}
               >
                 <div className="flex items-center justify-between">
                   <span
                     className={`flex h-16 w-16 items-center justify-center rounded-sm transition-colors duration-300 ${
                       isSignal
-                        ? "bg-signal/15 text-signal group-hover:bg-signal/30"
-                        : "bg-ember/15 text-ember group-hover:bg-ember/30"
+                        ? isActive
+                          ? "bg-signal/30 text-signal"
+                          : "bg-signal/15 text-signal"
+                        : isActive
+                          ? "bg-ember/30 text-ember"
+                          : "bg-ember/15 text-ember"
                     }`}
                   >
                     <Icon className="h-7 w-7" strokeWidth={1.6} />
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-graphite/40 transition-colors duration-300 group-hover:text-paper/40">
+                  <span
+                    className={`font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-300 ${
+                      isActive ? "text-paper/40" : "text-graphite/40"
+                    }`}
+                  >
                     /{service.tag}
                   </span>
                 </div>
                 <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">
                   {service.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-graphite/75 transition-colors duration-300 group-hover:text-paper/70">
+                <p
+                  className={`mt-3 text-sm leading-relaxed transition-colors duration-300 ${
+                    isActive ? "text-paper/70" : "text-graphite/75"
+                  }`}
+                >
                   {service.description}
                 </p>
               </motion.div>
