@@ -123,17 +123,20 @@ export default function TechnologiesDetailList() {
                 </p>
 
                 <ul className="mt-6 flex flex-wrap gap-2 border-t border-graphite/10 pt-6">
-                  {group.items.map((tool) => {
+                  {group.items.map((tool, idx) => {
                     const hasIcon = !!getTechIcon(tool.name);
+                    const stickerBg = idx % 2 === 0 ? "bg-signal text-paper" : "bg-ember text-paper";
+                    const stickerTilt =
+                      idx % 3 === 0 ? "-rotate-2" : idx % 3 === 1 ? "rotate-2" : "-rotate-1";
                     return (
                       <li
                         key={tool.id}
-                        className="flex items-center gap-1.5 rounded-full border border-graphite/15 px-3 py-1 font-mono text-xs text-graphite"
+                        className={`flex items-center gap-1.5 whitespace-nowrap rounded-tl-lg rounded-br-lg rounded-tr-sm rounded-bl-sm px-3 py-1.5 font-mono text-[0.7rem] font-bold uppercase tracking-wide shadow-[2px_2px_0_0_rgba(14,20,32,0.85)] transition-transform duration-200 hover:rotate-0 ${stickerBg} ${stickerTilt}`}
                       >
                         {hasIcon ? (
                           <TechBrandIcon name={tool.name} className="h-3.5 w-3.5 shrink-0" />
                         ) : (
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal/60" />
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-paper/70" />
                         )}
                         {tool.displayName}
                       </li>

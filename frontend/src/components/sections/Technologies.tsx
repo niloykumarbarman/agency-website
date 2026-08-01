@@ -93,19 +93,26 @@ export default function Technologies() {
                   <DraggableMarquee trackClassName="items-stretch gap-3">
                     {[...items, ...items].map((tech, i) => {
                       const hasIcon = !!getTechIcon(tech.name);
+                      const stickerOrder: Accent[] = ["signal", "ember", "wire"];
+                      const stickerAccent = ACCENT_CLASSES[stickerOrder[i % 3]];
+                      const stickerTilt = i % 2 === 0 ? "-rotate-3" : "rotate-3";
                       return (
                         <div
                           key={`${tech.id}-${i}`}
-                          className="flex min-w-[120px] flex-col items-center justify-center gap-2 whitespace-nowrap rounded-sm px-4 py-3"
+                          className="flex min-w-[130px] items-center justify-center px-1 py-3"
                         >
-                          {hasIcon ? (
-                            <TechBrandIcon name={tech.name} className="h-8 w-8" />
-                          ) : (
-                            <span className={`h-2 w-2 rounded-full ${accent.dot}`} />
-                          )}
-                          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-paper/60">
-                            {tech.displayName}
-                          </p>
+                          <div
+                            className={`flex items-center gap-2 whitespace-nowrap rounded-tl-xl rounded-br-xl rounded-tr-md rounded-bl-md px-4 py-2.5 shadow-[3px_3px_0_0_rgba(14,20,32,0.9)] transition-transform duration-300 hover:rotate-0 hover:scale-105 ${stickerAccent.blob} ${stickerTilt}`}
+                          >
+                            {hasIcon ? (
+                              <TechBrandIcon name={tech.name} className="h-4 w-4 shrink-0" />
+                            ) : (
+                              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ink/50" />
+                            )}
+                            <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.08em]">
+                              {tech.displayName}
+                            </p>
+                          </div>
                         </div>
                       );
                     })}
