@@ -17,6 +17,8 @@ jobs:
           script: |
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull origin main
+            cp infra/nginx/devliora.com.conf /etc/nginx/sites-available/devliora.com
+            nginx -t && systemctl reload nginx
             cd infra/docker
             docker compose --env-file .env -f docker-compose.prod.yml up --build -d
             docker image prune -f
