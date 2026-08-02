@@ -141,7 +141,7 @@ export default function AdminSettingsPage() {
             {uploading ? "Uploading..." : "Upload new logo"}
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
               className="hidden"
               onChange={handleFileChange}
               disabled={uploading}
