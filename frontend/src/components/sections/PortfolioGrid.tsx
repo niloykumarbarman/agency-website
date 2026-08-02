@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { fetchPortfolios, parseTechStack, type Portfolio } from "@/lib/portfolios";
+import { resolveImageUrl } from "@/lib/hero";
 
 function truncate(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
@@ -102,7 +103,7 @@ export default function PortfolioGrid() {
                     <div className="relative aspect-[16/10] w-full overflow-hidden bg-graphite/10">
                       {item.thumbnailUrl && (
                         <Image
-                          src={item.thumbnailUrl}
+                          src={resolveImageUrl(item.thumbnailUrl)}
                           alt={item.title}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
