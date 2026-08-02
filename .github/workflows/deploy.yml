@@ -15,8 +15,11 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           script: |
+            set -euo pipefail
             cd ${{ secrets.VPS_PROJECT_PATH }}
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
+            echo "Deployed commit: $(git log --oneline -1)"
             cp infra/nginx/devliora.com.conf /etc/nginx/sites-available/devliora.com
             nginx -t && systemctl reload nginx
             cd infra/docker
