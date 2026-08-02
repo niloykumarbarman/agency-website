@@ -10,12 +10,12 @@ public class UploadsController : ControllerBase
 {
     private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".jpg", ".jpeg", ".png", ".webp", ".gif"
+        ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"
     };
 
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase)
     {
-        "image/jpeg", "image/png", "image/webp", "image/gif"
+        "image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"
     };
 
     private const long MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
@@ -44,7 +44,7 @@ public class UploadsController : ControllerBase
         var extension = Path.GetExtension(file.FileName);
         if (string.IsNullOrWhiteSpace(extension) || !AllowedExtensions.Contains(extension))
         {
-            return BadRequest(new { error = "Unsupported file extension. Allowed: jpg, jpeg, png, webp, gif." });
+            return BadRequest(new { error = "Unsupported file extension. Allowed: jpg, jpeg, png, webp, gif, svg." });
         }
 
         if (!AllowedContentTypes.Contains(file.ContentType))
