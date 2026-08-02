@@ -27,8 +27,33 @@ public class CreatePortfolioCommandHandler : IRequestHandler<CreatePortfolioComm
             ProjectUrl = request.ProjectUrl,
             TechStack = request.TechStack,
             IsFeatured = request.IsFeatured,
-            DisplayOrder = request.DisplayOrder
+            DisplayOrder = request.DisplayOrder,
+            Industry = request.Industry,
+            Challenge = request.Challenge,
+            Approach = request.Approach,
+            Result = request.Result,
+            TestimonialId = request.TestimonialId
         };
+
+        foreach (var image in request.Images)
+        {
+            portfolio.Images.Add(new PortfolioImage
+            {
+                ImageUrl = image.ImageUrl,
+                Caption = image.Caption,
+                DisplayOrder = image.DisplayOrder
+            });
+        }
+
+        foreach (var metric in request.Metrics)
+        {
+            portfolio.Metrics.Add(new PortfolioMetric
+            {
+                Label = metric.Label,
+                Value = metric.Value,
+                DisplayOrder = metric.DisplayOrder
+            });
+        }
 
         _context.Portfolios.Add(portfolio);
         await _context.SaveChangesAsync(cancellationToken);

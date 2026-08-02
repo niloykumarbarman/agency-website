@@ -3,6 +3,7 @@ using Devliora.Application.Features.Portfolios.Commands.DeletePortfolio;
 using Devliora.Application.Features.Portfolios.Commands.UpdatePortfolio;
 using Devliora.Application.Features.Portfolios.Queries.GetAllPortfolios;
 using Devliora.Application.Features.Portfolios.Queries.GetAllPortfoliosAdmin;
+using Devliora.Application.Features.Portfolios.Queries.GetPortfolioBySlug;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,14 @@ public class PortfoliosController : ControllerBase
     public async Task<ActionResult<List<PortfolioDto>>> GetAll(CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new GetAllPortfoliosQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{slug}")]
+    public async Task<ActionResult<PortfolioDetailDto>> GetBySlug(string slug, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GetPortfolioBySlugQuery { Slug = slug }, cancellationToken);
+        if (result is null) return NotFound();
         return Ok(result);
     }
 

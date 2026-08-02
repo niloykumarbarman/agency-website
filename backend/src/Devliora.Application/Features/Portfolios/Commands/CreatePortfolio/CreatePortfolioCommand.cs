@@ -1,3 +1,4 @@
+using Devliora.Application.Features.Portfolios.Common;
 using MediatR;
 
 namespace Devliora.Application.Features.Portfolios.Commands.CreatePortfolio;
@@ -13,4 +14,13 @@ public class CreatePortfolioCommand : IRequest<Guid>
     public string TechStack { get; set; } = string.Empty;
     public bool IsFeatured { get; set; } = false;
     public int DisplayOrder { get; set; }
+
+    public string Industry { get; set; } = string.Empty;
+    public string Challenge { get; set; } = string.Empty;
+    public string Approach { get; set; } = string.Empty;
+    public string Result { get; set; } = string.Empty;
+    public Guid? TestimonialId { get; set; }
+
+    public List<PortfolioImageItem> Images { get; set; } = new();
+    public List<PortfolioMetricItem> Metrics { get; set; } = new();
 }

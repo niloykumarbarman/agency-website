@@ -1,4 +1,5 @@
 using Devliora.Application.Common.Interfaces;
+using Devliora.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,8 @@ public class UpdatePortfolioCommandHandler : IRequestHandler<UpdatePortfolioComm
     public async Task<Unit> Handle(UpdatePortfolioCommand request, CancellationToken cancellationToken)
     {
         var portfolio = await _context.Portfolios
+            .Include(p => p.Images)
+            .Include(p => p.Metrics)
             .FirstOrDefaultAsync(p => p.Id == request.Id && !p.IsDeleted, cancellationToken)
             ?? throw new KeyNotFoundException($"Portfolio with Id '{request.Id}' was not found.");
 
@@ -30,7 +33,34 @@ public class UpdatePortfolioCommandHandler : IRequestHandler<UpdatePortfolioComm
         portfolio.TechStack = request.TechStack;
         portfolio.IsFeatured = request.IsFeatured;
         portfolio.DisplayOrder = request.DisplayOrder;
+        portfolio.Industry = request.Industry;
+        portfolio.Challenge = request.Challenge;
+        portfolio.Approach = request.Approach;
+        portfolio.Result = request.Result;
+        portfolio.TestimonialId = request.TestimonialId;
         portfolio.UpdatedAt = DateTime.UtcNow;
+
+        portfolio.Images.Clear();
+        foreach (var image in request.Images)
+        {
+            portfolio.Images.Add(new PortfolioImage
+            {
+                ImageUrl = image.ImageUrl,
+                Caption = image.Caption,
+                DisplayOrder = image.DisplayOrder
+            });
+        }
+
+        portfolio.Metrics.Clear();
+        foreach (var metric in request.Metrics)
+        {
+            portfolio.Metrics.Add(new PortfolioMetric
+            {
+                Label = metric.Label,
+                Value = metric.Value,
+                DisplayOrder = metric.DisplayOrder
+            });
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 

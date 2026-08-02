@@ -12,6 +12,8 @@ public class AppDbContext : DbContext, IAppDbContext
 
     public DbSet<Service> Services => Set<Service>();
     public DbSet<Portfolio> Portfolios => Set<Portfolio>();
+    public DbSet<PortfolioImage> PortfolioImages => Set<PortfolioImage>();
+    public DbSet<PortfolioMetric> PortfolioMetrics => Set<PortfolioMetric>();
     public DbSet<CaseStudy> CaseStudies => Set<CaseStudy>();
     public DbSet<BlogPost> BlogPosts => Set<BlogPost>();
     public DbSet<Testimonial> Testimonials => Set<Testimonial>();

@@ -1,4 +1,5 @@
 using Devliora.Application.Common.Interfaces;
+using Devliora.Application.Features.Portfolios.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,7 +45,20 @@ public class GetAllPortfoliosQueryHandler : IRequestHandler<GetAllPortfoliosQuer
                 ThumbnailUrl = p.ThumbnailUrl,
                 ProjectUrl = p.ProjectUrl,
                 TechStack = p.TechStack,
-                IsFeatured = p.IsFeatured
+                IsFeatured = p.IsFeatured,
+                Industry = p.Industry,
+                Challenge = p.Challenge,
+                Approach = p.Approach,
+                Result = p.Result,
+                TestimonialId = p.TestimonialId,
+                Images = p.Images
+                    .OrderBy(i => i.DisplayOrder)
+                    .Select(i => new PortfolioImageItem { ImageUrl = i.ImageUrl, Caption = i.Caption, DisplayOrder = i.DisplayOrder })
+                    .ToList(),
+                Metrics = p.Metrics
+                    .OrderBy(m => m.DisplayOrder)
+                    .Select(m => new PortfolioMetricItem { Label = m.Label, Value = m.Value, DisplayOrder = m.DisplayOrder })
+                    .ToList()
             })
             .ToListAsync(cancellationToken);
 

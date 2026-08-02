@@ -3,25 +3,22 @@ using Devliora.Application.Features.Portfolios.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Devliora.Application.Features.Portfolios.Queries.GetAllPortfoliosAdmin;
+namespace Devliora.Application.Features.Portfolios.Queries.GetPortfolioBySlug;
 
-public class GetAllPortfoliosAdminQueryHandler : IRequestHandler<GetAllPortfoliosAdminQuery, List<AdminPortfolioDto>>
+public class GetPortfolioBySlugQueryHandler : IRequestHandler<GetPortfolioBySlugQuery, PortfolioDetailDto?>
 {
     private readonly IAppDbContext _context;
 
-    public GetAllPortfoliosAdminQueryHandler(IAppDbContext context)
+    public GetPortfolioBySlugQueryHandler(IAppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<List<AdminPortfolioDto>> Handle(GetAllPortfoliosAdminQuery request, CancellationToken cancellationToken)
+    public async Task<PortfolioDetailDto?> Handle(GetPortfolioBySlugQuery request, CancellationToken cancellationToken)
     {
-        // Admin view: includes DisplayOrder for reordering UI, and always
-        // reflects the latest true database state (no caching).
         return await _context.Portfolios
-            .Where(p => !p.IsDeleted)
-            .OrderBy(p => p.DisplayOrder)
-            .Select(p => new AdminPortfolioDto
+            .Where(p => p.Slug == request.Slug && !p.IsDeleted)
+            .Select(p => new PortfolioDetailDto
             {
                 Id = p.Id,
                 Title = p.Title,
@@ -31,13 +28,14 @@ public class GetAllPortfoliosAdminQueryHandler : IRequestHandler<GetAllPortfolio
                 ThumbnailUrl = p.ThumbnailUrl,
                 ProjectUrl = p.ProjectUrl,
                 TechStack = p.TechStack,
-                IsFeatured = p.IsFeatured,
-                DisplayOrder = p.DisplayOrder,
                 Industry = p.Industry,
                 Challenge = p.Challenge,
                 Approach = p.Approach,
                 Result = p.Result,
                 TestimonialId = p.TestimonialId,
+                TestimonialQuote = p.Testimonial != null ? p.Testimonial.Quote : null,
+                TestimonialClientName = p.Testimonial != null ? p.Testimonial.ClientName : null,
+                TestimonialClientTitle = p.Testimonial != null ? p.Testimonial.ClientTitle : null,
                 Images = p.Images
                     .OrderBy(i => i.DisplayOrder)
                     .Select(i => new PortfolioImageItem { ImageUrl = i.ImageUrl, Caption = i.Caption, DisplayOrder = i.DisplayOrder })
@@ -47,6 +45,6 @@ public class GetAllPortfoliosAdminQueryHandler : IRequestHandler<GetAllPortfolio
                     .Select(m => new PortfolioMetricItem { Label = m.Label, Value = m.Value, DisplayOrder = m.DisplayOrder })
                     .ToList()
             })
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }
