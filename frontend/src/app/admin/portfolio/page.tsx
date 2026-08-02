@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Briefcase } from "lucide-react";
 import AdminResourcePage, {
   type FieldConfig,
@@ -13,6 +14,7 @@ import {
   type AdminPortfolio,
   type PortfolioFormPayload,
 } from "@/lib/adminPortfolios";
+import { fetchAdminTestimonials, type AdminTestimonial } from "@/lib/adminTestimonials";
 
 const emptyForm: PortfolioFormPayload = {
   title: "",
@@ -24,25 +26,14 @@ const emptyForm: PortfolioFormPayload = {
   techStack: "",
   isFeatured: false,
   displayOrder: 0,
+  industry: "",
+  challenge: "",
+  approach: "",
+  result: "",
+  testimonialId: "",
+  images: [],
+  metrics: [],
 };
-
-const fields: FieldConfig<PortfolioFormPayload>[] = [
-  { key: "title", label: "Title", type: "text", required: true, colSpan: 2 },
-  { key: "slug", label: "Slug", type: "text", required: true },
-  { key: "clientName", label: "Client Name", type: "text" },
-  { key: "thumbnailUrl", label: "Thumbnail URL", type: "text" },
-  { key: "projectUrl", label: "Project URL", type: "text" },
-  { key: "techStack", label: "Tech Stack (comma separated)", type: "text" },
-  { key: "displayOrder", label: "Display Order", type: "number" },
-  { key: "isFeatured", label: "Featured", type: "checkbox" },
-  {
-    key: "summary",
-    label: "Summary",
-    type: "textarea",
-    required: true,
-    colSpan: 2,
-  },
-];
 
 const columns: ColumnConfig<AdminPortfolio>[] = [
   { key: "title", label: "Title" },
@@ -66,6 +57,85 @@ const columns: ColumnConfig<AdminPortfolio>[] = [
 ];
 
 export default function AdminPortfolioPage() {
+  const [testimonials, setTestimonials] = useState<AdminTestimonial[]>([]);
+
+  useEffect(() => {
+    fetchAdminTestimonials()
+      .then(setTestimonials)
+      .catch(() => setTestimonials([]));
+  }, []);
+
+  const fields: FieldConfig<PortfolioFormPayload>[] = [
+    { key: "title", label: "Title", type: "text", required: true, colSpan: 2 },
+    { key: "slug", label: "Slug", type: "text", required: true },
+    { key: "clientName", label: "Client Name", type: "text" },
+    { key: "thumbnailUrl", label: "Thumbnail URL", type: "text" },
+    { key: "projectUrl", label: "Project URL", type: "text" },
+    { key: "techStack", label: "Tech Stack (comma separated)", type: "text" },
+    { key: "displayOrder", label: "Display Order", type: "number" },
+    { key: "isFeatured", label: "Featured", type: "checkbox" },
+    {
+      key: "summary",
+      label: "Summary",
+      type: "textarea",
+      required: true,
+      colSpan: 2,
+    },
+    { key: "industry", label: "Industry", type: "text" },
+    {
+      key: "challenge",
+      label: "Challenge",
+      type: "textarea",
+      colSpan: 2,
+    },
+    {
+      key: "approach",
+      label: "Approach",
+      type: "textarea",
+      colSpan: 2,
+    },
+    {
+      key: "result",
+      label: "Result",
+      type: "textarea",
+      colSpan: 2,
+    },
+    {
+      key: "testimonialId",
+      label: "Testimonial",
+      type: "select",
+      selectValueType: "string",
+      options: [
+        { value: "", label: "— None —" },
+        ...testimonials.map((t) => ({ value: t.id, label: t.clientName })),
+      ],
+    },
+    {
+      key: "images",
+      label: "Gallery Images",
+      type: "list",
+      colSpan: 2,
+      listItemLabel: "Image",
+      listItemFields: [
+        { key: "imageUrl", label: "Image URL", type: "text", placeholder: "https://..." },
+        { key: "caption", label: "Caption", type: "text" },
+        { key: "displayOrder", label: "Order", type: "number" },
+      ],
+    },
+    {
+      key: "metrics",
+      label: "Metrics",
+      type: "list",
+      colSpan: 2,
+      listItemLabel: "Metric",
+      listItemFields: [
+        { key: "label", label: "Label", type: "text", placeholder: "e.g. Revenue Growth" },
+        { key: "value", label: "Value", type: "text", placeholder: "e.g. +45%" },
+        { key: "displayOrder", label: "Order", type: "number" },
+      ],
+    },
+  ];
+
   return (
     <AdminResourcePage<AdminPortfolio, PortfolioFormPayload>
       routePath="/admin/portfolio"
@@ -90,6 +160,13 @@ export default function AdminPortfolioPage() {
         techStack: item.techStack,
         isFeatured: item.isFeatured,
         displayOrder: item.displayOrder,
+        industry: item.industry,
+        challenge: item.challenge,
+        approach: item.approach,
+        result: item.result,
+        testimonialId: item.testimonialId ?? "",
+        images: item.images,
+        metrics: item.metrics,
       })}
     />
   );

@@ -3,14 +3,24 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, type LucideIcon } from "lucide-react";
 
+export interface ListItemFieldConfig {
+  key: string;
+  label: string;
+  type: "text" | "number";
+  placeholder?: string;
+}
+
 export interface FieldConfig<TForm> {
   key: keyof TForm;
   label: string;
-  type: "text" | "textarea" | "checkbox" | "number" | "select";
+  type: "text" | "textarea" | "checkbox" | "number" | "select" | "list";
   required?: boolean;
   colSpan?: 1 | 2;
   placeholder?: string;
-  options?: { value: number; label: string }[];
+  options?: { value: number | string; label: string }[];
+  selectValueType?: "number" | "string";
+  listItemFields?: ListItemFieldConfig[];
+  listItemLabel?: string;
 }
 
 export interface ColumnConfig<T> {
@@ -38,7 +48,10 @@ export interface AdminResourcePageProps<T extends { id: string }, TForm> {
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-graphite/15 px-3 py-2.5 text-sm outline-none transition focus:border-signal focus:ring-2 focus:ring-signal/10";
+const listInputClass =
+  "mt-1 w-full rounded-md border border-graphite/15 px-2 py-1.5 text-sm outline-none transition focus:border-signal focus:ring-2 focus:ring-signal/10";
 const labelClass = "block font-mono text-xs uppercase tracking-wider text-graphite/50";
+const listLabelClass = "block font-mono text-[10px] uppercase tracking-wider text-graphite/40";
 
 export default function AdminResourcePage<T extends { id: string }, TForm>({
   routePath,
@@ -134,7 +147,10 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
     }
   };
 
-  const setFieldValue = (key: keyof TForm, value: string | boolean | number) => {
+  const setFieldValue = (
+    key: keyof TForm,
+    value: string | boolean | number | Record<string, string | number>[]
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -232,7 +248,10 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
                     <select
                       required={field.required}
                       value={String(value ?? "")}
-                      onChange={(e) => setFieldValue(field.key, Number(e.target.value))}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        setFieldValue(field.key, field.selectValueType === "string" ? raw : Number(raw));
+                      }}
                       className={inputClass}
                     >
                       {field.options?.map((opt) => (
@@ -241,6 +260,85 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
                         </option>
                       ))}
                     </select>
+                  </div>
+                );
+              }
+
+              if (field.type === "list") {
+                const arr = (Array.isArray(value) ? value : []) as Record<string, string | number>[];
+                const itemFields = field.listItemFields ?? [];
+                const itemLabelText = field.listItemLabel ?? "Item";
+
+                const addItem = () => {
+                  const newItem: Record<string, string | number> = {};
+                  itemFields.forEach((f) => {
+                    newItem[f.key] = f.type === "number" ? 0 : "";
+                  });
+                  setFieldValue(field.key, [...arr, newItem]);
+                };
+
+                const removeItem = (idx: number) => {
+                  setFieldValue(field.key, arr.filter((_, i) => i !== idx));
+                };
+
+                const updateItem = (idx: number, itemKey: string, itemValue: string | number) => {
+                  const next = arr.map((it, i) => (i === idx ? { ...it, [itemKey]: itemValue } : it));
+                  setFieldValue(field.key, next);
+                };
+
+                return (
+                  <div key={String(field.key)} className={spanClass}>
+                    <div className="flex items-center justify-between">
+                      <label className={labelClass}>{field.label}</label>
+                      <button
+                        type="button"
+                        onClick={addItem}
+                        className="flex items-center gap-1 text-xs font-medium text-signal transition hover:brightness-110"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        Add {itemLabelText}
+                      </button>
+                    </div>
+                    <div className="mt-2 space-y-3">
+                      {arr.length === 0 && (
+                        <p className="text-xs text-graphite/40">No {itemLabelText.toLowerCase()}s yet.</p>
+                      )}
+                      {arr.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-2 rounded-lg border border-graphite/10 p-3"
+                        >
+                          <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3">
+                            {itemFields.map((f) => (
+                              <div key={f.key}>
+                                <label className={listLabelClass}>{f.label}</label>
+                                <input
+                                  type={f.type === "number" ? "number" : "text"}
+                                  placeholder={f.placeholder}
+                                  value={String(item[f.key] ?? "")}
+                                  onChange={(e) =>
+                                    updateItem(
+                                      idx,
+                                      f.key,
+                                      f.type === "number" ? Number(e.target.value) : e.target.value
+                                    )
+                                  }
+                                  className={listInputClass}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeItem(idx)}
+                            className="mt-5 text-graphite/30 transition hover:text-ember"
+                            title="Remove"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 );
               }
