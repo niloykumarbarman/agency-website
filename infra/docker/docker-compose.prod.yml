@@ -45,10 +45,13 @@ services:
       ConnectionStrings__Redis: "redis:6379"
       JwtSettings__SecretKey: ${JWT_SECRET_KEY}
       Cors__AllowedOrigins__0: ${CORS_ALLOWED_ORIGIN}
+      Cors__AllowedOrigins__1: https://www.devliora.com
     ports:
       - "8080:8080"
     networks:
       - devliora-net
+    volumes:
+      - ../../backend/src/Devliora.WebApi/wwwroot/uploads:/app/wwwroot/uploads
   frontend:
     build:
       context: ../../frontend
