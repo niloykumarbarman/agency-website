@@ -13,7 +13,7 @@ export const siteConfig = {
   // Drop a real logo/brand image at this path (frontend/public/og-image.png,
   // 1200x630px) to replace the generated placeholder.
   ogImage: "/og-image.png",
-  contactEmail: "niloybarman611@gmail.com",
+  contactEmail: "devliora74@gmail.com",
   contactPhone: "+8801766644823",
 };
 
