@@ -29,20 +29,6 @@ services:
       retries: 5
     networks:
       - devliora-net
-  ollama:
-    image: ollama/ollama:latest
-    container_name: devliora-ollama
-    restart: unless-stopped
-    mem_limit: 4g
-    volumes:
-      - ollama_data:/root/.ollama
-    healthcheck:
-      test: ["CMD-SHELL", "ollama list || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - devliora-net
   backend:
     build:
       context: ../../backend
@@ -60,8 +46,9 @@ services:
       JwtSettings__SecretKey: ${JWT_SECRET_KEY}
       Cors__AllowedOrigins__0: ${CORS_ALLOWED_ORIGIN}
       Cors__AllowedOrigins__1: https://www.devliora.com
-      Assistant__OllamaBaseUrl: "http://ollama:11434"
-      Assistant__Model: "qwen2.5:3b-instruct"
+      Assistant__GeminiApiKey: ${GEMINI_API_KEY}
+      Assistant__GeminiModel: "gemini-2.5-flash"
+      Assistant__GeminiDailyQuota: ${GEMINI_DAILY_QUOTA:-200}
     ports:
       - "8080:8080"
     networks:
@@ -90,4 +77,3 @@ networks:
 volumes:
   postgres_data:
   redis_data:
-  ollama_data:

@@ -4,6 +4,7 @@ using Devliora.Application.Features.Services.Commands.CreateService;
 using Devliora.Infrastructure.Caching;
 using Devliora.Infrastructure.Data;
 using Devliora.Infrastructure.Security;
+using Devliora.Infrastructure.Assistant;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,6 +44,7 @@ builder.Services.AddFluentValidationAutoValidation();
 
 // JWT + password hashing services
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.Configure<AssistantSettings>(builder.Configuration.GetSection("Assistant"));
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
@@ -54,6 +56,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "agencywebsite:";
 });
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddHttpClient<IAssistantChatService, GeminiChatService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()
     ?? throw new InvalidOperationException("JwtSettings configuration section is missing.");
@@ -101,12 +104,25 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst
             }));
+    options.AddPolicy("assistant", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            }));
 
     options.OnRejected = async (context, cancellationToken) =>
     {
         context.HttpContext.Response.ContentType = "application/json";
+        var message = context.HttpContext.Request.Path.StartsWithSegments("/api/assistant")
+            ? "Too many messages. Please wait a moment before trying again."
+            : "Too many login attempts. Please try again later.";
         await context.HttpContext.Response.WriteAsync(
-            "{\"message\":\"Too many login attempts. Please try again later.\"}",
+            $"{{\"message\":\"{message}\"}}",
             cancellationToken);
     };
 });
