@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
+    // In local dev, Next's image optimizer blocks "localhost" because it
+    // resolves to a loopback/private IP (SSRF protection), even though
+    // remotePatterns explicitly allows it. Disabling optimization only in
+    // development sidesteps this; production (devliora.com, a public
+    // domain) keeps full optimization.
+    unoptimized: process.env.NODE_ENV === "development",
     remotePatterns: [
       {
         protocol: "https",
