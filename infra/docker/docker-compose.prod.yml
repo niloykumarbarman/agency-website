@@ -47,7 +47,7 @@ services:
       Cors__AllowedOrigins__0: ${CORS_ALLOWED_ORIGIN}
       Cors__AllowedOrigins__1: https://www.devliora.com
       Assistant__GeminiApiKey: ${GEMINI_API_KEY}
-      Assistant__GeminiModel: "gemini-2.5-flash"
+      Assistant__GeminiModel: "gemini-3.6-flash"
       Assistant__GeminiDailyQuota: ${GEMINI_DAILY_QUOTA:-200}
     ports:
       - "8080:8080"
