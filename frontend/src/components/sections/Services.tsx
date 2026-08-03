@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   Layers,
@@ -66,17 +66,19 @@ const SERVICES: Service[] = [
 export default function Services() {
   const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [hoverCapable, setHoverCapable] = useState(true);
+
+  // Detect once on mount whether this device actually supports hover
+  // (mouse/trackpad) vs touch-only. Doing this once avoids the mobile
+  // "phantom hover" bug where a tap fires a synthetic mouseenter and
+  // then a click right after -- previously that made the active state
+  // flash on and immediately get toggled back off.
+  useEffect(() => {
+    setHoverCapable(window.matchMedia("(hover: hover)").matches);
+  }, []);
 
   const handleCardClick = (i: number) => {
-    // On hover-capable devices (mouse/trackpad), hover already drives the
-    // effect -- ignore clicks there so a click doesn't fight hover state.
-    // On touch devices (no hover), tapping toggles the effect instead.
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(hover: hover)").matches
-    ) {
-      return;
-    }
+    if (hoverCapable) return;
     setActiveIndex((prev) => (prev === i ? null : i));
   };
 
@@ -118,6 +120,15 @@ export default function Services() {
             const Icon = service.icon;
             const isSignal = i % 2 === 0;
             const isActive = activeIndex === i;
+            const hoverHandlers = hoverCapable
+              ? {
+                  onMouseEnter: () => setActiveIndex(i),
+                  onMouseLeave: () =>
+                    setActiveIndex((prev) => (prev === i ? null : prev)),
+                }
+              : {
+                  onClick: () => handleCardClick(i),
+                };
             return (
               <motion.div
                 key={service.title}
@@ -129,11 +140,7 @@ export default function Services() {
                     ? { duration: 0.3 }
                     : { duration: 0.5, ease: "easeOut", delay: i * 0.08 }
                 }
-                onMouseEnter={() => setActiveIndex(i)}
-                onMouseLeave={() =>
-                  setActiveIndex((prev) => (prev === i ? null : prev))
-                }
-                onClick={() => handleCardClick(i)}
+                {...hoverHandlers}
                 className={`group relative cursor-pointer p-8 transition-colors duration-300 ${
                   isActive ? "bg-ink text-paper" : "bg-paper"
                 }`}
