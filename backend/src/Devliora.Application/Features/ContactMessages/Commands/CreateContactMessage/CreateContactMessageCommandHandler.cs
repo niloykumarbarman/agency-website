@@ -24,7 +24,8 @@ public class CreateContactMessageCommandHandler : IRequestHandler<CreateContactM
             Phone = request.Phone,
             Subject = request.Subject,
             Message = request.Message,
-            IpAddress = request.IpAddress
+            IpAddress = request.IpAddress,
+            Source = string.IsNullOrWhiteSpace(request.Source) ? "contact-form" : request.Source
         };
 
         _context.ContactMessages.Add(message);

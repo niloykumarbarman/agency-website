@@ -12,4 +12,5 @@ public class ContactMessage : BaseEntity
     public string Message { get; set; } = string.Empty;
     public ContactMessageStatus Status { get; set; } = ContactMessageStatus.New;
     public string IpAddress { get; set; } = string.Empty; // audit/rate-limit trail
+    public string Source { get; set; } = "contact-form"; // e.g. "contact-form", "assistant-chat"
 }

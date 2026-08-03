@@ -10,4 +10,5 @@ public class CreateContactMessageCommand : IRequest<Guid>
     public string Subject { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
     public string IpAddress { get; set; } = string.Empty;
+    public string Source { get; set; } = "contact-form";
 }
