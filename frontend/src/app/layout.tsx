@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { buildMetadata, organizationJsonLd, siteConfig } from "@/lib/seo";
 import Analytics from "@/components/Analytics";
+import AssistantChat from "@/components/AssistantChat";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -62,6 +63,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <AssistantChat />
       </body>
     </html>
   );
