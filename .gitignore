@@ -26,3 +26,8 @@ Thumbs.db
 # Uploaded media files (local file storage) — keep folder via .gitkeep, ignore contents
 backend/src/Devliora.WebApi/wwwroot/uploads/*
 !backend/src/Devliora.WebApi/wwwroot/uploads/.gitkeep
+# Production secrets (preventive, in case ever created locally)
+appsettings.Production.json
+*.pem
+*.key
+*.pfx
