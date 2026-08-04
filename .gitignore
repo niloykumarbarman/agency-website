@@ -31,3 +31,5 @@ appsettings.Production.json
 *.pem
 *.key
 *.pfx
+*.swp
+*.swo

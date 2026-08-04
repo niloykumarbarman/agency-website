@@ -49,6 +49,11 @@ services:
       Assistant__GeminiApiKey: ${GEMINI_API_KEY}
       Assistant__GeminiModel: "gemini-3.6-flash"
       Assistant__GeminiDailyQuota: ${GEMINI_DAILY_QUOTA:-200}
+      Telegram__BotToken: ${TELEGRAM_BOT_TOKEN}
+      Telegram__WebhookSecretToken: ${TELEGRAM_WEBHOOK_SECRET}
+      Telegram__GeminiApiKey: ${TELEGRAM_GEMINI_API_KEY}
+      Telegram__GeminiModel: "gemini-3.6-flash"
+      Telegram__GeminiDailyQuota: ${TELEGRAM_GEMINI_DAILY_QUOTA:-200}
     ports:
       - "8080:8080"
     networks:

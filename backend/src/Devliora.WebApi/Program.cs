@@ -5,6 +5,7 @@ using Devliora.Infrastructure.Caching;
 using Devliora.Infrastructure.Data;
 using Devliora.Infrastructure.Security;
 using Devliora.Infrastructure.Assistant;
+using Devliora.Infrastructure.Telegram;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,6 +46,7 @@ builder.Services.AddFluentValidationAutoValidation();
 // JWT + password hashing services
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<AssistantSettings>(builder.Configuration.GetSection("Assistant"));
+builder.Services.Configure<TelegramAssistantSettings>(builder.Configuration.GetSection("Telegram"));
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
@@ -57,6 +59,9 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
 builder.Services.AddHttpClient<IAssistantChatService, GeminiChatService>();
+builder.Services.AddScoped<ITelegramSessionStore, TelegramSessionStore>();
+builder.Services.AddHttpClient<ITelegramApiClient, TelegramApiClient>();
+builder.Services.AddHttpClient<ITelegramChatService, TelegramGeminiChatService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()
     ?? throw new InvalidOperationException("JwtSettings configuration section is missing.");
