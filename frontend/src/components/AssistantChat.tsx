@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MessageCircle, X, Send, Loader2, PhoneCall } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, PhoneCall, Minus } from "lucide-react";
 import {
   sendAssistantMessage,
   type AssistantChatMessage,
@@ -15,6 +15,9 @@ const DOT_GRID_STYLE: React.CSSProperties = {
     "radial-gradient(circle, var(--color-wire) 1px, transparent 1px)",
   backgroundSize: "56px 56px",
 };
+
+const TOOLTIP_DISMISSED_KEY = "devliora-assistant-tooltip-dismissed";
+const TOOLTIP_SHOW_DELAY_MS = 1500;
 
 interface CallbackFormState {
   fullName: string;
@@ -34,11 +37,20 @@ const EMPTY_CALLBACK_FORM: CallbackFormState = {
 
 const REQUEST_CALLBACK_PHRASE = "Request a Callback";
 
+const SUGGESTED_QUESTIONS = [
+  "What services do you offer?",
+  "Tell me about your projects",
+  "What's your tech stack?",
+  "How can I contact you?",
+];
+
 export default function AssistantChat() {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [messages, setMessages] = useState<AssistantChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -63,13 +75,35 @@ export default function AssistantChat() {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.localStorage.getItem(TOOLTIP_DISMISSED_KEY)) return;
+
+    const timeout = setTimeout(() => {
+      setShowTooltip(true);
+    }, TOOLTIP_SHOW_DELAY_MS);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  function dismissTooltip() {
+    setShowTooltip(false);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(TOOLTIP_DISMISSED_KEY, "1");
+    }
+  }
+
+  function handleTooltipClick() {
+    dismissTooltip();
+    setIsOpen(true);
+  }
+
   const panelTransition = prefersReducedMotion
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 320, damping: 30 };
 
-  async function handleSend(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = input.trim();
+  async function sendMessage(text: string) {
+    const trimmed = text.trim();
     if (!trimmed || isSending) return;
 
     const historyBeforeSend = messages;
@@ -88,6 +122,15 @@ export default function AssistantChat() {
     } finally {
       setIsSending(false);
     }
+  }
+
+  async function handleSend(e: React.FormEvent) {
+    e.preventDefault();
+    await sendMessage(input);
+  }
+
+  function handleSuggestedQuestion(question: string) {
+    void sendMessage(question);
   }
 
   function handleCallbackChange(
@@ -126,6 +169,39 @@ export default function AssistantChat() {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       <AnimatePresence>
+        {showTooltip && !isOpen && (
+          <motion.div
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
+            transition={panelTransition}
+            className="relative max-w-[15rem] rounded-2xl rounded-br-sm border border-wire bg-paper px-4 py-3 text-sm text-ink shadow-2xl"
+            role="status"
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                dismissTooltip();
+              }}
+              aria-label="Dismiss tooltip"
+              className="absolute right-1.5 top-1.5 rounded-full p-1 text-graphite transition hover:bg-ink/5 hover:text-ink"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={handleTooltipClick}
+              className="block w-full pr-4 text-left leading-snug"
+            >
+              Chat with my AI Assistant! Ask about our services, projects, or
+              anything else.
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={
@@ -144,12 +220,12 @@ export default function AssistantChat() {
                 : { opacity: 0, y: 24, scale: 0.96 }
             }
             transition={panelTransition}
-            className="flex h-[32rem] w-[22rem] flex-col overflow-hidden rounded-2xl border border-wire bg-paper shadow-2xl sm:w-96"
+            className={`flex w-[22rem] flex-col overflow-hidden rounded-2xl border border-wire bg-paper shadow-2xl sm:w-96 ${isMinimized ? "h-auto" : "h-[32rem]"}`}
             role="dialog"
             aria-label="Devliora assistant chat"
           >
             <div
-              className="flex items-center justify-between border-b border-wire px-5 py-4"
+              className={isMinimized ? "flex items-center justify-between px-5 py-4" : "flex items-center justify-between border-b border-wire px-5 py-4"}
               style={DOT_GRID_STYLE}
             >
               <div>
@@ -157,17 +233,32 @@ export default function AssistantChat() {
                   Devliora
                 </p>
                 <h2 className="font-display text-lg text-ink">Ask Devliora</h2>
+                <p className="mt-0.5 flex items-center gap-1.5 text-xs text-graphite">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Online - Ask about our services, projects, or experience
+                </p>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close chat"
-                className="rounded-lg p-2 text-graphite transition hover:bg-ink/5 hover:text-ink"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setIsMinimized((prev) => !prev)}
+                  aria-label={isMinimized ? "Expand chat" : "Minimize chat"}
+                  className="rounded-lg p-2 text-graphite transition hover:bg-ink/5 hover:text-ink"
+                >
+                  <Minus className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close chat"
+                  className="rounded-lg p-2 text-graphite transition hover:bg-ink/5 hover:text-ink"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
+            {!isMinimized && (
             <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
               {messages.length === 0 && !showCallbackForm && (
                 <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
@@ -176,6 +267,18 @@ export default function AssistantChat() {
                     Ask about our services, timelines, or pricing, or request a
                     callback below.
                   </p>
+                  <div className="mt-2 flex flex-wrap justify-center gap-2">
+                    {SUGGESTED_QUESTIONS.map((question) => (
+                      <button
+                        key={question}
+                        type="button"
+                        onClick={() => handleSuggestedQuestion(question)}
+                        className="rounded-full border border-wire px-3 py-1.5 text-xs text-graphite transition hover:border-signal hover:text-signal"
+                      >
+                        {question}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -283,7 +386,9 @@ export default function AssistantChat() {
                 </form>
               )}
             </div>
+            )}
 
+            {!isMinimized && (
             <div className="border-t border-wire p-3">
               {!showCallbackForm && (
                 <button
@@ -300,7 +405,7 @@ export default function AssistantChat() {
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type your message..."
+                  placeholder="Ask about our services..."
                   className="flex-1 rounded-lg border border-wire bg-paper px-4 py-2.5 text-sm text-ink placeholder:text-graphite/40 outline-none transition focus-visible:border-signal focus-visible:ring-2 focus-visible:ring-signal/30"
                 />
                 <button
@@ -317,13 +422,17 @@ export default function AssistantChat() {
                 </button>
               </form>
             </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+          if (showTooltip) dismissTooltip();
+        }}
         whileHover={prefersReducedMotion ? undefined : { y: -2 }}
         aria-label={isOpen ? "Close assistant chat" : "Open assistant chat"}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-signal text-paper shadow-[0_0_24px_-6px_var(--color-signal)] transition-all"
