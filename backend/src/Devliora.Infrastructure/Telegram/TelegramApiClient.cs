@@ -51,4 +51,74 @@ public class TelegramApiClient : ITelegramApiClient
             _logger.LogError(ex, "Telegram sendMessage call failed for chat {ChatId}", chatId);
         }
     }
+
+    public async Task SendMessageWithButtonsAsync(
+        long chatId,
+        string text,
+        IReadOnlyList<(string Label, string CallbackData)> buttons,
+        CancellationToken cancellationToken = default)
+    {
+        var url = $"https://api.telegram.org/bot{_settings.BotToken}/sendMessage";
+
+        // Telegram expects inline_keyboard as an array of rows; put one button per row for readability.
+        var inlineKeyboard = buttons
+            .Select(b => new[] { new { text = b.Label, callback_data = b.CallbackData } })
+            .ToArray();
+
+        var requestBody = new
+        {
+            chat_id = chatId,
+            text,
+            reply_markup = new
+            {
+                inline_keyboard = inlineKeyboard
+            }
+        };
+
+        var json = JsonSerializer.Serialize(requestBody);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        try
+        {
+            var response = await _httpClient.PostAsync(url, content, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+                _logger.LogError("Telegram sendMessage (with buttons) returned {StatusCode}: {Body}", response.StatusCode, errorBody);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Telegram sendMessage (with buttons) call failed for chat {ChatId}", chatId);
+        }
+    }
+
+    public async Task AnswerCallbackQueryAsync(string callbackQueryId, CancellationToken cancellationToken = default)
+    {
+        var url = $"https://api.telegram.org/bot{_settings.BotToken}/answerCallbackQuery";
+
+        var requestBody = new
+        {
+            callback_query_id = callbackQueryId
+        };
+
+        var json = JsonSerializer.Serialize(requestBody);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        try
+        {
+            var response = await _httpClient.PostAsync(url, content, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+                _logger.LogError("Telegram answerCallbackQuery returned {StatusCode}: {Body}", response.StatusCode, errorBody);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Telegram answerCallbackQuery call failed for callback {CallbackQueryId}", callbackQueryId);
+        }
+    }
 }
