@@ -67,6 +67,11 @@ const OFFICE_LOCATIONS = [
     address: "34 Featherbrook, Point Cook VIC",
     phone: "+61 435251322",
   },
+  {
+    city: "Gaibandha",
+    address: "43/1, Sundarjahan Mor",
+    phone: "01606 479801",
+  },
 ];
 
 export default async function Footer() {
