@@ -34,6 +34,8 @@ public class GetAllServicesQueryHandler : IRequestHandler<GetAllServicesQuery, L
                 Title = s.Title,
                 Slug = s.Slug,
                 ShortDescription = s.ShortDescription,
+                FullDescription = s.FullDescription,
+                Includes = s.Includes,
                 IconUrl = s.IconUrl,
                 DisplayOrder = s.DisplayOrder
             })

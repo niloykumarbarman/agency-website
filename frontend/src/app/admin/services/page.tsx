@@ -19,6 +19,7 @@ const emptyForm: ServiceFormPayload = {
   slug: "",
   shortDescription: "",
   fullDescription: "",
+  includes: [],
   iconUrl: "",
   displayOrder: 0,
   isActive: true,
@@ -42,6 +43,12 @@ const fields: FieldConfig<ServiceFormPayload>[] = [
     label: "Full Description",
     type: "textarea",
     required: true,
+    colSpan: 2,
+  },
+  {
+    key: "includes",
+    label: "Includes (bullet points)",
+    type: "stringlist",
     colSpan: 2,
   },
 ];
@@ -87,6 +94,7 @@ export default function AdminServicesPage() {
         slug: item.slug,
         shortDescription: item.shortDescription,
         fullDescription: item.fullDescription,
+        includes: item.includes,
         iconUrl: item.iconUrl,
         displayOrder: item.displayOrder,
         isActive: item.isActive,

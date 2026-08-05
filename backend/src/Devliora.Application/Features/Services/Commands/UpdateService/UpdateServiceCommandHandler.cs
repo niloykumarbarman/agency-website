@@ -27,6 +27,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         service.Slug = request.Slug;
         service.ShortDescription = request.ShortDescription;
         service.FullDescription = request.FullDescription;
+        service.Includes = request.Includes;
         service.IconUrl = request.IconUrl;
         service.DisplayOrder = request.DisplayOrder;
         service.IsActive = request.IsActive;

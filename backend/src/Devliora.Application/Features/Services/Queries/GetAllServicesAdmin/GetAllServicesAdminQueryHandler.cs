@@ -27,6 +27,7 @@ public class GetAllServicesAdminQueryHandler : IRequestHandler<GetAllServicesAdm
                 Slug = s.Slug,
                 ShortDescription = s.ShortDescription,
                 FullDescription = s.FullDescription,
+                Includes = s.Includes,
                 IconUrl = s.IconUrl,
                 DisplayOrder = s.DisplayOrder,
                 IsActive = s.IsActive

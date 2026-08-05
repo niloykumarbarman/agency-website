@@ -13,7 +13,7 @@ export interface ListItemFieldConfig {
 export interface FieldConfig<TForm> {
   key: keyof TForm;
   label: string;
-  type: "text" | "textarea" | "checkbox" | "number" | "select" | "list";
+  type: "text" | "textarea" | "checkbox" | "number" | "select" | "list" | "stringlist";
   required?: boolean;
   colSpan?: 1 | 2;
   placeholder?: string;
@@ -149,7 +149,7 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
 
   const setFieldValue = (
     key: keyof TForm,
-    value: string | boolean | number | Record<string, string | number>[]
+    value: string | boolean | number | string[] | Record<string, string | number>[]
   ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
@@ -237,6 +237,29 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
                       onChange={(e) => setFieldValue(field.key, e.target.value)}
                       className={inputClass}
                     />
+                  </div>
+                );
+              }
+
+              if (field.type === "stringlist") {
+                const arr = (Array.isArray(value) ? value : []) as string[];
+                return (
+                  <div key={String(field.key)} className={spanClass}>
+                    <label className={labelClass}>{field.label}</label>
+                    <textarea
+                      required={field.required}
+                      rows={4}
+                      placeholder={field.placeholder ?? "One item per line"}
+                      value={arr.join("\n")}
+                      onChange={(e) =>
+                        setFieldValue(
+                          field.key,
+                          e.target.value.split("\n")
+                        )
+                      }
+                      className={inputClass}
+                    />
+                    <p className="mt-1 text-[11px] text-graphite/40">One item per line.</p>
                   </div>
                 );
               }

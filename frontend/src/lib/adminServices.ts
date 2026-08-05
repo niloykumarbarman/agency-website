@@ -7,6 +7,7 @@ export interface AdminService {
   slug: string;
   shortDescription: string;
   fullDescription: string;
+  includes: string[];
   iconUrl: string;
   displayOrder: number;
   isActive: boolean;
@@ -17,6 +18,7 @@ export interface ServiceFormPayload {
   slug: string;
   shortDescription: string;
   fullDescription: string;
+  includes: string[];
   iconUrl: string;
   displayOrder: number;
   isActive: boolean;
