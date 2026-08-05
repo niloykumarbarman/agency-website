@@ -45,11 +45,11 @@ export default function BookConsultationCTA() {
             devliora74@gmail.com
           </a>
           <a
-            href="tel:+8801766644823"
+            href="tel:+8801606479801"
             className="group inline-flex items-center gap-2 rounded-lg border border-wire/30 bg-paper/5 px-6 py-3 font-medium text-paper transition-all hover:-translate-y-0.5 hover:border-signal/50 hover:bg-paper/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             <Phone className="h-4 w-4 text-signal" />
-            +880 1766-644823
+            +880 1606-479801
           </a>
         </motion.div>
       </div>
