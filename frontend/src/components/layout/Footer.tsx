@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapPin, Phone } from "lucide-react";
 import { fetchSiteSettings } from "@/lib/siteSettings";
 import { resolveImageUrl } from "@/lib/hero";
 
@@ -112,13 +113,25 @@ export default async function Footer() {
             <p className="font-mono text-xs uppercase tracking-wider text-paper/40">
               Offices
             </p>
-            <ul className="mt-4 space-y-5">
+            <ul className="mt-4 space-y-6">
               {OFFICE_LOCATIONS.map((office) => (
-                <li key={office.city} className="text-sm text-paper/70">
-                  <p className="text-paper/90">{office.city}</p>
-                  <p className="mt-1 text-paper/60">{office.address}</p>
-                  <a href={`tel:${office.phone.replace(/\s+/g, "")}`} className="mt-1 block transition-colors hover:text-paper">
-                    {office.phone}
+                <li
+                  key={office.city}
+                  className="border-l-2 border-signal/40 pl-4 transition-colors hover:border-signal"
+                >
+                  <p className="font-display text-sm font-semibold text-paper/90">
+                    {office.city}
+                  </p>
+                  <p className="mt-2 flex items-start gap-2 text-sm text-paper/60">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-signal/70" />
+                    <span>{office.address}</span>
+                  </p>
+                  <a
+                    href={`tel:${office.phone.replace(/\s+/g, "")}`}
+                    className="mt-2 flex items-center gap-2 text-sm text-paper/60 transition-colors hover:text-signal"
+                  >
+                    <Phone className="h-4 w-4 shrink-0 text-signal/70" />
+                    <span>{office.phone}</span>
                   </a>
                 </li>
               ))}
