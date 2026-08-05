@@ -23,7 +23,7 @@ function LinkedInIcon() {
 function TwitterIcon() {
   return (
     <svg {...iconProps} aria-hidden="true">
-      <path d="M20 6.4c-.6.3-1.3.5-2 .6a3.6 3.6 0 001.5-2 7 7 0 01-2.2.9 3.5 3.5 0 00-6 3.2A10 10 0 014 5.9a3.5 3.5 0 001.1 4.7 3.4 3.4 0 01-1.6-.4v.05a3.5 3.5 0 002.8 3.5 3.5 3.5 0 01-1.6.06 3.5 3.5 0 003.3 2.5A7.1 7.1 0 013 17.6a10 10 0 005.4 1.6c6.5 0 10-5.4 10-10v-.5c.7-.5 1.3-1.1 1.6-1.8z" />
+      <path d="M20 6.4c-.6.3-1.3.5-2 .6a3.6 3.6 0 001.5-2 7 7 0 01-2.2.9 3.5 3.5 0 00-6 3.2A10 10 0 014 5.9a3.5 3.5 0 001.1 4.7 3.4 3.4 0 01-1.6-.4v.05a3.5 3.5 0 002.8 3.5 3.5 3.5 0 01-1.6.06 3.5 3.5 0003.3 2.5A7.1 7.1 0 013 17.6a10 10 0 005.4 1.6c6.5 0 10-5.4 10-10v-.5c.7-.5 1.3-1.1 1.6-1.8z" />
     </svg>
   );
 }
@@ -60,13 +60,21 @@ const FOOTER_LINKS = {
   ],
 };
 
+const OFFICE_LOCATIONS = [
+  {
+    city: "Melbourne",
+    address: "34 Featherbrook, Point Cook VIC",
+    phone: "+61 435251322",
+  },
+];
+
 export default async function Footer() {
   const settings = await fetchSiteSettings();
 
   return (
     <footer className="border-t border-wire/60 bg-ink text-paper">
       <div className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
           <div>
             {settings?.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -98,6 +106,23 @@ export default async function Footer() {
                 <InstagramIcon />
               </a>
             </div>
+          </div>
+
+          <div>
+            <p className="font-mono text-xs uppercase tracking-wider text-paper/40">
+              Offices
+            </p>
+            <ul className="mt-4 space-y-5">
+              {OFFICE_LOCATIONS.map((office) => (
+                <li key={office.city} className="text-sm text-paper/70">
+                  <p className="text-paper/90">{office.city}</p>
+                  <p className="mt-1 text-paper/60">{office.address}</p>
+                  <a href={`tel:${office.phone.replace(/\s+/g, "")}`} className="mt-1 block transition-colors hover:text-paper">
+                    {office.phone}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {Object.entries(FOOTER_LINKS).map(([heading, links]) => (
