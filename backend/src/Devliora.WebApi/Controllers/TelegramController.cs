@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Devliora.Application.Common.Interfaces;
+using Devliora.Application.Features.ContactMessages.Commands.CreateContactMessage;
 using Devliora.Application.Features.Telegram.Commands.ProcessUpdate;
 using Devliora.Infrastructure.Telegram;
 using MediatR;
@@ -15,6 +16,7 @@ public class TelegramController : ControllerBase
     private readonly ISender _sender;
     private readonly ITelegramApiClient _apiClient;
     private readonly ITelegramSessionStore _sessionStore;
+    private readonly ITelegramContactFlowStore _contactFlowStore;
     private readonly TelegramAssistantSettings _settings;
     private readonly ILogger<TelegramController> _logger;
     private const string SecretTokenHeader = "X-Telegram-Bot-Api-Secret-Token";
@@ -24,12 +26,14 @@ public class TelegramController : ControllerBase
         ISender sender,
         ITelegramApiClient apiClient,
         ITelegramSessionStore sessionStore,
+        ITelegramContactFlowStore contactFlowStore,
         IOptions<TelegramAssistantSettings> settings,
         ILogger<TelegramController> logger)
     {
         _sender = sender;
         _apiClient = apiClient;
         _sessionStore = sessionStore;
+        _contactFlowStore = contactFlowStore;
         _settings = settings.Value;
         _logger = logger;
     }
@@ -63,6 +67,13 @@ public class TelegramController : ControllerBase
             return Ok();
         }
 
+        var flowState = await _contactFlowStore.GetAsync(chatId, cancellationToken);
+        if (flowState is not null && flowState.Step != TelegramContactFlowStep.None)
+        {
+            await HandleContactFlowStepAsync(chatId, flowState, text, cancellationToken);
+            return Ok();
+        }
+
         await _sender.Send(new ProcessTelegramUpdateCommand(chatId, text), cancellationToken);
 
         return Ok();
@@ -70,11 +81,14 @@ public class TelegramController : ControllerBase
 
     private async Task HandleStartCommandAsync(long chatId, CancellationToken cancellationToken)
     {
-        // Start each /start with a clean slate so the conversation history doesn't carry over.
+        // Start each /start with a clean slate so the conversation history and any
+        // in-progress contact flow don't carry over.
         await _sessionStore.ClearAsync(chatId, cancellationToken);
+        await _contactFlowStore.ClearAsync(chatId, cancellationToken);
 
         var buttons = TelegramWelcomeMessage.SuggestedQuestions
             .Select((q, index) => (Label: q.Label, CallbackData: $"q{index}"))
+            .Append((Label: TelegramWelcomeMessage.RequestCallbackLabel, CallbackData: TelegramWelcomeMessage.RequestCallbackCallbackData))
             .ToList();
 
         await _apiClient.SendMessageWithButtonsAsync(chatId, TelegramWelcomeMessage.Text, buttons, cancellationToken);
@@ -87,8 +101,14 @@ public class TelegramController : ControllerBase
         CancellationToken cancellationToken)
     {
         // Always acknowledge the callback so Telegram clears the button's loading spinner,
-        // even if the data doesn't map to a known question.
+        // even if the data doesn't map to a known action.
         await _apiClient.AnswerCallbackQueryAsync(callbackQueryId, cancellationToken);
+
+        if (callbackData == TelegramWelcomeMessage.RequestCallbackCallbackData)
+        {
+            await StartContactFlowAsync(chatId, cancellationToken);
+            return;
+        }
 
         if (!callbackData.StartsWith('q')
             || !int.TryParse(callbackData.AsSpan(1), out var index)
@@ -101,6 +121,100 @@ public class TelegramController : ControllerBase
 
         var question = TelegramWelcomeMessage.SuggestedQuestions[index].Question;
         await _sender.Send(new ProcessTelegramUpdateCommand(chatId, question), cancellationToken);
+    }
+
+    private async Task StartContactFlowAsync(long chatId, CancellationToken cancellationToken)
+    {
+        var state = new TelegramContactFlowState { Step = TelegramContactFlowStep.AwaitingName };
+        await _contactFlowStore.SetAsync(chatId, state, cancellationToken);
+        await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.AskName, cancellationToken);
+    }
+
+    private async Task HandleContactFlowStepAsync(
+        long chatId,
+        TelegramContactFlowState state,
+        string text,
+        CancellationToken cancellationToken)
+    {
+        var trimmed = text.Trim();
+
+        switch (state.Step)
+        {
+            case TelegramContactFlowStep.AwaitingName:
+                state.FullName = trimmed;
+                state.Step = TelegramContactFlowStep.AwaitingEmail;
+                await _contactFlowStore.SetAsync(chatId, state, cancellationToken);
+                await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.AskEmail, cancellationToken);
+                break;
+
+            case TelegramContactFlowStep.AwaitingEmail:
+                if (!IsValidEmail(trimmed))
+                {
+                    await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.InvalidEmail, cancellationToken);
+                    break;
+                }
+
+                state.Email = trimmed;
+                state.Step = TelegramContactFlowStep.AwaitingPhone;
+                await _contactFlowStore.SetAsync(chatId, state, cancellationToken);
+                await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.AskPhone, cancellationToken);
+                break;
+
+            case TelegramContactFlowStep.AwaitingPhone:
+                state.Phone = trimmed;
+                state.Step = TelegramContactFlowStep.AwaitingMessage;
+                await _contactFlowStore.SetAsync(chatId, state, cancellationToken);
+                await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.AskMessage, cancellationToken);
+                break;
+
+            case TelegramContactFlowStep.AwaitingMessage:
+                await SubmitContactFlowAsync(chatId, state, trimmed, cancellationToken);
+                break;
+        }
+    }
+
+    private async Task SubmitContactFlowAsync(
+        long chatId,
+        TelegramContactFlowState state,
+        string message,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _sender.Send(new CreateContactMessageCommand
+            {
+                FullName = state.FullName,
+                Email = state.Email,
+                Phone = state.Phone,
+                Subject = TelegramContactFlowMessages.Subject,
+                Message = message,
+                Source = TelegramContactFlowMessages.Source
+            }, cancellationToken);
+
+            await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.Confirmation, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to submit Telegram contact flow request for chat {ChatId}", chatId);
+            await _apiClient.SendMessageAsync(chatId, TelegramContactFlowMessages.SubmissionFailed, cancellationToken);
+        }
+        finally
+        {
+            await _contactFlowStore.ClearAsync(chatId, cancellationToken);
+        }
+    }
+
+    private static bool IsValidEmail(string value)
+    {
+        try
+        {
+            _ = new System.Net.Mail.MailAddress(value);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static bool TryExtractTextMessage(JsonElement body, out long chatId, out string text)

@@ -14,4 +14,7 @@ public static class TelegramWelcomeMessage
         ("What's your tech stack?", "What's your tech stack?"),
         ("How can I contact you?", "How can I contact you?")
     };
+
+    public const string RequestCallbackLabel = "Request a callback";
+    public const string RequestCallbackCallbackData = "contact_start";
 }

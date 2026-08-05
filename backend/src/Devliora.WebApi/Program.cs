@@ -60,6 +60,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
 builder.Services.AddHttpClient<IAssistantChatService, GeminiChatService>();
 builder.Services.AddScoped<ITelegramSessionStore, TelegramSessionStore>();
+builder.Services.AddScoped<ITelegramContactFlowStore, TelegramContactFlowStore>();
 builder.Services.AddHttpClient<ITelegramApiClient, TelegramApiClient>();
 builder.Services.AddHttpClient<ITelegramChatService, TelegramGeminiChatService>();
 
