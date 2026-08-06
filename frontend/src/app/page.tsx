@@ -9,6 +9,7 @@ import Process from "@/components/sections/Process";
 import Technologies from "@/components/sections/Technologies";
 import Portfolio from "@/components/sections/Portfolio";
 import CaseStudies from "@/components/sections/CaseStudies";
+import Testimonials from "@/components/sections/Testimonials";
 import TrustGuarantees from "@/components/sections/TrustGuarantees";
 import FAQ from "@/components/sections/FAQ";
 import Contact from "@/components/sections/Contact";
@@ -27,6 +28,7 @@ export default function Home() {
         <Technologies />
         <Portfolio />
         <CaseStudies />
+        <Testimonials />
         <TrustGuarantees />
         <FAQ />
       <Contact />

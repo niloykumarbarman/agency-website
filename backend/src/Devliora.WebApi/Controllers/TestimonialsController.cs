@@ -21,9 +21,9 @@ public class TestimonialsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TestimonialDto>>> GetAll(CancellationToken cancellationToken)
+    public async Task<ActionResult<List<TestimonialDto>>> GetAll([FromQuery] bool featured, CancellationToken cancellationToken)
     {
-        var result = await _sender.Send(new GetAllTestimonialsQuery(), cancellationToken);
+        var result = await _sender.Send(new GetAllTestimonialsQuery { FeaturedOnly = featured }, cancellationToken);
         return Ok(result);
     }
 
