@@ -121,6 +121,7 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (saving) return;
     setSaving(true);
     setError("");
     try {
