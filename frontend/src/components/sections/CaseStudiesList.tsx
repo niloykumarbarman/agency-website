@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { fetchCaseStudies, type CaseStudy } from "@/lib/caseStudies";
+import { resolveImageUrl } from "@/lib/hero";
 
 const ILLUSTRATIVE_SUFFIX = " (Illustrative Example)";
 
@@ -112,6 +113,14 @@ export default function CaseStudiesList() {
                     className="group bg-paper p-8 transition-colors duration-300 hover:bg-ink/[0.02] md:p-12"
                   >
                     <Link href={`/case-studies/${study.slug}`}>
+                      {study.coverImageUrl && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={resolveImageUrl(study.coverImageUrl)}
+                          alt=""
+                          className="mb-6 h-48 w-full rounded-lg object-cover"
+                        />
+                      )}
                       <div className="flex flex-wrap items-center gap-3">
                       <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-signal">
                         {study.industry} — {name}

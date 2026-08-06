@@ -22,7 +22,7 @@ const EMPTY_FORM: CaseStudyFormPayload = {
   solution: "",
   results: "",
   coverImageUrl: "",
-  isPublished: false,
+  isPublished: true,
 };
 
 const inputClass =
