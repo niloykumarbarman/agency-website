@@ -19,8 +19,6 @@ public class UpdatePortfolioCommandHandler : IRequestHandler<UpdatePortfolioComm
     public async Task<Unit> Handle(UpdatePortfolioCommand request, CancellationToken cancellationToken)
     {
         var portfolio = await _context.Portfolios
-            .Include(p => p.Images)
-            .Include(p => p.Metrics)
             .FirstOrDefaultAsync(p => p.Id == request.Id && !p.IsDeleted, cancellationToken)
             ?? throw new KeyNotFoundException($"Portfolio with Id '{request.Id}' was not found.");
 
@@ -40,22 +38,36 @@ public class UpdatePortfolioCommandHandler : IRequestHandler<UpdatePortfolioComm
         portfolio.TestimonialId = request.TestimonialId;
         portfolio.UpdatedAt = DateTime.UtcNow;
 
-        portfolio.Images.Clear();
+        // Explicit DbSet remove/add (instead of navigation-collection Clear()+Add())
+        // avoids an EF Core change-tracker ambiguity that intermittently produced
+        // DbUpdateConcurrencyException ("expected 1 row, affected 0") on this
+        // replace-all-children pattern.
+        var existingImages = await _context.PortfolioImages
+            .Where(pi => pi.PortfolioId == portfolio.Id)
+            .ToListAsync(cancellationToken);
+        _context.PortfolioImages.RemoveRange(existingImages);
+
         foreach (var image in request.Images)
         {
-            portfolio.Images.Add(new PortfolioImage
+            _context.PortfolioImages.Add(new PortfolioImage
             {
+                PortfolioId = portfolio.Id,
                 ImageUrl = image.ImageUrl,
                 Caption = image.Caption,
                 DisplayOrder = image.DisplayOrder
             });
         }
 
-        portfolio.Metrics.Clear();
+        var existingMetrics = await _context.PortfolioMetrics
+            .Where(pm => pm.PortfolioId == portfolio.Id)
+            .ToListAsync(cancellationToken);
+        _context.PortfolioMetrics.RemoveRange(existingMetrics);
+
         foreach (var metric in request.Metrics)
         {
-            portfolio.Metrics.Add(new PortfolioMetric
+            _context.PortfolioMetrics.Add(new PortfolioMetric
             {
+                PortfolioId = portfolio.Id,
                 Label = metric.Label,
                 Value = metric.Value,
                 DisplayOrder = metric.DisplayOrder
