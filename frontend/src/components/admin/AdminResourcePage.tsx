@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, type LucideIcon } from "lucide-react";
+import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, Upload, type LucideIcon } from "lucide-react";
+import { uploadImage } from "@/lib/adminUploads";
+import { resolveImageUrl } from "@/lib/hero";
 
 export interface ListItemFieldConfig {
   key: string;
   label: string;
-  type: "text" | "number";
+  type: "text" | "number" | "image";
   placeholder?: string;
 }
 
 export interface FieldConfig<TForm> {
   key: keyof TForm;
   label: string;
-  type: "text" | "textarea" | "checkbox" | "number" | "select" | "list" | "stringlist";
+  type: "text" | "textarea" | "checkbox" | "number" | "select" | "list" | "stringlist" | "image";
   required?: boolean;
   colSpan?: 1 | 2;
   placeholder?: string;
@@ -78,6 +80,8 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState("");
 
   const load = async () => {
     setLoading(true);
@@ -154,6 +158,23 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleImageUpload = async (
+    file: File,
+    onUploaded: (url: string) => void,
+    uploadKey: string
+  ) => {
+    setUploadingKey(uploadKey);
+    setUploadError("");
+    try {
+      const url = await uploadImage(file);
+      onUploaded(url);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setUploadingKey(null);
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -201,6 +222,12 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
 
           {editingId && editNote && (
             <p className="mt-2 text-xs text-graphite/50">{editNote}</p>
+          )}
+
+          {uploadError && (
+            <div className="mt-4 rounded-lg border border-ember/40 bg-ember/10 px-4 py-3 text-sm text-ember">
+              {uploadError}
+            </div>
           )}
 
           <form onSubmit={handleSubmit} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -260,6 +287,59 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
                       className={inputClass}
                     />
                     <p className="mt-1 text-[11px] text-graphite/40">One item per line.</p>
+                  </div>
+                );
+              }
+
+              if (field.type === "image") {
+                const strValue = String(value ?? "");
+                const uploadKey = `field:${String(field.key)}`;
+                const isUploading = uploadingKey === uploadKey;
+                return (
+                  <div key={String(field.key)} className={spanClass}>
+                    <label className={labelClass}>{field.label}</label>
+                    <input
+                      type="text"
+                      required={field.required}
+                      placeholder={field.placeholder ?? "https://... or upload below"}
+                      value={strValue}
+                      onChange={(e) => setFieldValue(field.key, e.target.value)}
+                      className={inputClass}
+                    />
+                    <div className="mt-2 flex items-center gap-3">
+                      {strValue && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={resolveImageUrl(strValue)}
+                          alt=""
+                          className="h-12 w-12 shrink-0 rounded-md border border-graphite/15 object-cover"
+                        />
+                      )}
+                      <label className="flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-graphite/15 px-3 py-1.5 text-xs font-medium text-graphite transition hover:border-signal hover:text-signal">
+                        {isUploading ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Upload className="h-3.5 w-3.5" />
+                        )}
+                        {isUploading ? "Uploading..." : "Upload image"}
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                          className="hidden"
+                          disabled={isUploading}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            e.target.value = "";
+                            if (!file) return;
+                            handleImageUpload(
+                              file,
+                              (url) => setFieldValue(field.key, url),
+                              uploadKey
+                            );
+                          }}
+                        />
+                      </label>
+                    </div>
                   </div>
                 );
               }
@@ -332,24 +412,78 @@ export default function AdminResourcePage<T extends { id: string }, TForm>({
                           className="flex items-start gap-2 rounded-lg border border-graphite/10 p-3"
                         >
                           <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3">
-                            {itemFields.map((f) => (
-                              <div key={f.key}>
-                                <label className={listLabelClass}>{f.label}</label>
-                                <input
-                                  type={f.type === "number" ? "number" : "text"}
-                                  placeholder={f.placeholder}
-                                  value={String(item[f.key] ?? "")}
-                                  onChange={(e) =>
-                                    updateItem(
-                                      idx,
-                                      f.key,
-                                      f.type === "number" ? Number(e.target.value) : e.target.value
-                                    )
-                                  }
-                                  className={listInputClass}
-                                />
-                              </div>
-                            ))}
+                            {itemFields.map((f) => {
+                              if (f.type === "image") {
+                                const itemStrValue = String(item[f.key] ?? "");
+                                const itemUploadKey = `list:${String(field.key)}:${idx}:${f.key}`;
+                                const isItemUploading = uploadingKey === itemUploadKey;
+                                return (
+                                  <div key={f.key}>
+                                    <label className={listLabelClass}>{f.label}</label>
+                                    <input
+                                      type="text"
+                                      placeholder={f.placeholder}
+                                      value={itemStrValue}
+                                      onChange={(e) => updateItem(idx, f.key, e.target.value)}
+                                      className={listInputClass}
+                                    />
+                                    <div className="mt-1 flex items-center gap-2">
+                                      {itemStrValue && (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                          src={resolveImageUrl(itemStrValue)}
+                                          alt=""
+                                          className="h-8 w-8 shrink-0 rounded border border-graphite/15 object-cover"
+                                        />
+                                      )}
+                                      <label className="flex cursor-pointer items-center gap-1 text-[11px] font-medium text-signal transition hover:brightness-110">
+                                        {isItemUploading ? (
+                                          <Loader2 className="h-3 w-3 animate-spin" />
+                                        ) : (
+                                          <Upload className="h-3 w-3" />
+                                        )}
+                                        {isItemUploading ? "Uploading..." : "Upload"}
+                                        <input
+                                          type="file"
+                                          accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                                          className="hidden"
+                                          disabled={isItemUploading}
+                                          onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            e.target.value = "";
+                                            if (!file) return;
+                                            handleImageUpload(
+                                              file,
+                                              (url) => updateItem(idx, f.key, url),
+                                              itemUploadKey
+                                            );
+                                          }}
+                                        />
+                                      </label>
+                                    </div>
+                                  </div>
+                                );
+                              }
+
+                              return (
+                                <div key={f.key}>
+                                  <label className={listLabelClass}>{f.label}</label>
+                                  <input
+                                    type={f.type === "number" ? "number" : "text"}
+                                    placeholder={f.placeholder}
+                                    value={String(item[f.key] ?? "")}
+                                    onChange={(e) =>
+                                      updateItem(
+                                        idx,
+                                        f.key,
+                                        f.type === "number" ? Number(e.target.value) : e.target.value
+                                      )
+                                    }
+                                    className={listInputClass}
+                                  />
+                                </div>
+                              );
+                            })}
                           </div>
                           <button
                             type="button"

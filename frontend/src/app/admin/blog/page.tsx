@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, Newspaper } from "lucide-react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { Trash2, Loader2, RefreshCw, Plus, X, Pencil, Newspaper, ImageIcon, Upload } from "lucide-react";
 import {
   fetchAdminBlogPosts,
   fetchAdminBlogPostById,
@@ -13,6 +13,8 @@ import {
   type BlogPostStatus,
   type BlogPostFormPayload,
 } from "@/lib/adminBlog";
+import { uploadImage } from "@/lib/adminUploads";
+import { resolveImageUrl } from "@/lib/hero";
 
 const STATUS_STYLES: Record<string, string> = {
   Draft: "bg-graphite/10 text-graphite/60 border-graphite/20",
@@ -44,6 +46,24 @@ export default function AdminBlogPage() {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+    try {
+      const url = await uploadImage(file);
+      setForm((prev) => ({ ...prev, coverImageUrl: url }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -218,6 +238,35 @@ export default function AdminBlogPage() {
                 onChange={(e) => setForm({ ...form, coverImageUrl: e.target.value })}
                 className={inputClass}
               />
+              <div className="mt-2 flex items-center gap-3">
+                {form.coverImageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={resolveImageUrl(form.coverImageUrl)}
+                    alt=""
+                    className="h-12 w-12 shrink-0 rounded-md border border-graphite/15 object-cover"
+                  />
+                ) : (
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-dashed border-graphite/15 text-graphite/30">
+                    <ImageIcon className="h-4 w-4" />
+                  </div>
+                )}
+                <label className="flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-graphite/15 px-3 py-1.5 text-xs font-medium text-graphite transition hover:border-signal hover:text-signal">
+                  {uploading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Upload className="h-3.5 w-3.5" />
+                  )}
+                  {uploading ? "Uploading..." : "Upload image"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    disabled={uploading}
+                  />
+                </label>
+              </div>
             </div>
             <div>
               <label className={labelClass}>Author Name</label>

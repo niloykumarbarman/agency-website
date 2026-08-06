@@ -69,7 +69,7 @@ export default function AdminPortfolioPage() {
     { key: "title", label: "Title", type: "text", required: true, colSpan: 2 },
     { key: "slug", label: "Slug", type: "text", required: true },
     { key: "clientName", label: "Client Name", type: "text" },
-    { key: "thumbnailUrl", label: "Thumbnail URL", type: "text" },
+    { key: "thumbnailUrl", label: "Thumbnail URL", type: "image" },
     { key: "projectUrl", label: "Project URL", type: "text" },
     { key: "techStack", label: "Tech Stack (comma separated)", type: "text" },
     { key: "displayOrder", label: "Display Order", type: "number" },
@@ -117,7 +117,7 @@ export default function AdminPortfolioPage() {
       colSpan: 2,
       listItemLabel: "Image",
       listItemFields: [
-        { key: "imageUrl", label: "Image URL", type: "text", placeholder: "https://..." },
+        { key: "imageUrl", label: "Image URL", type: "image", placeholder: "https://..." },
         { key: "caption", label: "Caption", type: "text" },
         { key: "displayOrder", label: "Order", type: "number" },
       ],

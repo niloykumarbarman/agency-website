@@ -28,7 +28,7 @@ const fields: FieldConfig<TestimonialFormPayload>[] = [
   { key: "clientName", label: "Client Name", type: "text", required: true },
   { key: "clientTitle", label: "Client Title", type: "text" },
   { key: "clientCompany", label: "Client Company", type: "text" },
-  { key: "clientPhotoUrl", label: "Client Photo URL", type: "text" },
+  { key: "clientPhotoUrl", label: "Client Photo URL", type: "image" },
   { key: "rating", label: "Rating (1-5)", type: "number", required: true },
   { key: "isFeatured", label: "Featured", type: "checkbox" },
   {

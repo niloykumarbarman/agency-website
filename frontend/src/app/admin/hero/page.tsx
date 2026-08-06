@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { Loader2, Save, ImageIcon, Video, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { Loader2, Save, ImageIcon, Video, Plus, Trash2, Upload } from "lucide-react";
 import {
   fetchAdminHero,
   updateHero,
   type HeroFormPayload,
   type TelemetryPillInput,
 } from "@/lib/adminHero";
+import { uploadImage } from "@/lib/adminUploads";
+import { resolveImageUrl } from "@/lib/hero";
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-graphite/15 px-3 py-2.5 text-sm outline-none transition focus:border-signal focus:ring-2 focus:ring-signal/10";
@@ -48,6 +50,7 @@ export default function AdminHeroPage() {
   const [pills, setPills] = useState<PillRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -94,6 +97,24 @@ export default function AdminHeroPage() {
   const setField = (key: keyof HeroFormPayload, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setSuccess(false);
+  };
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+    setSuccess(false);
+    try {
+      const url = await uploadImage(file);
+      setField("backgroundImageUrl", url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const addPill = () => {
@@ -246,7 +267,7 @@ export default function AdminHeroPage() {
             {form.backgroundImageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={form.backgroundImageUrl}
+                src={resolveImageUrl(form.backgroundImageUrl)}
                 alt="Background preview"
                 className="h-full w-full object-cover"
               />
@@ -257,6 +278,21 @@ export default function AdminHeroPage() {
               </div>
             )}
           </div>
+          <label className="mt-3 flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-graphite/15 px-4 py-2.5 text-sm font-medium text-graphite transition hover:border-signal hover:text-signal">
+            {uploading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
+            {uploading ? "Uploading..." : "Upload image"}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={uploading}
+            />
+          </label>
         </div>
 
         <div className="md:col-span-2">

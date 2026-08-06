@@ -28,7 +28,7 @@ const emptyForm: ServiceFormPayload = {
 const fields: FieldConfig<ServiceFormPayload>[] = [
   { key: "title", label: "Title", type: "text", required: true, colSpan: 2 },
   { key: "slug", label: "Slug", type: "text", required: true },
-  { key: "iconUrl", label: "Icon URL", type: "text" },
+  { key: "iconUrl", label: "Icon URL", type: "image" },
   { key: "displayOrder", label: "Display Order", type: "number" },
   { key: "isActive", label: "Active", type: "checkbox" },
   {
