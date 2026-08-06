@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { User, CalendarDays } from "lucide-react";
 import { fetchBlogPosts, type BlogPost } from "@/lib/blogPosts";
+import { resolveImageUrl } from "@/lib/hero";
 
 function formatDate(value: string | null): string {
   if (!value) return "Unpublished";
@@ -107,7 +108,7 @@ export default function BlogPostList() {
                   <div className="relative aspect-[16/9] w-full overflow-hidden bg-graphite/10">
                     {post.coverImageUrl && (
                       <Image
-                        src={post.coverImageUrl}
+                        src={resolveImageUrl(post.coverImageUrl)}
                         alt={post.title}
                         fill
                         className="object-cover"

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import { API_BASE_URL } from "@/lib/apiConfig";
+import { resolveImageUrl } from "@/lib/hero";
 
 type TestimonialItem = {
   id: string;
@@ -125,7 +126,7 @@ export default function Testimonials() {
                   {item.clientPhotoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={item.clientPhotoUrl}
+                      src={resolveImageUrl(item.clientPhotoUrl)}
                       alt=""
                       className="h-10 w-10 shrink-0 rounded-full object-cover"
                     />

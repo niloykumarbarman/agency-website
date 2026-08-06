@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { BlogPostDetail } from "@/lib/blogPosts";
+import { resolveImageUrl } from "@/lib/hero";
 
 export default function BlogPostDetailContent({
   post,
@@ -12,7 +13,7 @@ export default function BlogPostDetailContent({
         {post.coverImageUrl && (
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-graphite/10">
             <Image
-              src={post.coverImageUrl}
+              src={resolveImageUrl(post.coverImageUrl)}
               alt={post.title}
               fill
               className="object-cover"
