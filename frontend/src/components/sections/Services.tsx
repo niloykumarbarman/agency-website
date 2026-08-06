@@ -2,71 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import {
-  Layers,
-  Workflow,
-  RefreshCw,
-  Cloud,
-  ShieldCheck,
-  Gauge,
-} from "lucide-react";
+import { Layers } from "lucide-react";
+import { API_BASE_URL } from "@/lib/apiConfig";
 
-type Service = {
-  icon: typeof Layers;
-  tag: string;
+type ServiceItem = {
+  id: string;
   title: string;
-  description: string;
+  slug: string;
+  shortDescription: string;
+  fullDescription: string;
+  includes: string[];
+  iconUrl: string;
+  displayOrder: number;
 };
-
-const SERVICES: Service[] = [
-  {
-    icon: Layers,
-    tag: "platform",
-    title: "Platform Engineering",
-    description:
-      "Internal developer platforms, service scaffolding, and golden paths that let product teams ship without reinventing infrastructure each time.",
-  },
-  {
-    icon: Workflow,
-    tag: "integration",
-    title: "API Design & Integration",
-    description:
-      "Contract-first REST and event-driven APIs, versioning strategy, and integration layers that hold up under multi-team, multi-vendor load.",
-  },
-  {
-    icon: RefreshCw,
-    tag: "migration",
-    title: "System Migration",
-    description:
-      "Legacy modernization and cloud migration executed in reversible stages, with data integrity and uptime treated as non-negotiable.",
-  },
-  {
-    icon: Cloud,
-    tag: "devops",
-    title: "Cloud Infrastructure & DevOps",
-    description:
-      "Infrastructure as code, container orchestration, and CI/CD pipelines built for repeatable, auditable deployments at scale.",
-  },
-  {
-    icon: ShieldCheck,
-    tag: "security",
-    title: "Security & Compliance Engineering",
-    description:
-      "Threat modeling, access control, audit logging, and hardened authentication built into the system, not bolted on afterward.",
-  },
-  {
-    icon: Gauge,
-    tag: "reliability",
-    title: "Performance & Reliability Engineering",
-    description:
-      "Caching strategy, load testing, and observability that keep latency low and SLAs intact as traffic and complexity grow.",
-  },
-];
 
 export default function Services() {
   const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [hoverCapable, setHoverCapable] = useState(true);
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   // Detect once on mount whether this device actually supports hover
   // (mouse/trackpad) vs touch-only. Doing this once avoids the mobile
@@ -75,6 +31,27 @@ export default function Services() {
   // flash on and immediately get toggled back off.
   useEffect(() => {
     setHoverCapable(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch(`${API_BASE_URL}/services`);
+        if (!res.ok) {
+          throw new Error(`Failed to load services: ${res.status}`);
+        }
+        const data = (await res.json()) as ServiceItem[];
+        setServices(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load services.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
   }, []);
 
   const handleCardClick = (i: number) => {
@@ -115,72 +92,91 @@ export default function Services() {
           </p>
         </motion.div>
 
-        <div className="mt-16 grid gap-px overflow-hidden rounded-sm border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((service, i) => {
-            const Icon = service.icon;
-            const isSignal = i % 2 === 0;
-            const isActive = activeIndex === i;
-            const hoverHandlers = hoverCapable
-              ? {
-                  onMouseEnter: () => setActiveIndex(i),
-                  onMouseLeave: () =>
-                    setActiveIndex((prev) => (prev === i ? null : prev)),
-                }
-              : {
-                  onClick: () => handleCardClick(i),
-                };
-            return (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={
-                  reduceMotion
-                    ? { duration: 0.3 }
-                    : { duration: 0.5, ease: "easeOut", delay: i * 0.08 }
-                }
-                {...hoverHandlers}
-                className={`group relative cursor-pointer p-8 transition-colors duration-300 ${
-                  isActive ? "bg-ink text-paper" : "bg-paper"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`flex h-16 w-16 items-center justify-center rounded-sm transition-colors duration-300 ${
-                      isSignal
-                        ? isActive
-                          ? "bg-signal/30 text-signal"
-                          : "bg-signal/15 text-signal"
-                        : isActive
-                          ? "bg-ember/30 text-ember"
-                          : "bg-ember/15 text-ember"
-                    }`}
-                  >
-                    <Icon className="h-7 w-7" strokeWidth={1.6} />
-                  </span>
-                  <span
-                    className={`font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-300 ${
-                      isActive ? "text-paper/40" : "text-graphite/40"
-                    }`}
-                  >
-                    /{service.tag}
-                  </span>
-                </div>
-                <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">
-                  {service.title}
-                </h3>
-                <p
-                  className={`mt-3 text-sm leading-relaxed transition-colors duration-300 ${
-                    isActive ? "text-paper/70" : "text-graphite/75"
+        {loading ? (
+          <p className="mt-16 text-center text-sm text-graphite/50">
+            Loading services...
+          </p>
+        ) : error ? (
+          <p className="mt-16 text-center text-sm text-ember">{error}</p>
+        ) : services.length === 0 ? (
+          <p className="mt-16 text-center text-sm text-graphite/50">
+            No services available yet.
+          </p>
+        ) : (
+          <div className="mt-16 grid gap-px overflow-hidden rounded-sm border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((service, i) => {
+              const isSignal = i % 2 === 0;
+              const isActive = activeIndex === i;
+              const hoverHandlers = hoverCapable
+                ? {
+                    onMouseEnter: () => setActiveIndex(i),
+                    onMouseLeave: () =>
+                      setActiveIndex((prev) => (prev === i ? null : prev)),
+                  }
+                : {
+                    onClick: () => handleCardClick(i),
+                  };
+              return (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={
+                    reduceMotion
+                      ? { duration: 0.3 }
+                      : { duration: 0.5, ease: "easeOut", delay: i * 0.08 }
+                  }
+                  {...hoverHandlers}
+                  className={`group relative cursor-pointer p-8 transition-colors duration-300 ${
+                    isActive ? "bg-ink text-paper" : "bg-paper"
                   }`}
                 >
-                  {service.description}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`flex h-16 w-16 items-center justify-center rounded-sm transition-colors duration-300 ${
+                        isSignal
+                          ? isActive
+                            ? "bg-signal/30 text-signal"
+                            : "bg-signal/15 text-signal"
+                          : isActive
+                            ? "bg-ember/30 text-ember"
+                            : "bg-ember/15 text-ember"
+                      }`}
+                    >
+                      {service.iconUrl ? (
+                        <img
+                          src={service.iconUrl}
+                          alt=""
+                          className="h-7 w-7 object-contain"
+                        />
+                      ) : (
+                        <Layers className="h-7 w-7" strokeWidth={1.6} />
+                      )}
+                    </span>
+                    <span
+                      className={`font-mono text-[11px] uppercase tracking-[0.15em] transition-colors duration-300 ${
+                        isActive ? "text-paper/40" : "text-graphite/40"
+                      }`}
+                    >
+                      /{service.slug}
+                    </span>
+                  </div>
+                  <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">
+                    {service.title}
+                  </h3>
+                  <p
+                    className={`mt-3 text-sm leading-relaxed transition-colors duration-300 ${
+                      isActive ? "text-paper/70" : "text-graphite/75"
+                    }`}
+                  >
+                    {service.shortDescription}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
