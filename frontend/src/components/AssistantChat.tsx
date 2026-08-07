@@ -427,7 +427,7 @@ export default function AssistantChat() {
         )}
       </AnimatePresence>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-center gap-3">
         <motion.a
           href="https://t.me/Devliora_bot"
           target="_blank"
