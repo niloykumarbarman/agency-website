@@ -427,22 +427,38 @@ export default function AssistantChat() {
         )}
       </AnimatePresence>
 
-      <motion.button
-        type="button"
-        onClick={() => {
-          setIsOpen((prev) => !prev);
-          if (showTooltip) dismissTooltip();
-        }}
-        whileHover={prefersReducedMotion ? undefined : { y: -2 }}
-        aria-label={isOpen ? "Close assistant chat" : "Open assistant chat"}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-signal text-paper shadow-[0_0_24px_-6px_var(--color-signal)] transition-all"
-      >
-        {isOpen ? (
-          <X className="h-6 w-6" />
-        ) : (
-          <MessageCircle className="h-6 w-6" />
-        )}
-      </motion.button>
+      <div className="flex items-center gap-3">
+        <motion.a
+          href="https://t.me/Devliora_bot"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={prefersReducedMotion ? undefined : { y: -2 }}
+          aria-label="Chat with us on Telegram"
+          title="Chat with us on Telegram"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#26A5E4] text-paper shadow-[0_0_24px_-6px_#26A5E4] transition-all"
+        >
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true">
+            <path d="M9.036 15.803 8.72 20.09c.46 0 .658-.198.898-.436l2.155-2.06 4.467 3.27c.818.452 1.401.214 1.62-.757l2.937-13.81h.001c.256-1.19-.43-1.656-1.226-1.363L2.6 9.9c-1.157.452-1.14 1.1-.197 1.393l4.408 1.376L17.05 6.29c.485-.318.928-.142.564.176"/>
+          </svg>
+        </motion.a>
+
+        <motion.button
+          type="button"
+          onClick={() => {
+            setIsOpen((prev) => !prev);
+            if (showTooltip) dismissTooltip();
+          }}
+          whileHover={prefersReducedMotion ? undefined : { y: -2 }}
+          aria-label={isOpen ? "Close assistant chat" : "Open assistant chat"}
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-signal text-paper shadow-[0_0_24px_-6px_var(--color-signal)] transition-all"
+        >
+          {isOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <MessageCircle className="h-6 w-6" />
+          )}
+        </motion.button>
+      </div>
     </div>
   );
 }
