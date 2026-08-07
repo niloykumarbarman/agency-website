@@ -10,6 +10,7 @@ export interface Portfolio {
   projectUrl: string;
   techStack: string;
   isFeatured: boolean;
+  industry: string;
 }
 
 export interface PortfolioImage {

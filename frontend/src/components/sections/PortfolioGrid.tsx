@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { fetchPortfolios, parseTechStack, type Portfolio } from "@/lib/portfolios";
+import { fetchPortfolios, type Portfolio } from "@/lib/portfolios";
 import { resolveImageUrl } from "@/lib/hero";
 
 function truncate(text: string, maxLength: number): string {
@@ -13,12 +13,34 @@ function truncate(text: string, maxLength: number): string {
   return `${text.slice(0, maxLength).trimEnd()}...`;
 }
 
+const CARD_THEMES = [
+  {
+    bg: "bg-signal",
+    text: "text-paper",
+    sub: "text-paper/70",
+    label: "text-paper/60",
+  },
+  {
+    bg: "bg-ember",
+    text: "text-paper",
+    sub: "text-paper/80",
+    label: "text-paper/65",
+  },
+  {
+    bg: "bg-graphite",
+    text: "text-paper",
+    sub: "text-paper/70",
+    label: "text-paper/60",
+  },
+];
+
 export default function PortfolioGrid() {
   const shouldReduceMotion = useReducedMotion();
   const [items, setItems] = useState<Portfolio[]>([]);
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading"
   );
+  const [activeIndustry, setActiveIndustry] = useState<string>("All");
 
   useEffect(() => {
     let cancelled = false;
@@ -40,6 +62,18 @@ export default function PortfolioGrid() {
       cancelled = true;
     };
   }, []);
+
+  const industries = useMemo(() => {
+    const unique = Array.from(
+      new Set(items.map((item) => item.industry).filter(Boolean))
+    );
+    return ["All", ...unique];
+  }, [items]);
+
+  const filteredItems = useMemo(() => {
+    if (activeIndustry === "All") return items;
+    return items.filter((item) => item.industry === activeIndustry);
+  }, [items, activeIndustry]);
 
   const fadeUp = (i: number) =>
     shouldReduceMotion
@@ -87,67 +121,74 @@ export default function PortfolioGrid() {
         )}
 
         {status === "success" && items.length > 0 && (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item, i) => {
-              const techList = parseTechStack(item.techStack);
-              return (
-                <motion.article
-                  key={item.id}
-                  {...fadeUp(i)}
-                  className="group flex flex-col overflow-hidden rounded-xl border border-ink/10 bg-paper transition-colors duration-300 hover:border-ink/25"
-                >
-                  <Link
-                    href={`/portfolio/${item.slug}`}
-                    className="flex flex-1 flex-col"
+          <>
+            {industries.length > 2 && (
+              <div className="mb-12 flex flex-wrap gap-x-6 gap-y-3">
+                {industries.map((industry) => (
+                  <button
+                    key={industry}
+                    type="button"
+                    onClick={() => setActiveIndustry(industry)}
+                    className={`font-mono text-sm font-medium uppercase tracking-[0.08em] transition-colors ${
+                      activeIndustry === industry
+                        ? "text-ember"
+                        : "text-graphite/60 hover:text-ink"
+                    }`}
                   >
-                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-graphite/10">
-                      {item.thumbnailUrl && (
-                        <Image
-                          src={resolveImageUrl(item.thumbnailUrl)}
-                          alt={item.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                      )}
-                    </div>
+                    {industry}
+                  </button>
+                ))}
+              </div>
+            )}
 
-                    <div className="flex flex-1 flex-col p-6">
-                      <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-signal">
-                        {item.clientName}
-                      </p>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {filteredItems.map((item, i) => {
+                const theme = CARD_THEMES[i % CARD_THEMES.length];
+                return (
+                  <motion.article
+                    key={item.id}
+                    {...fadeUp(i)}
+                    className="group overflow-hidden rounded-xl"
+                  >
+                    <Link href={`/portfolio/${item.slug}`} className="flex h-full flex-col sm:flex-row">
+                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-graphite/10 sm:aspect-auto sm:w-2/5">
+                        {item.thumbnailUrl && (
+                          <Image
+                            src={resolveImageUrl(item.thumbnailUrl)}
+                            alt={item.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                          />
+                        )}
+                      </div>
 
-                      <h3 className="mt-3 font-display text-xl font-semibold leading-snug tracking-tight text-graphite">
-                        {item.title}
-                      </h3>
+                      <div className={`flex flex-1 flex-col justify-center p-8 ${theme.bg}`}>
+                        {item.industry && (
+                          <p className={`font-mono text-[0.6875rem] uppercase tracking-[0.14em] ${theme.label}`}>
+                            &bull; {item.industry}
+                          </p>
+                        )}
 
-                      <p className="mt-3 flex-1 text-sm leading-relaxed text-graphite/70">
-                        {truncate(item.summary, 140)}
-                      </p>
+                        <h3 className={`mt-3 font-display text-xl font-semibold leading-snug tracking-tight ${theme.text}`}>
+                          {item.title}
+                        </h3>
 
-                      {techList.length > 0 && (
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {techList.map((tech) => (
-                            <span
-                              key={tech}
-                              className="rounded-sm border border-ink/10 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.1em] text-graphite/60"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                        <p className={`mt-3 text-sm leading-relaxed ${theme.sub}`}>
+                          {truncate(item.summary, 140)}
+                        </p>
 
-                      <span className="mt-6 inline-flex items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-graphite/50 transition-colors group-hover:text-ember">
-                        View case study
-                        <ArrowUpRight className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                      </span>
-                    </div>
-                  </Link>
-                </motion.article>
-              );
-            })}
-          </div>
+                        <span className={`mt-6 inline-flex w-fit items-center gap-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] ${theme.text} transition-transform group-hover:translate-x-1`}>
+                          Read more
+                          <ArrowUpRight className="h-3.5 w-3.5 shrink-0" />
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
     </section>
