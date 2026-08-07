@@ -22,5 +22,7 @@ public interface IAppDbContext
     DbSet<TechnologyItem> TechnologyItems { get; }
     DbSet<FaqItem> FaqItems { get; }
     DbSet<SiteSettings> SiteSettings { get; }
+    DbSet<ChatConversation> ChatConversations { get; }
+    DbSet<ChatMessage> ChatMessages { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

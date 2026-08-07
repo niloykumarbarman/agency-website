@@ -6,6 +6,7 @@ using Devliora.Infrastructure.Data;
 using Devliora.Infrastructure.Security;
 using Devliora.Infrastructure.Assistant;
 using Devliora.Infrastructure.Telegram;
+using Devliora.Infrastructure.Chat;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,6 +64,7 @@ builder.Services.AddScoped<ITelegramSessionStore, TelegramSessionStore>();
 builder.Services.AddScoped<ITelegramContactFlowStore, TelegramContactFlowStore>();
 builder.Services.AddHttpClient<ITelegramApiClient, TelegramApiClient>();
 builder.Services.AddHttpClient<ITelegramChatService, TelegramGeminiChatService>();
+builder.Services.AddScoped<IChatPersistenceService, ChatPersistenceService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()
     ?? throw new InvalidOperationException("JwtSettings configuration section is missing.");

@@ -12,4 +12,5 @@ public class SendChatMessageCommand : IRequest<string>
 {
     public List<ChatMessageDto> History { get; set; } = new();
     public string Message { get; set; } = string.Empty;
+    public string SessionId { get; set; } = string.Empty;
 }

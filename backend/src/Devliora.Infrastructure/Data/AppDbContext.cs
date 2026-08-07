@@ -28,6 +28,8 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<FaqItem> FaqItems => Set<FaqItem>();
     public DbSet<HeroTelemetryPill> HeroTelemetryPills => Set<HeroTelemetryPill>();
     public DbSet<SiteSettings> SiteSettings => Set<SiteSettings>();
+    public DbSet<ChatConversation> ChatConversations => Set<ChatConversation>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
