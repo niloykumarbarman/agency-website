@@ -21,4 +21,7 @@ public class TelegramAssistantSettings
     // How long a chat's conversation history is kept in Redis after the
     // last message, in minutes. Keeps memory bounded for inactive chats.
     public int SessionTtlMinutes { get; set; } = 60;
+    // Personal Telegram chat ID of the site admin; new-message alerts
+    // (website chat + Telegram bot) are sent here.
+    public string AdminChatId { get; set; } = string.Empty;
 }

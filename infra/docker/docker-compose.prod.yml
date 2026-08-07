@@ -54,6 +54,7 @@ services:
       Telegram__GeminiApiKey: ${TELEGRAM_GEMINI_API_KEY}
       Telegram__GeminiModel: "gemini-3.6-flash"
       Telegram__GeminiDailyQuota: ${TELEGRAM_GEMINI_DAILY_QUOTA:-8}
+      Telegram__AdminChatId: ${TELEGRAM_ADMIN_CHAT_ID}
     ports:
       - "8080:8080"
     networks:
