@@ -5,4 +5,5 @@ public class SiteSettingsDto
     public Guid Id { get; set; }
     public string LogoUrl { get; set; } = string.Empty;
     public string SiteName { get; set; } = string.Empty;
+    public string PortfolioHeroImageUrl { get; set; } = string.Empty;
 }

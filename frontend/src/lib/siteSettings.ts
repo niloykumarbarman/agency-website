@@ -5,6 +5,7 @@ export interface SiteSettingsDto {
   id: string;
   logoUrl: string;
   siteName: string;
+  portfolioHeroImageUrl: string;
 }
 
 export const SITE_SETTINGS_API_URL = `${API_BASE_URL}/site-settings`;

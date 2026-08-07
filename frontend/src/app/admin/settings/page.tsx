@@ -14,8 +14,10 @@ export default function AdminSettingsPage() {
   const [settingsId, setSettingsId] = useState<string | null>(null);
   const [logoUrl, setLogoUrl] = useState("");
   const [siteName, setSiteName] = useState("");
+  const [portfolioHeroImageUrl, setPortfolioHeroImageUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadingHero, setUploadingHero] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -30,6 +32,7 @@ export default function AdminSettingsPage() {
           setSettingsId(data.id);
           setLogoUrl(data.logoUrl);
           setSiteName(data.siteName);
+          setPortfolioHeroImageUrl(data.portfolioHeroImageUrl);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load site settings.");
@@ -58,13 +61,31 @@ export default function AdminSettingsPage() {
     }
   };
 
+  const handleHeroFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setUploadingHero(true);
+    setError("");
+    setSuccess(false);
+    try {
+      const url = await uploadImage(file);
+      setPortfolioHeroImageUrl(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload portfolio hero image.");
+    } finally {
+      setUploadingHero(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!settingsId) return;
     setSaving(true);
     setError("");
     setSuccess(false);
     try {
-      await updateSiteSettings({ id: settingsId, logoUrl, siteName });
+      await updateSiteSettings({ id: settingsId, logoUrl, siteName, portfolioHeroImageUrl });
       setSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save site settings.");
@@ -145,6 +166,41 @@ export default function AdminSettingsPage() {
               className="hidden"
               onChange={handleFileChange}
               disabled={uploading}
+            />
+          </label>
+        </div>
+
+        <div className="md:col-span-2">
+          <label className={labelClass}>Portfolio Page Hero Background</label>
+          <div className="mt-3 flex h-40 w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-graphite/15 bg-graphite/5">
+            {portfolioHeroImageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={resolveImageUrl(portfolioHeroImageUrl)}
+                alt="Portfolio hero preview"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-2 text-graphite/30">
+                <ImageIcon className="h-6 w-6" />
+                <span className="text-xs">No portfolio hero image set</span>
+              </div>
+            )}
+          </div>
+
+          <label className="mt-3 flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-graphite/15 px-4 py-2.5 text-sm font-medium text-graphite transition hover:border-signal hover:text-signal">
+            {uploadingHero ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
+            {uploadingHero ? "Uploading..." : "Upload portfolio hero image"}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+              className="hidden"
+              onChange={handleHeroFileChange}
+              disabled={uploadingHero}
             />
           </label>
         </div>

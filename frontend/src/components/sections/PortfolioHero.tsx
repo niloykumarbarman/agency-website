@@ -1,9 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
+import { fetchSiteSettings } from "@/lib/siteSettings";
+import { resolveImageUrl } from "@/lib/hero";
 
 export default function PortfolioHero() {
   const shouldReduceMotion = useReducedMotion();
+  const [heroImageUrl, setHeroImageUrl] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchSiteSettings().then((data) => {
+      if (!cancelled && data?.portfolioHeroImageUrl) {
+        setHeroImageUrl(resolveImageUrl(data.portfolioHeroImageUrl));
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const fadeUp = (i: number) =>
     shouldReduceMotion
@@ -15,36 +33,41 @@ export default function PortfolioHero() {
         };
 
   return (
-    <section className="bg-grain relative overflow-hidden bg-ink py-28 text-paper md:py-36">
-      <div
-        className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full opacity-[0.12] blur-[120px]"
-        style={{ backgroundColor: "var(--color-signal)" }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[size:56px_56px] opacity-100"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, color-mix(in srgb, var(--color-paper) 4%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--color-paper) 4%, transparent) 1px, transparent 1px)",
-        }}
-      />
-
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
+    <section className="relative overflow-hidden bg-ink text-paper">
+      <div className="relative flex h-[420px] items-center justify-center md:h-[480px]">
+        {heroImageUrl ? (
+          <Image
+            src={heroImageUrl}
+            alt="Devliora portfolio"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+        ) : (
+          <div
+            className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full opacity-[0.18] blur-[120px]"
+            style={{ backgroundColor: "var(--color-signal)" }}
+          />
+        )}
+        <div className="absolute inset-0 bg-ink/70" />
 
         <motion.h1
           {...fadeUp(1)}
-          className="mt-6 text-balance text-4xl font-semibold leading-tight md:text-6xl"
+          className="relative text-balance text-5xl font-semibold leading-tight md:text-7xl"
         >
-          Real systems. <span className="text-signal">Real constraints.</span>
+          Our work
         </motion.h1>
+      </div>
 
-        <motion.p
-          {...fadeUp(2)}
-          className="mx-auto mt-6 max-w-2xl text-lg text-paper/70"
-        >
-          A visual look at engagements that had to work correctly the first
-          time, with real constraints around uptime, compliance, and data
-          integrity. Open any project for the full breakdown.
-        </motion.p>
+      <div className="relative border-t border-paper/10 bg-ink">
+        <div className="mx-auto flex max-w-6xl items-center gap-2 px-6 py-6 font-mono text-sm">
+          <Link href="/" className="text-paper/70 transition-colors hover:text-paper">
+            Home
+          </Link>
+          <span className="text-paper/30">/</span>
+          <span className="text-ember">Portfolio</span>
+        </div>
       </div>
     </section>
   );
