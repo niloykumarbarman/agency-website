@@ -4,6 +4,7 @@ import Hero from "@/components/sections/Hero";
 import Capabilities from "@/components/sections/Capabilities";
 import ClientShowcase from "@/components/sections/ClientShowcase";
 import Services from "@/components/sections/Services";
+import Partners from "@/components/sections/Partners";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import Process from "@/components/sections/Process";
 import Technologies from "@/components/sections/Technologies";
@@ -23,6 +24,7 @@ export default function Home() {
         <Capabilities />
         <ClientShowcase />
         <Services />
+        <Partners />
         <WhyChooseUs />
         <Process />
         <Technologies />

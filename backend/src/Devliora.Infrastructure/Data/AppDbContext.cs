@@ -31,6 +31,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<ChatConversation> ChatConversations => Set<ChatConversation>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public DbSet<OfficeLocation> OfficeLocations => Set<OfficeLocation>();
+    public DbSet<Partner> Partners => Set<Partner>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

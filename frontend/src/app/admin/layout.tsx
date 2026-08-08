@@ -19,6 +19,7 @@ import {
   LogOut,
   Settings,
   MapPin,
+  Handshake,
 } from "lucide-react";
 import { clearAdminToken, isAdminAuthenticated } from "@/lib/adminAuth";
 
@@ -36,6 +37,7 @@ const NAV_ITEMS = [
   { href: "/admin/technologies", label: "Technologies", icon: Cpu },
   { href: "/admin/faq", label: "FAQ", icon: HelpCircle },
   { href: "/admin/office-locations", label: "Office Locations", icon: MapPin },
+  { href: "/admin/partners", label: "Partners", icon: Handshake },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

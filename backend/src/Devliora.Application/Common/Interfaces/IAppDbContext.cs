@@ -25,5 +25,6 @@ public interface IAppDbContext
     DbSet<ChatConversation> ChatConversations { get; }
     DbSet<ChatMessage> ChatMessages { get; }
     DbSet<OfficeLocation> OfficeLocations { get; }
+    DbSet<Partner> Partners { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
