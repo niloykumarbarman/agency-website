@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import { Handshake } from "lucide-react";
-import DraggableMarquee from "@/components/DraggableMarquee";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, Handshake } from "lucide-react";
 import { fetchPartners, type PartnerDto } from "@/lib/partners";
 import { resolveImageUrl } from "@/lib/hero";
+
+const PER_PAGE_DESKTOP = 2;
 
 export default function Partners() {
   const reduceMotion = useReducedMotion();
   const [partners, setPartners] = useState<PartnerDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [perPage, setPerPage] = useState(PER_PAGE_DESKTOP);
 
   useEffect(() => {
     const load = async () => {
@@ -22,77 +25,125 @@ export default function Partners() {
     load();
   }, []);
 
+  useEffect(() => {
+    const updatePerPage = () => {
+      setPerPage(window.innerWidth < 640 ? 1 : PER_PAGE_DESKTOP);
+    };
+    updatePerPage();
+    window.addEventListener("resize", updatePerPage);
+    return () => window.removeEventListener("resize", updatePerPage);
+  }, []);
+
+  const pageCount = Math.max(1, Math.ceil(partners.length / perPage));
+
+  useEffect(() => {
+    setPage((prev) => Math.min(prev, pageCount - 1));
+  }, [pageCount]);
+
   if (!loading && partners.length === 0) {
     return null;
   }
 
+  const goPrev = () => setPage((p) => (p - 1 + pageCount) % pageCount);
+  const goNext = () => setPage((p) => (p + 1) % pageCount);
+
+  const visible = partners.slice(page * perPage, page * perPage + perPage);
+
   return (
     <section className="relative overflow-hidden bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={
-            reduceMotion ? { duration: 0.3 } : { duration: 0.6, ease: "easeOut" }
-          }
-          className="text-center"
-        >
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            Meet Our <span className="text-signal">Partners</span>
-          </h2>
-          <p className="mt-2 text-sm text-graphite/60">
-            Who are helping us grow, thank you.
-          </p>
-        </motion.div>
+        <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={
+              reduceMotion ? { duration: 0.3 } : { duration: 0.6, ease: "easeOut" }
+            }
+            className="shrink-0"
+          >
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+              Meet Our <span className="text-signal">Partners</span>
+            </h2>
+            <p className="mt-2 text-sm text-graphite/60">
+              Who are helping us grow, thank you.
+            </p>
 
-        {loading ? (
-          <p className="mt-12 text-center text-sm text-graphite/50">
-            Loading partners...
-          </p>
-        ) : (
-          <div className="relative mt-12 overflow-hidden">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-paper to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-paper to-transparent" />
+            {!loading && pageCount > 1 && (
+              <div className="mt-6 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  aria-label="Previous partners"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-wire text-ink transition-colors hover:border-signal hover:text-signal"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goNext}
+                  aria-label="Next partners"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-wire text-ink transition-colors hover:border-signal hover:text-signal"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </motion.div>
 
-            <DraggableMarquee trackClassName="items-center gap-14">
-              {[...partners, ...partners].map((partner, i) => {
-                const content = partner.logoUrl ? (
-                  <img
-                    src={resolveImageUrl(partner.logoUrl)}
-                    alt={partner.name}
-                    className="h-9 w-auto max-w-[140px] object-contain grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100"
-                  />
-                ) : (
-                  <span className="flex items-center gap-2 font-mono text-sm text-graphite/50">
-                    <Handshake className="h-5 w-5" strokeWidth={1.6} />
-                    {partner.name}
-                  </span>
-                );
-
-                return (
-                  <div
-                    key={`${partner.id}-${i}`}
-                    className="flex shrink-0 items-center justify-center px-4"
-                  >
-                    {partner.websiteUrl ? (
-                      <a
-                        href={partner.websiteUrl}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        aria-label={partner.name}
-                      >
-                        {content}
-                      </a>
+          <div className="flex min-h-[140px] w-full flex-1 items-center justify-center gap-16">
+            {loading ? (
+              <p className="text-center text-sm text-graphite/50">
+                Loading partners...
+              </p>
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={page}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={
+                    reduceMotion ? { duration: 0.2 } : { duration: 0.4, ease: "easeOut" }
+                  }
+                  className="flex w-full flex-wrap items-center justify-center gap-16"
+                >
+                  {visible.map((partner) => {
+                    const content = partner.logoUrl ? (
+                      <img
+                        src={resolveImageUrl(partner.logoUrl)}
+                        alt={partner.name}
+                        className="h-20 w-auto max-w-[240px] object-contain md:h-24"
+                      />
                     ) : (
-                      content
-                    )}
-                  </div>
-                );
-              })}
-            </DraggableMarquee>
+                      <span className="flex items-center gap-2 font-mono text-base text-graphite/60">
+                        <Handshake className="h-6 w-6" strokeWidth={1.6} />
+                        {partner.name}
+                      </span>
+                    );
+
+                    return (
+                      <div key={partner.id} className="flex items-center justify-center">
+                        {partner.websiteUrl ? (
+                          <a
+                            href={partner.websiteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer nofollow"
+                            aria-label={partner.name}
+                          >
+                            {content}
+                          </a>
+                        ) : (
+                          content
+                        )}
+                      </div>
+                    );
+                  })}
+                </motion.div>
+              </AnimatePresence>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
