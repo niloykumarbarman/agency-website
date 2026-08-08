@@ -13,18 +13,18 @@ type Office = {
 
 const OFFICES: Office[] = [
   {
-    country: "Bangladesh",
-    address: "House 12, Road 5, Dhanmondi, Dhaka 1209, Bangladesh",
-    phone: "+880 000 000 000",
-    email: "hello@devliora.com",
-    mapQuery: "House+12,+Road+5,+Dhanmondi,+Dhaka+1209,+Bangladesh",
+    country: "Melbourne",
+    address: "34 Featherbrook, Point Cook VIC, Australia",
+    phone: "+61 435251322",
+    email: "devliora74@gmail.com",
+    mapQuery: "34+Featherbrook,+Point+Cook+VIC,+Australia",
   },
   {
-    country: "Melbourne",
-    address: "123 Collins Street, Melbourne VIC 3000, Australia",
-    phone: "+61 0 0000 0000",
-    email: "au@devliora.com",
-    mapQuery: "123+Collins+Street,+Melbourne+VIC+3000,+Australia",
+    country: "Gaibandha",
+    address: "43/1, Sundarjahan Mor, Gaibandha, Bangladesh",
+    phone: "01606 479801",
+    email: "devliora74@gmail.com",
+    mapQuery: "43/1,+Sundarjahan+Mor,+Gaibandha,+Bangladesh",
   },
 ];
 
@@ -44,7 +44,7 @@ export default function ContactLocations() {
   return (
     <section className="relative overflow-hidden bg-ink text-paper">
       {/* Schedule-a-call banner */}
-      <a href="#"
+      <a href="/book-consultation"
         className="group flex flex-col items-start justify-between gap-4 bg-signal px-6 py-8 transition-colors hover:bg-signal/90 sm:flex-row sm:items-center sm:px-12 sm:py-10"
       >
         <span className="font-display text-2xl font-semibold text-paper md:text-3xl">
