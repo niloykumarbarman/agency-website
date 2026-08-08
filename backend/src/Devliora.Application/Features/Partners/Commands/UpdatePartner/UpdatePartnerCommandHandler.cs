@@ -17,9 +17,9 @@ public class UpdatePartnerCommandHandler : IRequestHandler<UpdatePartnerCommand,
         var partner = await _context.Partners
             .FirstOrDefaultAsync(p => p.Id == request.Id && !p.IsDeleted, cancellationToken)
             ?? throw new KeyNotFoundException($"Partner with Id '{request.Id}' was not found.");
-        partner.Name = request.Name;
-        partner.LogoUrl = request.LogoUrl;
-        partner.WebsiteUrl = request.WebsiteUrl;
+        partner.Name = request.Name.Trim();
+        partner.LogoUrl = request.LogoUrl.Trim();
+        partner.WebsiteUrl = request.WebsiteUrl.Trim();
         partner.DisplayOrder = request.DisplayOrder;
         partner.IsActive = request.IsActive;
         partner.UpdatedAt = DateTime.UtcNow;

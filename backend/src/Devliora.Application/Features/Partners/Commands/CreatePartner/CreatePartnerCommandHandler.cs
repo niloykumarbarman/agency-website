@@ -16,9 +16,9 @@ public class CreatePartnerCommandHandler : IRequestHandler<CreatePartnerCommand,
     {
         var partner = new Partner
         {
-            Name = request.Name,
-            LogoUrl = request.LogoUrl,
-            WebsiteUrl = request.WebsiteUrl,
+            Name = request.Name.Trim(),
+            LogoUrl = request.LogoUrl.Trim(),
+            WebsiteUrl = request.WebsiteUrl.Trim(),
             DisplayOrder = request.DisplayOrder,
             IsActive = request.IsActive
         };
