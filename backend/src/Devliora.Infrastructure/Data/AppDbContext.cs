@@ -30,6 +30,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<SiteSettings> SiteSettings => Set<SiteSettings>();
     public DbSet<ChatConversation> ChatConversations => Set<ChatConversation>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<OfficeLocation> OfficeLocations => Set<OfficeLocation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

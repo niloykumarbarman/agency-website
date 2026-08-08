@@ -18,6 +18,7 @@ import {
   HelpCircle,
   LogOut,
   Settings,
+  MapPin,
 } from "lucide-react";
 import { clearAdminToken, isAdminAuthenticated } from "@/lib/adminAuth";
 
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
   { href: "/admin/hero", label: "Hero", icon: PanelTop },
   { href: "/admin/technologies", label: "Technologies", icon: Cpu },
   { href: "/admin/faq", label: "FAQ", icon: HelpCircle },
+  { href: "/admin/office-locations", label: "Office Locations", icon: MapPin },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

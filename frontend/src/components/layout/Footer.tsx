@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { fetchSiteSettings } from "@/lib/siteSettings";
+import { fetchOfficeLocations } from "@/lib/officeLocations";
 import { resolveImageUrl } from "@/lib/hero";
 
 const iconProps = { className: "h-5 w-5", fill: "currentColor", viewBox: "0 0 24 24" } as const;
@@ -61,21 +62,9 @@ const FOOTER_LINKS = {
   ],
 };
 
-const OFFICE_LOCATIONS = [
-  {
-    city: "Melbourne",
-    address: "34 Featherbrook, Point Cook VIC",
-    phone: "+61 435251322",
-  },
-  {
-    city: "Gaibandha",
-    address: "43/1, Sundarjahan Mor",
-    phone: "01606 479801",
-  },
-];
-
 export default async function Footer() {
   const settings = await fetchSiteSettings();
+  const offices = await fetchOfficeLocations();
 
   return (
     <footer className="border-t border-wire/60 bg-ink text-paper">
@@ -119,13 +108,13 @@ export default async function Footer() {
               Offices
             </p>
             <ul className="mt-4 space-y-6">
-              {OFFICE_LOCATIONS.map((office) => (
+              {offices.map((office) => (
                 <li
-                  key={office.city}
+                  key={office.id}
                   className="border-l-2 border-signal/40 pl-4 transition-colors hover:border-signal"
                 >
                   <p className="font-display text-sm font-semibold text-paper/90">
-                    {office.city}
+                    {office.country}
                   </p>
                   <p className="mt-2 flex items-start gap-2 text-sm text-paper/60">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-signal/70" />

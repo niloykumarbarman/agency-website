@@ -1,36 +1,9 @@
 "use client";
-
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, MapPin, Phone, Mail } from "lucide-react";
-
-type Office = {
-  country: string;
-  address: string;
-  phone: string;
-  email: string;
-  mapQuery: string;
-};
-
-const OFFICES: Office[] = [
-  {
-    country: "Melbourne",
-    address: "34 Featherbrook, Point Cook VIC, Australia",
-    phone: "+61 435251322",
-    email: "devliora74@gmail.com",
-    mapQuery: "34+Featherbrook,+Point+Cook+VIC,+Australia",
-  },
-  {
-    country: "Gaibandha",
-    address: "43/1, Sundarjahan Mor, Gaibandha, Bangladesh",
-    phone: "01606 479801",
-    email: "devliora74@gmail.com",
-    mapQuery: "43/1,+Sundarjahan+Mor,+Gaibandha,+Bangladesh",
-  },
-];
-
-export default function ContactLocations() {
+import type { OfficeLocationDto } from "@/lib/officeLocations";
+export default function ContactLocations({ offices }: { offices: OfficeLocationDto[] }) {
   const shouldReduceMotion = useReducedMotion();
-
   const fadeUp = (i: number) =>
     shouldReduceMotion
       ? {}
@@ -40,7 +13,6 @@ export default function ContactLocations() {
           viewport: { once: true, margin: "-60px" },
           transition: { duration: 0.5, delay: i * 0.08 },
         };
-
   return (
     <section className="relative overflow-hidden bg-ink text-paper">
       {/* Schedule-a-call banner */}
@@ -55,14 +27,13 @@ export default function ContactLocations() {
           <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
         </span>
       </a>
-
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <motion.div
           {...fadeUp(0)}
           className="grid gap-12 sm:grid-cols-2 sm:gap-16"
         >
-          {OFFICES.map((office) => (
-            <div key={office.country}>
+          {offices.map((office) => (
+            <div key={office.id}>
               <h3 className="font-mono text-sm uppercase tracking-[0.15em] text-ember">
                 {office.country}
               </h3>
@@ -84,14 +55,13 @@ export default function ContactLocations() {
             </div>
           ))}
         </motion.div>
-
         <motion.div
           {...fadeUp(1)}
           className="mt-16 grid gap-6 sm:grid-cols-2"
         >
-          {OFFICES.map((office) => (
+          {offices.map((office) => (
             <div
-              key={office.country}
+              key={office.id}
               className="overflow-hidden rounded-lg border border-paper/10"
             >
               <iframe

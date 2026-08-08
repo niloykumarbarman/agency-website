@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import ContactHero from "@/components/sections/ContactHero";
 import ContactForm from "@/components/sections/ContactForm";
 import ContactLocations from "@/components/sections/ContactLocations";
+import { fetchOfficeLocations } from "@/lib/officeLocations";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact | Devliora",
@@ -13,14 +14,15 @@ export const metadata: Metadata = buildMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const offices = await fetchOfficeLocations();
   return (
     <>
       <Navbar />
       <main>
         <ContactHero />
         <ContactForm />
-        <ContactLocations />
+        <ContactLocations offices={offices} />
       </main>
       <Footer />
     </>
