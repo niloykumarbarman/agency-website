@@ -6,14 +6,18 @@ import { ChevronLeft, ChevronRight, Handshake } from "lucide-react";
 import { fetchPartners, type PartnerDto } from "@/lib/partners";
 import { resolveImageUrl } from "@/lib/hero";
 
-const PER_PAGE_DESKTOP = 2;
+function getPerPage(width: number) {
+  if (width < 640) return 1;
+  if (width < 1024) return 2;
+  return 4;
+}
 
 export default function Partners() {
   const reduceMotion = useReducedMotion();
   const [partners, setPartners] = useState<PartnerDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
-  const [perPage, setPerPage] = useState(PER_PAGE_DESKTOP);
+  const [perPage, setPerPage] = useState(4);
 
   useEffect(() => {
     const load = async () => {
@@ -26,9 +30,7 @@ export default function Partners() {
   }, []);
 
   useEffect(() => {
-    const updatePerPage = () => {
-      setPerPage(window.innerWidth < 640 ? 1 : PER_PAGE_DESKTOP);
-    };
+    const updatePerPage = () => setPerPage(getPerPage(window.innerWidth));
     updatePerPage();
     window.addEventListener("resize", updatePerPage);
     return () => window.removeEventListener("resize", updatePerPage);
@@ -48,50 +50,41 @@ export default function Partners() {
   const goNext = () => setPage((p) => (p + 1) % pageCount);
 
   const visible = partners.slice(page * perPage, page * perPage + perPage);
+  const showArrows = !loading && pageCount > 1;
 
   return (
     <section className="relative overflow-hidden bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <div className="flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={
-              reduceMotion ? { duration: 0.3 } : { duration: 0.6, ease: "easeOut" }
-            }
-            className="shrink-0"
-          >
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-              Meet Our <span className="text-signal">Partners</span>
-            </h2>
-            <p className="mt-2 text-sm text-graphite/60">
-              Who are helping us grow, thank you.
-            </p>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={
+            reduceMotion ? { duration: 0.3 } : { duration: 0.6, ease: "easeOut" }
+          }
+          className="mb-12"
+        >
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+            Meet Our <span className="text-signal">Partners</span>
+          </h2>
+          <p className="mt-2 text-sm text-graphite/60">
+            Who are helping us grow, thank you.
+          </p>
+        </motion.div>
 
-            {!loading && pageCount > 1 && (
-              <div className="mt-6 flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={goPrev}
-                  aria-label="Previous partners"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-wire text-ink transition-colors hover:border-signal hover:text-signal"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={goNext}
-                  aria-label="Next partners"
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-wire text-ink transition-colors hover:border-signal hover:text-signal"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
-          </motion.div>
+        <div className="relative flex items-center">
+          {showArrows && (
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous partners"
+              className="absolute left-0 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-wire bg-paper text-ink shadow-sm transition-colors hover:border-signal hover:text-signal"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          )}
 
-          <div className="flex min-h-[140px] w-full flex-1 items-center justify-center gap-16">
+          <div className="flex min-h-[120px] w-full items-center justify-center overflow-hidden px-16">
             {loading ? (
               <p className="text-center text-sm text-graphite/50">
                 Loading partners...
@@ -106,14 +99,14 @@ export default function Partners() {
                   transition={
                     reduceMotion ? { duration: 0.2 } : { duration: 0.4, ease: "easeOut" }
                   }
-                  className="flex w-full flex-wrap items-center justify-center gap-16"
+                  className="flex w-full flex-wrap items-center justify-center gap-x-14 gap-y-8"
                 >
                   {visible.map((partner) => {
                     const content = partner.logoUrl ? (
                       <img
                         src={resolveImageUrl(partner.logoUrl)}
                         alt={partner.name}
-                        className="h-20 w-auto max-w-[240px] object-contain md:h-24"
+                        className="h-14 w-auto max-w-[160px] object-contain md:h-16"
                       />
                     ) : (
                       <span className="flex items-center gap-2 font-mono text-base text-graphite/60">
@@ -143,6 +136,17 @@ export default function Partners() {
               </AnimatePresence>
             )}
           </div>
+
+          {showArrows && (
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next partners"
+              className="absolute right-0 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-wire bg-paper text-ink shadow-sm transition-colors hover:border-signal hover:text-signal"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
     </section>
