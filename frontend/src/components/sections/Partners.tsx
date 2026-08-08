@@ -1,154 +1,27 @@
-"use client";
+import { API_BASE_URL } from "@/lib/apiConfig";
+import PartnersView from "./PartnersView";
 
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Handshake } from "lucide-react";
-import { fetchPartners, type PartnerDto } from "@/lib/partners";
-import { resolveImageUrl } from "@/lib/hero";
+type PartnerDto = {
+  id: string;
+  name: string;
+  logoUrl: string;
+  websiteUrl: string;
+  displayOrder: number;
+};
 
-function getPerPage(width: number) {
-  if (width < 640) return 1;
-  if (width < 1024) return 2;
-  return 4;
+async function fetchPartners(): Promise<PartnerDto[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/partners`, { cache: "no-store" });
+    if (!res.ok) {
+      return [];
+    }
+    return (await res.json()) as PartnerDto[];
+  } catch {
+    return [];
+  }
 }
 
-export default function Partners() {
-  const reduceMotion = useReducedMotion();
-  const [partners, setPartners] = useState<PartnerDto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [perPage, setPerPage] = useState(4);
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const data = await fetchPartners();
-      setPartners(data);
-      setLoading(false);
-    };
-    load();
-  }, []);
-
-  useEffect(() => {
-    const updatePerPage = () => setPerPage(getPerPage(window.innerWidth));
-    updatePerPage();
-    window.addEventListener("resize", updatePerPage);
-    return () => window.removeEventListener("resize", updatePerPage);
-  }, []);
-
-  const pageCount = Math.max(1, Math.ceil(partners.length / perPage));
-
-  useEffect(() => {
-    setPage((prev) => Math.min(prev, pageCount - 1));
-  }, [pageCount]);
-
-  if (!loading && partners.length === 0) {
-    return null;
-  }
-
-  const goPrev = () => setPage((p) => (p - 1 + pageCount) % pageCount);
-  const goNext = () => setPage((p) => (p + 1) % pageCount);
-
-  const visible = partners.slice(page * perPage, page * perPage + perPage);
-  const showArrows = !loading && pageCount > 1;
-
-  return (
-    <section className="relative overflow-hidden bg-paper">
-      <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={
-            reduceMotion ? { duration: 0.3 } : { duration: 0.6, ease: "easeOut" }
-          }
-          className="mb-12"
-        >
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            Meet Our <span className="text-signal">Partners</span>
-          </h2>
-          <p className="mt-2 text-sm text-graphite/60">
-            Who are helping us grow, thank you.
-          </p>
-        </motion.div>
-
-        <div className="relative flex items-center">
-          {showArrows && (
-            <button
-              type="button"
-              onClick={goPrev}
-              aria-label="Previous partners"
-              className="absolute left-0 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-wire bg-paper text-ink shadow-sm transition-colors hover:border-signal hover:text-signal"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-          )}
-
-          <div className="flex min-h-[120px] w-full items-center justify-center overflow-hidden px-16">
-            {loading ? (
-              <p className="text-center text-sm text-graphite/50">
-                Loading partners...
-              </p>
-            ) : (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={page}
-                  initial={{ opacity: 0, x: 24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -24 }}
-                  transition={
-                    reduceMotion ? { duration: 0.2 } : { duration: 0.4, ease: "easeOut" }
-                  }
-                  className="flex w-full flex-wrap items-center justify-center gap-x-14 gap-y-8"
-                >
-                  {visible.map((partner) => {
-                    const content = partner.logoUrl ? (
-                      <img
-                        src={resolveImageUrl(partner.logoUrl)}
-                        alt={partner.name}
-                        className="h-14 w-auto max-w-[160px] object-contain md:h-16"
-                      />
-                    ) : (
-                      <span className="flex items-center gap-2 font-mono text-base text-graphite/60">
-                        <Handshake className="h-6 w-6" strokeWidth={1.6} />
-                        {partner.name}
-                      </span>
-                    );
-
-                    return (
-                      <div key={partner.id} className="flex items-center justify-center">
-                        {partner.websiteUrl ? (
-                          <a
-                            href={partner.websiteUrl}
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                            aria-label={partner.name}
-                          >
-                            {content}
-                          </a>
-                        ) : (
-                          content
-                        )}
-                      </div>
-                    );
-                  })}
-                </motion.div>
-              </AnimatePresence>
-            )}
-          </div>
-
-          {showArrows && (
-            <button
-              type="button"
-              onClick={goNext}
-              aria-label="Next partners"
-              className="absolute right-0 z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-wire bg-paper text-ink shadow-sm transition-colors hover:border-signal hover:text-signal"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-      </div>
-    </section>
-  );
+export default async function Partners() {
+  const partners = await fetchPartners();
+  return <PartnersView partners={partners} />;
 }
